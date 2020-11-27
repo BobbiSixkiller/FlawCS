@@ -1,23 +1,13 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const typeDefs = gql`
-    type Query{
-        sayHi: String!
-    }
-`;
-
-const resolvers = {
-    Query: {
-        sayHi() {
-            return "Hello world!"
-        }
-    }
-};
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
 
 const server = new ApolloServer({
-    typeDefs, resolvers
+    typeDefs, 
+    resolvers
 });
 
 mongoose.connect(process.env.DB_DEV_ATLAS, { useNewUrlParser: true, useUnifiedTopology: true })
