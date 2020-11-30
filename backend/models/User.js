@@ -1,10 +1,23 @@
 const { model, Schema } = require('mongoose');
 
 const userSchema = new Schema({
-    firstName: {type: String},
-    lastName: {type: String},
-    email: {type: String},
-    password: {type: String}
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    telephone: String,
+    organisation: String,
+    titleBefore: String,
+    titleAfter: String,
+    billing: {
+        name: String,
+        street: String,
+        city: String,
+        postalCode: String,
+        country: String,
+        ICO: String,
+        DIC: String
+    }
 }, {
     timestamps: true
 });
