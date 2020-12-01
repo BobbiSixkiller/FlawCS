@@ -4,10 +4,6 @@ const attendeeSchema = new Schema({
     attendee: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    paid: {
-        type: Boolean,
-        default: false
     }
 }, {
     timestamps: true
@@ -17,10 +13,6 @@ const speakerSchema = new Schema({
     speaker: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    paid: {
-        type: Boolean,
-        default: false
     },
     submission: {
         name: String,
