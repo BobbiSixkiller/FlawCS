@@ -18,22 +18,40 @@ const speakerSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-
+    paid: {
+        type: Boolean,
+        default: false
+    },
+    submission: {
+        name: String,
+        abstract: String,
+        keywords: String,
+        url: String,
+        reviewed: {
+            type: Boolean,
+            default: false
+        }
+    }
 }, {
     timestamps: true
 });
 
 const sectionSchema = new Schema({
     name: String,
+    title: String,
+    garants: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     speakers: [speakerSchema],
-    attendees: [attendeeSchema]
 }, {
     timestamps: true
 });
 
 const conferenceSchema = new Schema({
     name: String,
-    date: Date,
+    start: Date,
+    end: Date,
     location: {
         name: String,
         street: String,        
@@ -42,7 +60,9 @@ const conferenceSchema = new Schema({
         country: String
     },
     ticketPrice: Number,
-    sections: [sectionSchema]
+    sections: [sectionSchema],
+    //trackovanie ucastnikov BEZ prispevku v ramci celej konfery
+    attendees: [attendeeSchema]
 }, {
     timestamps: true
 });
