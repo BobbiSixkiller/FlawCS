@@ -1,24 +1,88 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 module.exports = gql`
-    type User {
-        id: ID!
-        firstName: String!
-        lastName: String!
-        email: String!
-        password: String!
-        createdAt: String!
-        updatedAt: String!
-    }
-    type Conference {
-        id: ID!
-        attendees: [User]
-        createdAt: String!
-        updatedAt: String!
-    }
-    type Query {
-        getUsers: [User]
-        getConferences: [Conference]
-    }
+	scalar Date
+	type User {
+		id: ID!
+		firstName: String!
+		lastName: String!
+		email: String!
+		telephone: String!
+		# password: String!
+		organisation: String!
+		titleBefore: String!
+		titleAfter: String!
+		createdAt: Date!
+		updatedAt: Date!
+		billing: Billing
+		token: String
+	}
+	type Billing {
+		name: String
+		address: Address
+		ICO: String
+		DIC: String
+	}
+	type Address {
+		street: String
+		city: String
+		postalCode: String
+		country: String
+	}
+	type Location {
+		name: String!
+		address: Address!
+	}
+	type Speaker {
+		id: ID!
+		submission: Submission
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	type Submission {
+		name: String!
+		abstract: String!
+		keywords: String!
+		url: String!
+		reviewed: Boolean!
+	}
+	type Section {
+		id: ID!
+		name: String!
+		title: String!
+		garants: [User]!
+		speakers: [Speaker]!
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	type Conference {
+		id: ID!
+		name: String!
+		start: Date!
+		end: Date!
+		location: Location!
+		ticketPrice: Int!
+		sections: [Section]!
+		attendees: [User]!
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	input RegisterInput {
+		firstName: String!
+		lastName: String!
+		password: String!
+		confirmPassword: String!
+		email: String!
+		telephone: Int!
+		organisation: String!
+		titleBefore: String!
+		titleAfter: String!
+	}
+	type Query {
+		getUsers: [User]
+		getConferences: [Conference]
+	}
+	type Mutation {
+		register(registerInput: RegisterInput): User!
+	}
 `;
-

@@ -1,14 +1,5 @@
 const { model, Schema } = require('mongoose');
 
-const attendeeSchema = new Schema({
-    attendee: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
-}, {
-    timestamps: true
-});
-
 const speakerSchema = new Schema({
     speaker: {
         type: Schema.Types.ObjectId,
@@ -46,15 +37,20 @@ const conferenceSchema = new Schema({
     end: Date,
     location: {
         name: String,
-        street: String,        
-        city: String,
-        postal: String,
-        country: String
+        address: {
+            street: String,        
+            city: String,
+            postal: String,
+            country: String
+        }
     },
     ticketPrice: Number,
     sections: [sectionSchema],
     //trackovanie ucastnikov BEZ prispevku v ramci celej konfery
-    attendees: [attendeeSchema]
+    attendees: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, {
     timestamps: true
 });

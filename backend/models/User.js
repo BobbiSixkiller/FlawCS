@@ -11,10 +11,12 @@ const userSchema = new Schema({
     titleAfter: String,
     billing: {
         name: String,
-        street: String,
-        city: String,
-        postalCode: String,
-        country: String,
+        address: {
+            street: String,
+            city: String,
+            postalCode: String,
+            country: String,
+        },
         ICO: String,
         DIC: String
     }
