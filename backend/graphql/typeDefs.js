@@ -80,10 +80,14 @@ module.exports = gql`
 	}
 	type Query {
 		getUsers: [User]
+		getUser(userId: ID!): User
 		getConferences: [Conference]
+		getConference(conferenceId: ID!): Conference
 	}
 	type Mutation {
 		register(registerInput: RegisterInput): User!
 		login(email: String!, password: String!): User!
+		editUser(userId: ID!): User!
+		deleteUser(userId: ID!): String!
 	}
 `;

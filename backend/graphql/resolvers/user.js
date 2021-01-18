@@ -1,6 +1,7 @@
 const { UserInputError } = require("apollo-server");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const checkAuth = require("../../util/checkAuth");
 const User = require("../../models/User");
 const {
 	validateRegisterInput,
@@ -24,10 +25,23 @@ module.exports = {
 	Query: {
 		async getUsers() {
 			try {
-				const users = await User.find();
+				const users = await User.find().sort({ updatedAt: -1 });
 				return users;
 			} catch (err) {
-				console.log(err);
+				throw new Error(err);
+			}
+		},
+		async getUser(_, { userId }, context) {
+			try {
+				const authorized = checkAuth(context);
+				console.log(authorized);
+				const user = await User.findOne({ _id: userId });
+				if (user) {
+					return user;
+				} else {
+					throw new Error("User not found");
+				}
+			} catch (err) {
 				throw new Error(err);
 			}
 		},
