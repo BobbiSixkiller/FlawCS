@@ -2,6 +2,23 @@ const { UserInputError } = require("apollo-server");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
+const {
+	validateRegisterInput,
+	validateLoginInput,
+} = require("../../util/validation");
+
+function generateToken(user) {
+	return jwt.sign(
+		{
+			id: user.id,
+			email: user.email,
+		},
+		process.env.SECRET,
+		{
+			expiresIn: "1h",
+		}
+	);
+}
 
 module.exports = {
 	Query: {
@@ -34,46 +51,70 @@ module.exports = {
 			context,
 			info
 		) {
-			try {
-				const emailExists = await User.findOne({ email });
-				if (emailExists) {
-					throw new UserInputError("Email is already taken!", {
-						errors: {
-							email: "Submitted email address is already taken",
-						},
-					});
-				}
-
-				password = await bcrypt.hash(password, 12);
-				confirmPassword = await bcrypt.hash(confirmPassword, 12);
-				if (password !== confirmPassword) {
-					throw new UserInputError("Passwords do not match!");
-				}
-
-				const user = new User({
-					titleBefore,
-					firstName,
-					lastName,
-					titleAfter,
-					email,
-					telephone,
-					password,
-					organisation,
-				});
-
-				const res = await user.save();
-
-				const token = jwt.sign(
-					{ id: res._id, email: res.email },
-					process.env.SECRET,
-					{ expiresIn: "1h" }
-				);
-
-				return { id: res._id, ...res._doc, token };
-			} catch (err) {
-				console.log(err);
-				throw new Error(err);
+			const { valid, errors } = validateRegisterInput(
+				firstName,
+				lastName,
+				titleBefore,
+				titleAfter,
+				email,
+				telephone,
+				password,
+				confirmPassword,
+				organisation
+			);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
 			}
+
+			const emailExists = await User.findOne({ email });
+			if (emailExists) {
+				throw new UserInputError("Email taken!", {
+					errors: {
+						email: "Submitted email address is already taken",
+					},
+				});
+			}
+
+			password = await bcrypt.hash(password, 12);
+
+			const user = new User({
+				titleBefore,
+				firstName,
+				lastName,
+				titleAfter,
+				email,
+				telephone,
+				password,
+				organisation,
+			});
+
+			const res = await user.save();
+
+			const token = generateToken(res);
+
+			return { id: res._id, ...res._doc, token };
+		},
+		async login(_, { email, password }, context) {
+			const { errors, valid } = validateLoginInput(email, password);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const user = await User.findOne({ email });
+			if (!user) {
+				errors.general = "Email or password is incorrect";
+				throw new UserInputError("Wrong credentials", { errors });
+			}
+
+			const match = await bcrypt.compare(password, user.password);
+			if (!match) {
+				errors.general = "Email or password is incorrect";
+				throw new UserInputError("Wrong credentials", { errors });
+			}
+
+			const token = generateToken(user);
+
+			return { id: user._id, ...user._doc, token };
 		},
 	},
 };

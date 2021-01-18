@@ -10,8 +10,8 @@ module.exports = gql`
 		telephone: String!
 		# password: String!
 		organisation: String!
-		titleBefore: String!
-		titleAfter: String!
+		titleBefore: String
+		titleAfter: String
 		createdAt: Date!
 		updatedAt: Date!
 		billing: Billing
@@ -73,7 +73,7 @@ module.exports = gql`
 		password: String!
 		confirmPassword: String!
 		email: String!
-		telephone: Int!
+		telephone: String!
 		organisation: String!
 		titleBefore: String!
 		titleAfter: String!
@@ -84,5 +84,6 @@ module.exports = gql`
 	}
 	type Mutation {
 		register(registerInput: RegisterInput): User!
+		login(email: String!, password: String!): User!
 	}
 `;
