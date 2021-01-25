@@ -1,13 +1,17 @@
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer, makeExecutableSchema } = require("apollo-server");
+const { applyMiddleware } = require("graphql-middleware");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
+const authorization = require("./graphql/authorization");
 
 const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+	schema: applyMiddleware(
+		makeExecutableSchema({ typeDefs, resolvers }),
+		authorization
+	),
 	context: ({ req }) => ({ req }),
 });
 

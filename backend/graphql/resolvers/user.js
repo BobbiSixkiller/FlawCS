@@ -13,6 +13,7 @@ function generateToken(user) {
 		{
 			id: user.id,
 			email: user.email,
+			role: user.role,
 		},
 		process.env.SECRET,
 		{
@@ -91,6 +92,8 @@ module.exports = {
 
 			password = await bcrypt.hash(password, 12);
 
+			const users = await User.find();
+
 			const user = new User({
 				titleBefore,
 				firstName,
@@ -100,9 +103,11 @@ module.exports = {
 				telephone,
 				password,
 				organisation,
+				role: users.length === 0 ? "ADMIN" : "ATTENDEE",
 			});
 
 			const res = await user.save();
+			console.log(res);
 
 			const token = generateToken(res);
 
@@ -129,6 +134,9 @@ module.exports = {
 			const token = generateToken(user);
 
 			return { id: user._id, ...user._doc, token };
+		},
+		async deleteUser(_, { userID }, context) {
+			const authorized = checkAuth(context);
 		},
 	},
 };

@@ -8,14 +8,14 @@ module.exports = gql`
 		lastName: String!
 		email: String!
 		telephone: String!
-		# password: String!
 		organisation: String!
-		titleBefore: String
-		titleAfter: String
+		titleBefore: String!
+		titleAfter: String!
 		createdAt: Date!
 		updatedAt: Date!
 		billing: Billing
-		token: String
+		token: String!
+		role: String!
 	}
 	type Billing {
 		name: String
@@ -24,10 +24,10 @@ module.exports = gql`
 		DIC: String
 	}
 	type Address {
-		street: String
-		city: String
-		postalCode: String
-		country: String
+		street: String!
+		city: String!
+		postalCode: String!
+		country: String!
 	}
 	type Location {
 		name: String!
@@ -35,7 +35,7 @@ module.exports = gql`
 	}
 	type Speaker {
 		id: ID!
-		submission: Submission
+		submission: Submission!
 		createdAt: Date!
 		updatedAt: Date!
 	}
