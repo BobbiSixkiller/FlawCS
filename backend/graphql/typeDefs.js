@@ -11,11 +11,11 @@ module.exports = gql`
 		organisation: String!
 		titleBefore: String!
 		titleAfter: String!
-		createdAt: Date!
-		updatedAt: Date!
-		billing: Billing
+		billing: Billing!
 		token: String!
 		role: String!
+		createdAt: Date!
+		updatedAt: Date!
 	}
 	type Billing {
 		name: String
@@ -24,18 +24,46 @@ module.exports = gql`
 		DIC: String
 	}
 	type Address {
-		street: String!
-		city: String!
-		postalCode: String!
-		country: String!
+		street: String
+		city: String
+		postalCode: String
+		country: String
 	}
 	type Location {
-		name: String!
+		name: String
 		address: Address!
+		createdAt: Date
+		updatedAt: Date
+	}
+	type Host {
+		name: String
+		address: Location!
+		ICO: String
+		DIC: String
+		IBAN: String
+		SWIFT: String
+		stampUrl: String
+		createdAt: Date
+		updatedAt: Date
 	}
 	type Speaker {
 		id: ID!
-		submission: Submission!
+		submission: Submission
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	type Garant {
+		id: ID!
+		name: String!
+		garantID: Strin!
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	type Attendee {
+		id: ID!
+		name: String!
+		attendeeID: String!
+		invoiceID: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
@@ -43,7 +71,7 @@ module.exports = gql`
 		name: String!
 		abstract: String!
 		keywords: String!
-		url: String!
+		url: String
 		reviewed: Boolean!
 	}
 	type Section {
@@ -61,6 +89,7 @@ module.exports = gql`
 		start: Date!
 		end: Date!
 		location: Location!
+		host: Host!
 		ticketPrice: Int!
 		sections: [Section]!
 		attendees: [User]!

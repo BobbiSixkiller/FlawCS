@@ -21,6 +21,7 @@ const hostSchema = new Schema(
 		DIC: String,
 		IBAN: String,
 		SWIFT: String,
+		stampUrl: String,
 	},
 	{ timestamps: true }
 );
