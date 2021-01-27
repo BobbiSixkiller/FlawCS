@@ -32,4 +32,18 @@ const userSchema = new Schema(
 	}
 );
 
+userSchema.virtual("conferences", {
+	ref: "Conference",
+	localField: "_id",
+	foreignField: "attendees.attendee",
+	justOne: false,
+});
+
+userSchema.virtual("invoices", {
+	ref: "Invoice",
+	localField: "_id",
+	foreignField: "user",
+	justOne: false,
+});
+
 module.exports = model("User", userSchema);

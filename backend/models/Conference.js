@@ -1,5 +1,6 @@
 const { model, Schema } = require("mongoose");
-
+const location = require("./utilSchemas/location");
+//test importu utility schemy
 const locationSchema = new Schema(
 	{
 		name: String,
@@ -15,8 +16,7 @@ const locationSchema = new Schema(
 
 const hostSchema = new Schema(
 	{
-		name: String,
-		address: { locationSchema },
+		location: { locationSchema },
 		ICO: String,
 		DIC: String,
 		IBAN: String,
@@ -86,11 +86,13 @@ const conferenceSchema = new Schema(
 		name: String,
 		start: Date,
 		end: Date,
-		registrationStart: Date,
-		registrationEnd: Date,
+		regStart: Date,
+		regEnd: Date,
 		ticketPrice: Number,
-		location: { locationSchema },
-		host: { hostSchema },
+		//location: { locationSchema },
+		//host: { hostSchema },
+		location: { location },
+		host: { type: Schema.Types.ObjectId, ref: "Host" },
 		sections: [sectionSchema],
 		attendees: [attendeeSchema],
 	},

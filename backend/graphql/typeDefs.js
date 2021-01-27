@@ -55,7 +55,7 @@ module.exports = gql`
 	type Garant {
 		id: ID!
 		name: String!
-		garantID: Strin!
+		garantID: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
