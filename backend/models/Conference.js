@@ -69,11 +69,20 @@ const garantSchema = new Schema(
 	{ timestamps: true }
 );
 
+const coordinatorSchema = new Schema(
+	{
+		name: String,
+		coordinator: { type: Schema.Types.ObjectId, ref: "User" },
+	},
+	{ timestamps: true }
+);
+
 const sectionSchema = new Schema(
 	{
 		name: String,
 		title: String,
 		garants: [garantSchema],
+		coordinators: [coordinatorSchema],
 		speakers: [speakerSchema],
 	},
 	{

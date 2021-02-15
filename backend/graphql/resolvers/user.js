@@ -1,7 +1,7 @@
 const { UserInputError } = require("apollo-server");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const checkAuth = require("../../util/checkAuth");
+//const checkAuth = require("../../util/checkAuth");
 const User = require("../../models/User");
 const {
 	validateRegisterInput,
@@ -103,7 +103,7 @@ module.exports = {
 				telephone,
 				password,
 				organisation,
-				role: users.length === 0 ? "ADMIN" : "ATTENDEE",
+				role: users.length === 0 ? "ADMIN" : "BASIC",
 			});
 
 			const res = await user.save();
@@ -135,8 +135,6 @@ module.exports = {
 
 			return { id: user._id, ...user._doc, token };
 		},
-		async deleteUser(_, { userID }, context) {
-			const authorized = checkAuth(context);
-		},
+		async deleteUser(_, { userID }, context) {},
 	},
 };
