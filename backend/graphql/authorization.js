@@ -14,7 +14,7 @@ const isAuthenticated = rule({ cache: "contextual" })(
 	}
 );
 
-const isOwnUser = rule()((parent, { userId }, { user }) => {
+const isOwnUser = rule({ cache: "strict" })((parent, { userId }, { user }) => {
 	return userId === user.id;
 });
 
@@ -27,12 +27,14 @@ const isSupervisor = rule({ cache: "contextual" })((parent, args, context) => {
 });
 
 //needs testing once graphQL resolvers are implemented
-const isGarant = rule()(async (parent, args, context) => {
-	const garant = await Conference.findOne({
-		"sections.garants.garant": context.user.id,
-	});
-	return garant !== null;
-});
+const isGarant = rule({ cache: "contextual" })(
+	async (parent, args, context) => {
+		const garant = await Conference.findOne({
+			"sections.garants.garant": context.user.id,
+		});
+		return garant !== null;
+	}
+);
 
 module.exports = shield(
 	{
