@@ -15,8 +15,7 @@ const server = new ApolloServer({
 	),
 	context: ({ req }) => {
 		const user = checkAuth(req);
-		console.log("context");
-		console.log(user);
+
 		return { user };
 	},
 });
