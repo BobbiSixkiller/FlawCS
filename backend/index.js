@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
+const checkAuth = require("./util/checkAuth");
 const authorization = require("./graphql/authorization");
 
 const server = new ApolloServer({
@@ -12,7 +13,12 @@ const server = new ApolloServer({
 		makeExecutableSchema({ typeDefs, resolvers }),
 		authorization
 	),
-	context: ({ req }) => ({ req }),
+	context: ({ req }) => {
+		const user = checkAuth(req);
+		console.log("context");
+		console.log(user);
+		return { user };
+	},
 });
 
 mongoose
