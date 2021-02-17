@@ -18,19 +18,19 @@ const isOwnUser = rule({ cache: "strict" })((parent, { userId }, { user }) => {
 	return userId === user.id;
 });
 
-const isAdmin = rule({ cache: "contextual" })((parent, args, context) => {
-	return checkRole(context.user, "ADMIN");
+const isAdmin = rule({ cache: "contextual" })((parent, args, { user }) => {
+	return checkRole(user, "ADMIN");
 });
 
-const isSupervisor = rule({ cache: "contextual" })((parent, args, context) => {
-	return checkRole(context.user, "SUPERVISOR");
+const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
+	return checkRole(user, "SUPERVISOR");
 });
 
 //needs testing once graphQL resolvers are implemented
 const isGarant = rule({ cache: "contextual" })(
-	async (parent, args, context) => {
+	async (parent, args, { user }) => {
 		const garant = await Conference.findOne({
-			"sections.garants.garant": context.user.id,
+			"sections.garants.garant": user.id,
 		});
 		return garant !== null;
 	}
