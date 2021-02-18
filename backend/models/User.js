@@ -12,14 +12,15 @@ const userSchema = new Schema(
 		titleAfter: String,
 		billing: {
 			name: String,
+			ICO: String,
+			DIC: String,
+			ICDPH: String,
 			address: {
 				street: String,
 				city: String,
 				postalCode: String,
 				country: String,
 			},
-			ICO: String,
-			DIC: String,
 		},
 		role: {
 			type: String,

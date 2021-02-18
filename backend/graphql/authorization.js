@@ -1,4 +1,4 @@
-const { and, or, rule, shield, allow } = require("graphql-shield");
+const { and, or, rule, shield } = require("graphql-shield");
 const Conference = require("../models/Conference");
 
 function checkRole(user, role) {
@@ -41,6 +41,10 @@ module.exports = shield(
 		Query: {
 			getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+		},
+		Mutation: {
+			deleteUser: and(isAuthenticated, isAdmin),
+			updateUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
 		},
 	},
 	{ allowExternalErrors: true }

@@ -45,6 +45,26 @@ module.exports = {
 		},
 	},
 	Mutation: {
+		async deleteUser(_, { userId }, context) {
+			try {
+				const user = await User.findOne({ _id: userId });
+				if (user) {
+					await user.remove();
+					return "User has been deleted";
+				} else {
+					throw new Error("User not found");
+				}
+			} catch (err) {
+				throw new Error(err);
+			}
+		},
+		async updateUser(_, { userId }, context) {
+			try {
+				const user = await User.findOne({ _id: userId });
+			} catch (err) {
+				throw new Error(err);
+			}
+		},
 		async register(
 			parent,
 			{
@@ -58,6 +78,13 @@ module.exports = {
 					password,
 					confirmPassword,
 					organisation,
+					name,
+					DIC,
+					ICO,
+					street,
+					city,
+					postalCode,
+					country,
 				},
 			},
 			context,
@@ -100,11 +127,17 @@ module.exports = {
 				telephone,
 				password,
 				organisation,
+				"billing.name": name,
+				"billing.DIC": DIC,
+				"billing.ICO": ICO,
+				"billing.address.street": street,
+				"billing.address.city": city,
+				"billing.address.postalCode": postalCode,
+				"billing.address.country": country,
 				role: users.length === 0 ? "ADMIN" : "BASIC",
 			});
 
 			const res = await user.save();
-			console.log(res);
 
 			const token = generateToken(res);
 
@@ -132,6 +165,5 @@ module.exports = {
 
 			return { id: user._id, ...user._doc, token };
 		},
-		async deleteUser(_, { userID }, context) {},
 	},
 };

@@ -106,7 +106,15 @@ module.exports = gql`
 		organisation: String!
 		titleBefore: String!
 		titleAfter: String!
+		name: String!
+		DIC: String
+		ICO: String
+		street: String!
+		city: String!
+		postalCode: Int!
+		country: String!
 	}
+
 	type Query {
 		getUsers: [User]
 		getUser(userId: ID!): User
@@ -116,7 +124,7 @@ module.exports = gql`
 	type Mutation {
 		register(registerInput: RegisterInput): User!
 		login(email: String!, password: String!): User!
-		editUser(userId: ID!): User!
+		updateUser(userId: ID!): User!
 		deleteUser(userId: ID!): String!
 	}
 `;
