@@ -68,44 +68,50 @@ module.exports = {
 		async register(
 			parent,
 			{
-				registerInput: {
-					firstName,
-					lastName,
-					titleBefore,
-					titleAfter,
-					email,
-					telephone,
-					password,
-					confirmPassword,
-					organisation,
-					name,
-					DIC,
-					ICO,
-					street,
-					city,
-					postalCode,
-					country,
-				},
+				// registerInput: {
+				// 	firstName,
+				// 	lastName,
+				// 	titleBefore,
+				// 	titleAfter,
+				// 	email,
+				// 	telephone,
+				// 	password,
+				// 	confirmPassword,
+				// 	organisation,
+				// 	name,
+				// 	DIC,
+				// 	ICO,
+				// 	street,
+				// 	city,
+				// 	postalCode,
+				// 	country,
+				// },
+				registerInput,
+				billingInput,
 			},
 			context,
 			info
 		) {
-			const { valid, errors } = validateRegisterInput(
-				firstName,
-				lastName,
-				titleBefore,
-				titleAfter,
-				email,
-				telephone,
-				password,
-				confirmPassword,
-				organisation
-			);
+			// const { valid, errors } = validateRegisterInput(
+			// 	firstName,
+			// 	lastName,
+			// 	titleBefore,
+			// 	titleAfter,
+			// 	email,
+			// 	telephone,
+			// 	password,
+			// 	confirmPassword,
+			// 	organisation
+			// );
+			const { valid, errors } = validateRegisterInput({
+				...registerInput,
+				...billingInput,
+			});
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
 
-			const emailExists = await User.findOne({ email });
+			const emailExists = await User.findOne({ email: registerInput.email });
 			if (emailExists) {
 				throw new UserInputError("Email taken!", {
 					errors: {
@@ -114,26 +120,26 @@ module.exports = {
 				});
 			}
 
-			password = await bcrypt.hash(password, 12);
+			password = await bcrypt.hash(registerInput.password, 12);
 
 			const users = await User.find();
 
 			const user = new User({
-				titleBefore,
-				firstName,
-				lastName,
-				titleAfter,
-				email,
-				telephone,
+				titleBefore: registerInput.titleBefore,
+				firstName: registerInput.firstName,
+				lastName: registerInput.lastName,
+				titleAfter: registerInput.titleAfter,
+				email: registerInput.email,
+				telephone: registerInput.telephone,
 				password,
-				organisation,
-				"billing.name": name,
-				"billing.DIC": DIC,
-				"billing.ICO": ICO,
-				"billing.address.street": street,
-				"billing.address.city": city,
-				"billing.address.postalCode": postalCode,
-				"billing.address.country": country,
+				organisation: registerInput.organisation,
+				"billing.name": billingInput.name,
+				"billing.DIC": billingInput.DIC,
+				"billing.ICO": billingInput.ICO,
+				"billing.address.street": billingInput.street,
+				"billing.address.city": billingInput.city,
+				"billing.address.postalCode": billingInput.postalCode,
+				"billing.address.country": billingInput.country,
 				role: users.length === 0 ? "ADMIN" : "BASIC",
 			});
 

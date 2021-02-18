@@ -106,12 +106,14 @@ module.exports = gql`
 		organisation: String!
 		titleBefore: String!
 		titleAfter: String!
+	}
+	input BillingInput {
 		name: String!
 		DIC: String
 		ICO: String
 		street: String!
 		city: String!
-		postalCode: Int!
+		postalCode: String!
 		country: String!
 	}
 
@@ -122,7 +124,7 @@ module.exports = gql`
 		getConference(conferenceId: ID!): Conference
 	}
 	type Mutation {
-		register(registerInput: RegisterInput): User!
+		register(registerInput: RegisterInput, billingInput: BillingInput): User!
 		login(email: String!, password: String!): User!
 		updateUser(userId: ID!): User!
 		deleteUser(userId: ID!): String!
