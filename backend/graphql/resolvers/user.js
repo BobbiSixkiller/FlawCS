@@ -2,10 +2,7 @@ const { UserInputError } = require("apollo-server");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
-const {
-	validateRegisterInput,
-	validateLoginInput,
-} = require("../../util/validation");
+const { validateRegister, validateLogin } = require("../../util/validation");
 
 function generateToken(user) {
 	return jwt.sign(
@@ -65,45 +62,8 @@ module.exports = {
 				throw new Error(err);
 			}
 		},
-		async register(
-			parent,
-			{
-				// registerInput: {
-				// 	firstName,
-				// 	lastName,
-				// 	titleBefore,
-				// 	titleAfter,
-				// 	email,
-				// 	telephone,
-				// 	password,
-				// 	confirmPassword,
-				// 	organisation,
-				// 	name,
-				// 	DIC,
-				// 	ICO,
-				// 	street,
-				// 	city,
-				// 	postalCode,
-				// 	country,
-				// },
-				registerInput,
-				billingInput,
-			},
-			context,
-			info
-		) {
-			// const { valid, errors } = validateRegisterInput(
-			// 	firstName,
-			// 	lastName,
-			// 	titleBefore,
-			// 	titleAfter,
-			// 	email,
-			// 	telephone,
-			// 	password,
-			// 	confirmPassword,
-			// 	organisation
-			// );
-			const { valid, errors } = validateRegisterInput({
+		async register(parent, { registerInput, billingInput }, context, info) {
+			const { valid, errors } = validateRegister({
 				...registerInput,
 				...billingInput,
 			});
@@ -133,6 +93,7 @@ module.exports = {
 				telephone: registerInput.telephone,
 				password,
 				organisation: registerInput.organisation,
+				role: users.length === 0 ? "ADMIN" : registerInput.role,
 				"billing.name": billingInput.name,
 				"billing.DIC": billingInput.DIC,
 				"billing.ICO": billingInput.ICO,
@@ -140,7 +101,6 @@ module.exports = {
 				"billing.address.city": billingInput.city,
 				"billing.address.postalCode": billingInput.postalCode,
 				"billing.address.country": billingInput.country,
-				role: users.length === 0 ? "ADMIN" : "BASIC",
 			});
 
 			const res = await user.save();
@@ -150,7 +110,7 @@ module.exports = {
 			return { id: res._id, ...res._doc, token };
 		},
 		async login(_, { email, password }, context) {
-			const { errors, valid } = validateLoginInput(email, password);
+			const { errors, valid } = validateLogin(email, password);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}

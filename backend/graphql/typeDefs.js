@@ -111,6 +111,7 @@ module.exports = gql`
 		name: String!
 		DIC: String
 		ICO: String
+		ICDPH: String
 		street: String!
 		city: String!
 		postalCode: String!
