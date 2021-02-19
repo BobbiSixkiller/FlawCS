@@ -12,7 +12,7 @@ module.exports = gql`
 		titleBefore: String!
 		titleAfter: String!
 		billing: Billing!
-		token: String!
+		token: String
 		role: String!
 		createdAt: Date!
 		updatedAt: Date!
@@ -106,6 +106,7 @@ module.exports = gql`
 		organisation: String!
 		titleBefore: String!
 		titleAfter: String!
+		role: String
 	}
 	input BillingInput {
 		name: String!
@@ -127,7 +128,11 @@ module.exports = gql`
 	type Mutation {
 		register(registerInput: RegisterInput, billingInput: BillingInput): User!
 		login(email: String!, password: String!): User!
-		updateUser(userId: ID!): User!
+		updateUser(
+			userId: ID!
+			userInput: RegisterInput
+			billingInput: BillingInput
+		): User!
 		deleteUser(userId: ID!): String!
 	}
 `;

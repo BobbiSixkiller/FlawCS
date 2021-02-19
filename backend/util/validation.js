@@ -35,6 +35,18 @@ module.exports.validateRegister = (fields) => {
 	if (fields.name.trim() === "") {
 		errors.name = "Please submit your billing name";
 	}
+	if (fields.street.trim() === "") {
+		errors.street = "Please submit your address";
+	}
+	if (fields.city.trim() === "") {
+		errors.city = "Please submit your city";
+	}
+	if (fields.postalCode.trim() === "") {
+		errors.postaCode = "Please submit your postal code";
+	}
+	if (fields.country.trim() === "") {
+		errors.country = "Please submit your country";
+	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
 };

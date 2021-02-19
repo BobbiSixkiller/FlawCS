@@ -55,9 +55,42 @@ module.exports = {
 				throw new Error(err);
 			}
 		},
-		async updateUser(_, { userId }, context) {
+		async updateUser(_, { userId, userInput, billingInput }, context) {
 			try {
-				const user = await User.findOne({ _id: userId });
+				const { valid, errors } = validateRegister({
+					...userInput,
+					...billingInput,
+				});
+				if (!valid) {
+					throw new UserInputError("Errors", { errors });
+				}
+
+				const password = await bcrypt.hash(userInput.password, 12);
+
+				//const user = await User.findOne({ _id: userId });
+				const update = {
+					titleBefore: userInput.titleBefore,
+					firstName: userInput.firstName,
+					lastName: userInput.lastName,
+					titleAfter: userInput.titleAfter,
+					email: userInput.email,
+					telephone: userInput.telephone,
+					password,
+					organisation: userInput.organisation,
+					role: userInput.role,
+					"billing.name": billingInput.name,
+					"billing.DIC": billingInput.DIC,
+					"billing.ICO": billingInput.ICO,
+					"billing.address.street": billingInput.street,
+					"billing.address.city": billingInput.city,
+					"billing.address.postalCode": billingInput.postalCode,
+					"billing.address.country": billingInput.country,
+				};
+				const user = await User.findOneAndUpdate({ _id: userId }, update, {
+					new: true,
+				});
+
+				return user;
 			} catch (err) {
 				throw new Error(err);
 			}
@@ -67,6 +100,7 @@ module.exports = {
 				...registerInput,
 				...billingInput,
 			});
+
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
@@ -80,9 +114,9 @@ module.exports = {
 				});
 			}
 
-			password = await bcrypt.hash(registerInput.password, 12);
+			const password = await bcrypt.hash(registerInput.password, 12);
 
-			const users = await User.find();
+			const users = await User.countDocuments();
 
 			const user = new User({
 				titleBefore: registerInput.titleBefore,
@@ -93,7 +127,6 @@ module.exports = {
 				telephone: registerInput.telephone,
 				password,
 				organisation: registerInput.organisation,
-				role: users.length === 0 ? "ADMIN" : registerInput.role,
 				"billing.name": billingInput.name,
 				"billing.DIC": billingInput.DIC,
 				"billing.ICO": billingInput.ICO,
@@ -101,6 +134,7 @@ module.exports = {
 				"billing.address.city": billingInput.city,
 				"billing.address.postalCode": billingInput.postalCode,
 				"billing.address.country": billingInput.country,
+				role: users === 0 ? "ADMIN" : registerInput.role,
 			});
 
 			const res = await user.save();

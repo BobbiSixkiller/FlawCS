@@ -10,6 +10,11 @@ const userSchema = new Schema(
 		organisation: String,
 		titleBefore: String,
 		titleAfter: String,
+		role: {
+			type: String,
+			enum: ["BASIC", "SUPERVISOR", "ADMIN"],
+			default: "BASIC",
+		},
 		billing: {
 			name: String,
 			ICO: String,
@@ -21,11 +26,6 @@ const userSchema = new Schema(
 				postalCode: String,
 				country: String,
 			},
-		},
-		role: {
-			type: String,
-			enum: ["BASIC", "SUPERVISOR", "ADMIN"],
-			default: "BASIC",
 		},
 	},
 	{
