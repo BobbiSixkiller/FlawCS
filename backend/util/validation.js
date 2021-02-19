@@ -8,15 +8,23 @@ module.exports.validateRegister = (fields) => {
 	}
 	if (fields.firstName.trim() === "") {
 		errors.firstName = "Please submit your first name.";
+	} else if (fields.firstName.trim() > 50) {
+		errors.firstName = "Maximum length for first name is 50 characters.";
 	}
 	if (fields.lastName.trim() === "") {
 		errors.lastName = "Please submit your last name.";
+	} else if (fields.lastName.trim() > 50) {
+		errors.lastName = "Maximum length for last name is 50 characters.";
 	}
 	if (fields.organisation.trim() === "") {
 		errors.organisation = "Please submit name of your organisation.";
+	} else if (fields.organisation.trim() > 100) {
+		errors.organisation = "Maximum length for first name is 100 characters.";
 	}
 	if (fields.telephone.trim() === "") {
 		errors.telephone = "Please submit your telephone number.";
+	} else if (fields.telephone.replace(/\s+/g, "") > 13) {
+		errors.telephone = "Maximum length for first name is 13 characters.";
 	}
 	if (fields.email.trim() === "") {
 		errors.email = "Please submit your email address.";

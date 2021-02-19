@@ -2,6 +2,7 @@ const { gql } = require("apollo-server");
 
 module.exports = gql`
 	scalar Date
+
 	type User {
 		id: ID!
 		firstName: String!
@@ -97,26 +98,26 @@ module.exports = gql`
 		updatedAt: Date!
 	}
 	input RegisterInput {
-		firstName: String!
-		lastName: String!
-		password: String!
-		confirmPassword: String!
-		email: String!
-		telephone: String!
-		organisation: String!
-		titleBefore: String!
-		titleAfter: String!
+		firstName: String
+		lastName: String
+		password: String
+		confirmPassword: String
+		email: String
+		telephone: String
+		organisation: String
+		titleBefore: String
+		titleAfter: String
 		role: String
 	}
 	input BillingInput {
-		name: String!
+		name: String
 		DIC: String
 		ICO: String
 		ICDPH: String
-		street: String!
-		city: String!
-		postalCode: String!
-		country: String!
+		street: String
+		city: String
+		postalCode: String
+		country: String
 	}
 
 	type Query {

@@ -67,7 +67,6 @@ module.exports = {
 
 				const password = await bcrypt.hash(userInput.password, 12);
 
-				//const user = await User.findOne({ _id: userId });
 				const update = {
 					titleBefore: userInput.titleBefore,
 					firstName: userInput.firstName,
