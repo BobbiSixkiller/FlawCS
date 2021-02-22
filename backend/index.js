@@ -3,7 +3,7 @@ const { applyMiddleware } = require("graphql-middleware");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const typeDefs = require("./graphql/typeDefs");
+const typeDefs = require("./graphql/typeDefinitions");
 const resolvers = require("./graphql/resolvers");
 const checkAuth = require("./util/checkAuth");
 const authorization = require("./graphql/authorization");

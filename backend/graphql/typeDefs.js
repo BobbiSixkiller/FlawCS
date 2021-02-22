@@ -25,10 +25,10 @@ module.exports = gql`
 		DIC: String
 	}
 	type Address {
-		street: String
-		city: String
-		postalCode: String
-		country: String
+		street: String!
+		city: String!
+		postalCode: String!
+		country: String!
 	}
 	type Location {
 		name: String
@@ -119,6 +119,14 @@ module.exports = gql`
 		postalCode: String
 		country: String
 	}
+	input ConferenceInput {
+		name: String
+		start: Date
+		end: Date
+		regStart: Date
+		regEnd: Date
+		ticketPrice: Float
+	}
 
 	type Query {
 		getUsers: [User]
@@ -135,5 +143,6 @@ module.exports = gql`
 			billingInput: BillingInput
 		): User!
 		deleteUser(userId: ID!): String!
+		createConference(conferenceInput: ConferenceInput): Conference!
 	}
 `;

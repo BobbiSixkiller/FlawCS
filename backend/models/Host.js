@@ -3,8 +3,9 @@ const location = require("./utilSchemas/location");
 
 const hostSchema = new Schema(
 	{
-		location: { location },
+		location: location,
 		ICO: String,
+		ICDPH: String,
 		DIC: String,
 		IBAN: String,
 		SWIFT: String,

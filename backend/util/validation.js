@@ -23,8 +23,8 @@ module.exports.validateRegister = (fields) => {
 	}
 	if (fields.telephone.trim() === "") {
 		errors.telephone = "Please submit your telephone number.";
-	} else if (fields.telephone.replace(/\s+/g, "") > 13) {
-		errors.telephone = "Maximum length for first name is 13 characters.";
+	} else if (fields.telephone.replace(/\s+/g, "").length > 13) {
+		errors.telephone = "Maximum length for telephone number is 13 characters.";
 	}
 	if (fields.email.trim() === "") {
 		errors.email = "Please submit your email address.";
@@ -49,8 +49,8 @@ module.exports.validateRegister = (fields) => {
 	if (fields.city.trim() === "") {
 		errors.city = "Please submit your city";
 	}
-	if (fields.postalCode.trim() === "") {
-		errors.postaCode = "Please submit your postal code";
+	if (fields.postal.trim() === "") {
+		errors.postal = "Please submit your postal code";
 	}
 	if (fields.country.trim() === "") {
 		errors.country = "Please submit your country";

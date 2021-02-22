@@ -1,12 +1,7 @@
 const { Schema } = require("mongoose");
+const address = require("./address");
 
-module.exports = new Schema(
-	{
-		name: String,
-		street: String,
-		city: String,
-		postal: String,
-		country: String,
-	},
-	{ timestamps: true }
-);
+module.exports = new Schema({
+	name: String,
+	address: { address },
+});

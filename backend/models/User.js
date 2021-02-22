@@ -1,4 +1,5 @@
 const { model, Schema } = require("mongoose");
+const address = require("./utilSchemas/address");
 
 const userSchema = new Schema(
 	{
@@ -20,12 +21,7 @@ const userSchema = new Schema(
 			ICO: String,
 			DIC: String,
 			ICDPH: String,
-			address: {
-				street: String,
-				city: String,
-				postalCode: String,
-				country: String,
-			},
+			address: address,
 		},
 	},
 	{

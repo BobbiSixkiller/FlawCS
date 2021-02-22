@@ -1,17 +1,11 @@
 const { Schema, Model } = require("mongoose");
-
-const addressSchema = new Schema({
-	street: String,
-	city: String,
-	postal: String,
-	country: String,
-});
+const address = require("./utilSchemas/address");
 
 const invoiceSchema = new Schema(
 	{
 		issuer: {
 			name: String,
-			address: { addressSchema },
+			address: address,
 			ICO: String,
 			ICDPH: String,
 			DIC: String,
@@ -21,7 +15,7 @@ const invoiceSchema = new Schema(
 		},
 		payer: {
 			name: String,
-			address: { addressSchema },
+			address: address,
 			ICO: String,
 			ICDPH: String,
 			DIC: String,

@@ -2,31 +2,6 @@ const { model, Schema } = require("mongoose");
 //test importu utility schemy
 const location = require("./utilSchemas/location");
 
-// const locationSchema = new Schema(
-// 	{
-// 		name: String,
-// 		address: {
-// 			street: String,
-// 			city: String,
-// 			postal: String,
-// 			country: String,
-// 		},
-// 	},
-// 	{ timestamps: true }
-// );
-
-// const hostSchema = new Schema(
-// 	{
-// 		location: { locationSchema },
-// 		ICO: String,
-// 		DIC: String,
-// 		IBAN: String,
-// 		SWIFT: String,
-// 		stampUrl: String,
-// 	},
-// 	{ timestamps: true }
-// );
-
 const attendeeSchema = new Schema(
 	{
 		name: String,
@@ -99,8 +74,6 @@ const conferenceSchema = new Schema(
 		regStart: Date,
 		regEnd: Date,
 		ticketPrice: Number,
-		//location: { locationSchema },
-		//host: { hostSchema },
 		location: { location },
 		host: { type: Schema.Types.ObjectId, ref: "Host" },
 		sections: [sectionSchema],
