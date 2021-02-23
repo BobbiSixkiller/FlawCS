@@ -1,8 +1,9 @@
 const { gql } = require("apollo-server");
 module.exports = gql`
 	type Host {
+		id: ID!
 		name: String!
-		address: Location
+		address: Address
 		ICO: String!
 		ICDPH: String!
 		DIC: String!
@@ -13,20 +14,27 @@ module.exports = gql`
 		updatedAt: Date!
 	}
 
-	input LocationInput {
+	input HostInput {
 		name: String!
 		street: String!
 		city: String!
 		postal: String!
 		country: String!
-	}
-	input HostInput {
-		name: String!
 		ICO: String!
 		ICDPH: String!
 		DIC: String!
 		IBAN: String!
 		SWIFT: String!
 		stampUrl: String!
+	}
+
+	extend type Query {
+		getHosts: [Host]
+		getHost(hostId: ID!): Host
+	}
+	extend type Mutation {
+		createHost(hostInput: HostInput): Host!
+		updateHost(hostId: ID!, hostInput: HostInput): Host!
+		deleteHost(hostId: ID!): String!
 	}
 `;

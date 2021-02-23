@@ -1,9 +1,10 @@
 const { model, Schema } = require("mongoose");
-const location = require("./utilSchemas/location");
+const { address } = require("./utilSchemas");
 
 const hostSchema = new Schema(
 	{
-		location: location,
+		name: String,
+		address,
 		ICO: String,
 		ICDPH: String,
 		DIC: String,

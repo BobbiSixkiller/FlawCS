@@ -38,12 +38,16 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type Venue {
+		name: String!
+		address: Address
+	}
 	type Conference {
 		id: ID!
 		name: String!
 		start: Date!
 		end: Date!
-		location: Location!
+		venue: Venue
 		host: Host!
 		ticketPrice: Int!
 		sections: [Section]!
@@ -67,5 +71,7 @@ module.exports = gql`
 	}
 	extend type Mutation {
 		createConference(conferenceInput: ConferenceInput): Conference!
+		updateConference(conferenceId: ID!): Conference!
+		deleteConference(conferenceId: ID!): String!
 	}
 `;

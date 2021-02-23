@@ -28,7 +28,7 @@ module.exports = {
 				throw new Error(err);
 			}
 		},
-		async getUser(_, { userId }, context) {
+		async getUser(_parent, { userId }, _context, _info) {
 			try {
 				const user = await User.findOne({ _id: userId });
 				if (user) {
@@ -42,146 +42,134 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async deleteUser(_, { userId }, context) {
-			try {
-				const user = await User.findOne({ _id: userId });
-				if (user) {
-					await user.remove();
-					return "User has been deleted";
-				} else {
-					throw new Error("User not found.");
-				}
-			} catch (err) {
-				throw new Error(err);
+		async deleteUser(_, { userId }) {
+			const user = await User.findOne({ _id: userId });
+			if (user) {
+				await user.remove();
+				return "User has been deleted";
+			} else {
+				throw new Error("User not found.");
 			}
 		},
-		async updateUser(_, { userId, userInput, billingInput }, context) {
-			try {
-				const { valid, errors } = validateRegister({
-					...userInput,
-					...billingInput,
+		async updateUser(_, { userId, userInput, billingInput }) {
+			const { valid, errors } = validateRegister({
+				...userInput,
+				...billingInput,
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const emailExists = await User.findOne({ email: userInput.email });
+			if (emailExists) {
+				throw new UserInputError("Email taken!", {
+					errors: {
+						email: "Submitted email address is already taken",
+					},
 				});
-				if (!valid) {
-					throw new UserInputError("Errors", { errors });
-				}
+			}
 
-				const emailExists = await User.findOne({ email: userInput.email });
-				if (emailExists) {
-					throw new UserInputError("Email taken!", {
-						errors: {
-							email: "Submitted email address is already taken",
-						},
-					});
-				}
+			const password = await bcrypt.hash(userInput.password, 12);
 
-				const password = await bcrypt.hash(userInput.password, 12);
+			const update = {
+				titleBefore: userInput.titleBefore,
+				firstName: userInput.firstName,
+				lastName: userInput.lastName,
+				titleAfter: userInput.titleAfter,
+				email: userInput.email,
+				telephone: userInput.telephone,
+				password,
+				organisation: userInput.organisation,
+				role: userInput.role,
+				"billing.name": billingInput.name,
+				"billing.DIC": billingInput.DIC,
+				"billing.ICO": billingInput.ICO,
+				"billing.ICDPH": billingInput.ICDPH,
+				"billing.address.street": billingInput.street,
+				"billing.address.city": billingInput.city,
+				"billing.address.postal": billingInput.postal,
+				"billing.address.country": billingInput.country,
+			};
+			const user = await User.findOneAndUpdate({ _id: userId }, update, {
+				new: true,
+			});
 
-				const update = {
-					titleBefore: userInput.titleBefore,
-					firstName: userInput.firstName,
-					lastName: userInput.lastName,
-					titleAfter: userInput.titleAfter,
-					email: userInput.email,
-					telephone: userInput.telephone,
-					password,
-					organisation: userInput.organisation,
-					role: userInput.role,
-					"billing.name": billingInput.name,
-					"billing.DIC": billingInput.DIC,
-					"billing.ICO": billingInput.ICO,
-					"billing.ICDPH": billingInput.ICDPH,
-					"billing.address.street": billingInput.street,
-					"billing.address.city": billingInput.city,
-					"billing.address.postal": billingInput.postal,
-					"billing.address.country": billingInput.country,
-				};
-				const user = await User.findOneAndUpdate({ _id: userId }, update, {
-					new: true,
-				});
-
+			if (user) {
 				return user;
-			} catch (err) {
-				throw new Error(err);
+			} else {
+				throw new Error("User not found");
 			}
 		},
-		async register(parent, { registerInput, billingInput }, context, info) {
-			try {
-				const { valid, errors } = validateRegister({
-					...registerInput,
-					...billingInput,
-				});
+		async register(_, { registerInput, billingInput }) {
+			const { valid, errors } = validateRegister({
+				...registerInput,
+				...billingInput,
+			});
 
-				if (!valid) {
-					throw new UserInputError("Errors", { errors });
-				}
-
-				const emailExists = await User.findOne({ email: registerInput.email });
-				if (emailExists) {
-					throw new UserInputError("Email taken!", {
-						errors: {
-							email: "Submitted email address is already taken",
-						},
-					});
-				}
-
-				const password = await bcrypt.hash(registerInput.password, 12);
-
-				const users = await User.countDocuments();
-
-				const user = new User({
-					titleBefore: registerInput.titleBefore,
-					firstName: registerInput.firstName,
-					lastName: registerInput.lastName,
-					titleAfter: registerInput.titleAfter,
-					email: registerInput.email,
-					telephone: registerInput.telephone,
-					password,
-					organisation: registerInput.organisation,
-					"billing.name": billingInput.name,
-					"billing.DIC": billingInput.DIC,
-					"billing.ICO": billingInput.ICO,
-					"billing.ICDPH": billingInput.ICDPH,
-					"billing.address.street": billingInput.street,
-					"billing.address.city": billingInput.city,
-					"billing.address.postal": billingInput.postal,
-					"billing.address.country": billingInput.country,
-					role: users === 0 ? "ADMIN" : registerInput.role,
-				});
-
-				const res = await user.save();
-
-				const token = generateToken(res);
-
-				return { id: res._id, ...res._doc, token };
-			} catch (err) {
-				throw new Error(err);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
 			}
+
+			const emailExists = await User.findOne({ email: registerInput.email });
+			if (emailExists) {
+				throw new UserInputError("Email taken!", {
+					errors: {
+						email: "Submitted email address is already taken",
+					},
+				});
+			}
+
+			const password = await bcrypt.hash(registerInput.password, 12);
+
+			const users = await User.countDocuments();
+
+			const user = new User({
+				titleBefore: registerInput.titleBefore,
+				firstName: registerInput.firstName,
+				lastName: registerInput.lastName,
+				titleAfter: registerInput.titleAfter,
+				email: registerInput.email,
+				telephone: registerInput.telephone,
+				password,
+				organisation: registerInput.organisation,
+				"billing.name": billingInput.name,
+				"billing.DIC": billingInput.DIC,
+				"billing.ICO": billingInput.ICO,
+				"billing.ICDPH": billingInput.ICDPH,
+				"billing.address.street": billingInput.street,
+				"billing.address.city": billingInput.city,
+				"billing.address.postal": billingInput.postal,
+				"billing.address.country": billingInput.country,
+				role: users === 0 ? "ADMIN" : registerInput.role,
+			});
+
+			const res = await user.save();
+
+			const token = generateToken(res);
+
+			return { id: res._id, ...res._doc, token };
 		},
-		async login(_, { email, password }, context) {
-			try {
-				const { errors, valid } = validateLogin(email, password);
-				if (!valid) {
-					throw new UserInputError("Errors", { errors });
-				}
-
-				const user = await User.findOne({ email });
-				if (!user) {
-					errors.general = "Email or password is incorrect";
-					throw new UserInputError("Wrong credentials", { errors });
-				}
-
-				const match = await bcrypt.compare(password, user.password);
-				if (!match) {
-					errors.general = "Email or password is incorrect";
-					throw new UserInputError("Wrong credentials", { errors });
-				}
-
-				const token = generateToken(user);
-
-				return { id: user._id, ...user._doc, token };
-			} catch (err) {
-				throw new Error(err);
+		async login(_, { email, password }) {
+			const { errors, valid } = validateLogin(email, password);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
 			}
+
+			const user = await User.findOne({ email });
+			if (!user) {
+				errors.general = "Email or password is incorrect";
+				throw new UserInputError("Wrong credentials", { errors });
+			}
+
+			const match = await bcrypt.compare(password, user.password);
+			if (!match) {
+				errors.general = "Email or password is incorrect";
+				throw new UserInputError("Wrong credentials", { errors });
+			}
+
+			const token = generateToken(user);
+
+			return { id: user._id, ...user._doc, token };
 		},
 	},
 };

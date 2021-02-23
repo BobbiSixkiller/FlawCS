@@ -17,7 +17,7 @@ module.exports = gql`
 		updatedAt: Date!
 	}
 	type Billing {
-		name: String
+		name: String!
 		address: Address
 		ICO: String
 		ICDPH: String
@@ -25,26 +25,26 @@ module.exports = gql`
 	}
 
 	input RegisterInput {
-		firstName: String
-		lastName: String
-		password: String
-		confirmPassword: String
-		email: String
-		telephone: String
-		organisation: String
+		firstName: String!
+		lastName: String!
+		password: String!
+		confirmPassword: String!
+		email: String!
+		telephone: String!
+		organisation: String!
 		titleBefore: String
 		titleAfter: String
 		role: String
 	}
 	input BillingInput {
-		name: String
+		name: String!
 		DIC: String
 		ICO: String
 		ICDPH: String
-		street: String
-		city: String
-		postal: String
-		country: String
+		street: String!
+		city: String!
+		postal: String!
+		country: String!
 	}
 
 	type Query {

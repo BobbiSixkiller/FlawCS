@@ -70,3 +70,42 @@ module.exports.validateLogin = (email, password) => {
 
 	return { errors, valid: Object.keys(errors).length === 0 };
 };
+
+module.exports.validateHost = (fields) => {
+	const errors = {};
+	if (fields.name === "") {
+		errors.name = "Please submit name of the hosting organisation.";
+	}
+	if (fields.ICO === "") {
+		errors.ICO = "Please submit ICO.";
+	}
+	if (fields.ICDPH === "") {
+		errors.ICDPH = "Please submit ICDPH.";
+	}
+	if (fields.DIC === "") {
+		errors.DIC = "Please submit DIC.";
+	}
+	if (fields.SWIFT === "") {
+		errors.SWIFT = "Please submit SWIFT.";
+	}
+	if (fields.IBAN === "") {
+		errors.IBAN = "Please submit IBAN.";
+	}
+	if (fields.stampUrl === "") {
+		errors.stampUrl = "Please upload scan of your organisation's signature.";
+	}
+	if (fields.street === "") {
+		errors.street = "Please submit name and number of street.";
+	}
+	if (fields.city === "") {
+		errors.city = "Please submit name of the city.";
+	}
+	if (fields.postal === "") {
+		errors.postal = "Please submit postal code.";
+	}
+	if (fields.country === "") {
+		errors.country = "Please submit country.";
+	}
+
+	return { errors, valid: Object.keys(errors).length === 0 };
+};

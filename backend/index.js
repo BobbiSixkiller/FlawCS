@@ -24,6 +24,7 @@ mongoose
 	.connect(process.env.DB_DEV_ATLAS, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
+		useFindAndModify: false,
 	})
 	.then(() => {
 		console.log("MongoDB connected!");

@@ -4,10 +4,9 @@ module.exports = {
 	Query: {
 		async getConferences() {
 			try {
-				const conferences = await Conference.find();
+				const conferences = await Conference.find().sort({ updatedAt: -1 });
 				return conferences;
 			} catch (err) {
-				console.log(err);
 				throw new Error(err);
 			}
 		},
@@ -26,7 +25,7 @@ module.exports = {
 	},
 	Mutation: {
 		async createConference() {},
-		//async updateConference() {},
-		//async deleteConference() {},
+		async updateConference() {},
+		async deleteConference() {},
 	},
 };
