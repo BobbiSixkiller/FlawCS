@@ -2,8 +2,12 @@ const { gql } = require("apollo-server");
 
 module.exports = gql`
 	scalar Date
+	scalar Upload
 
-	#vytvorit address input, ktory by sa dal dedit medzi dalsimi inputmi
+	type File {
+		url: String!
+	}
+
 	type Address {
 		street: String!
 		city: String!
@@ -11,5 +15,16 @@ module.exports = gql`
 		country: String!
 		createdAt: Date!
 		updatedAt: Date!
+	}
+
+	input AddressInput {
+		street: String!
+		city: String!
+		postal: String!
+		country: String!
+	}
+
+	type Mutation {
+		uploadFile(file: Upload!): File
 	}
 `;

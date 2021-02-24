@@ -9,23 +9,20 @@ module.exports = gql`
 		DIC: String!
 		IBAN: String!
 		SWIFT: String!
-		stampUrl: String!
+		signatureUrl: String!
+		logoUrl: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 
 	input HostInput {
 		name: String!
-		street: String!
-		city: String!
-		postal: String!
-		country: String!
+		address: AddressInput
 		ICO: String!
 		ICDPH: String!
 		DIC: String!
 		IBAN: String!
 		SWIFT: String!
-		stampUrl: String!
 	}
 
 	extend type Query {

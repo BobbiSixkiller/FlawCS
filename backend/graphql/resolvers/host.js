@@ -1,6 +1,10 @@
 const { UserInputError } = require("apollo-server");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const fs = require("fs");
+require("dotenv").config();
+
 const Host = require("../../models/Host");
-const User = require("../../models/User");
 const { validateHost } = require("../../util/validation");
 
 module.exports = {
@@ -23,6 +27,16 @@ module.exports = {
 		},
 	},
 	Mutation: {
+		async uploadFile(parent, { file }) {
+			const { createReadStream, filename, mimetime, encoding } = await file;
+
+			const stream = createReadStream();
+			path.dirname(require.main.filename);
+			const pathName = path.join(process.cwd(), `/public/images/${filename}`);
+			await stream.pipe(fs.createWriteStream(pathName));
+
+			return { url: `${process.env.BASE_URL}/${filename}` };
+		},
 		async createHost(_, { hostInput }) {
 			const { errors, valid } = validateHost(hostInput);
 			if (!valid) {
@@ -38,10 +52,10 @@ module.exports = {
 
 			const host = new Host({
 				name: hostInput.name,
-				"address.street": hostInput.street,
-				"address.city": hostInput.city,
-				"address.postal": hostInput.postal,
-				"address.country": hostInput.country,
+				"address.street": hostInput.address.street,
+				"address.city": hostInput.address.city,
+				"address.postal": hostInput.address.postal,
+				"address.country": hostInput.address.country,
 				ICO: hostInput.ICO,
 				ICDPH: hostInput.ICDPH,
 				DIC: hostInput.DIC,
@@ -68,10 +82,10 @@ module.exports = {
 
 			const update = {
 				name: hostInput.name,
-				"address.street": hostInput.street,
-				"address.city": hostInput.city,
-				"address.postal": hostInput.postal,
-				"address.country": hostInput.country,
+				"address.street": hostInput.address.street,
+				"address.city": hostInput.address.city,
+				"address.postal": hostInput.address.postal,
+				"address.country": hostInput.address.country,
 				ICO: hostInput.ICO,
 				ICDPH: hostInput.ICDPH,
 				DIC: hostInput.DIC,

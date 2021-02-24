@@ -41,17 +41,14 @@ module.exports = gql`
 		DIC: String
 		ICO: String
 		ICDPH: String
-		street: String!
-		city: String!
-		postal: String!
-		country: String!
+		address: AddressInput
 	}
 
 	type Query {
 		getUsers: [User]
 		getUser(userId: ID!): User
 	}
-	type Mutation {
+	extend type Mutation {
 		register(registerInput: RegisterInput, billingInput: BillingInput): User!
 		login(email: String!, password: String!): User!
 		updateUser(

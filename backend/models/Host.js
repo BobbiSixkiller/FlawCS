@@ -10,7 +10,8 @@ const hostSchema = new Schema(
 		DIC: String,
 		IBAN: String,
 		SWIFT: String,
-		stampUrl: String,
+		signatureUrl: String,
+		logoUrl: String,
 	},
 	{ timestamps: true }
 );

@@ -61,7 +61,7 @@ module.exports = {
 			}
 
 			const emailExists = await User.findOne({ email: userInput.email });
-			if (emailExists) {
+			if (emailExists && emailExists._id != userId) {
 				throw new UserInputError("Email taken!", {
 					errors: {
 						email: "Submitted email address is already taken",
@@ -85,10 +85,10 @@ module.exports = {
 				"billing.DIC": billingInput.DIC,
 				"billing.ICO": billingInput.ICO,
 				"billing.ICDPH": billingInput.ICDPH,
-				"billing.address.street": billingInput.street,
-				"billing.address.city": billingInput.city,
-				"billing.address.postal": billingInput.postal,
-				"billing.address.country": billingInput.country,
+				"billing.address.street": billingInput.address.street,
+				"billing.address.city": billingInput.address.city,
+				"billing.address.postal": billingInput.address.postal,
+				"billing.address.country": billingInput.address.country,
 			};
 			const user = await User.findOneAndUpdate({ _id: userId }, update, {
 				new: true,
@@ -101,6 +101,7 @@ module.exports = {
 			}
 		},
 		async register(_, { registerInput, billingInput }) {
+			console.log(billingInput);
 			const { valid, errors } = validateRegister({
 				...registerInput,
 				...billingInput,
@@ -136,10 +137,10 @@ module.exports = {
 				"billing.DIC": billingInput.DIC,
 				"billing.ICO": billingInput.ICO,
 				"billing.ICDPH": billingInput.ICDPH,
-				"billing.address.street": billingInput.street,
-				"billing.address.city": billingInput.city,
-				"billing.address.postal": billingInput.postal,
-				"billing.address.country": billingInput.country,
+				"billing.address.street": billingInput.address.street,
+				"billing.address.city": billingInput.address.city,
+				"billing.address.postal": billingInput.address.postal,
+				"billing.address.country": billingInput.address.country,
 				role: users === 0 ? "ADMIN" : registerInput.role,
 			});
 
