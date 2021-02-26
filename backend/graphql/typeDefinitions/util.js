@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server-express");
 
 module.exports = gql`
 	scalar Date
@@ -25,6 +25,6 @@ module.exports = gql`
 	}
 
 	type Mutation {
-		uploadFile(file: Upload!): File
+		uploadFile(file: Upload!): File!
 	}
 `;

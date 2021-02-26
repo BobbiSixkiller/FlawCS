@@ -91,8 +91,12 @@ module.exports.validateHost = (fields) => {
 	if (fields.IBAN === "") {
 		errors.IBAN = "Please submit IBAN.";
 	}
-	if (fields.stampUrl === "") {
-		errors.stampUrl = "Please upload scan of your organisation's signature.";
+	if (fields.signatureUrl === "") {
+		errors.signatureUrl =
+			"Please upload scan of your organisation's signature.";
+	}
+	if (fields.logoUrl === "") {
+		errors.logoUrl = "Please upload scan of your organisation's logo.";
 	}
 	if (fields.street === "") {
 		errors.street = "Please submit name and number of street.";
@@ -106,6 +110,14 @@ module.exports.validateHost = (fields) => {
 	if (fields.country === "") {
 		errors.country = "Please submit country.";
 	}
+
+	return { errors, valid: Object.keys(errors).length === 0 };
+};
+
+module.exports.validateConference = (fields) => {
+	const errors = {};
+
+	console.log(fields);
 
 	return { errors, valid: Object.keys(errors).length === 0 };
 };

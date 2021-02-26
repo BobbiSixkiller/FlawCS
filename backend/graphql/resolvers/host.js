@@ -1,9 +1,3 @@
-const { UserInputError } = require("apollo-server");
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
-const fs = require("fs");
-require("dotenv").config();
-
 const Host = require("../../models/Host");
 const { validateHost } = require("../../util/validation");
 
@@ -27,16 +21,6 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async uploadFile(parent, { file }) {
-			const { createReadStream, filename, mimetime, encoding } = await file;
-
-			const stream = createReadStream();
-			path.dirname(require.main.filename);
-			const pathName = path.join(process.cwd(), `/public/images/${filename}`);
-			await stream.pipe(fs.createWriteStream(pathName));
-
-			return { url: `${process.env.BASE_URL}/${filename}` };
-		},
 		async createHost(_, { hostInput }) {
 			const { errors, valid } = validateHost(hostInput);
 			if (!valid) {
@@ -61,7 +45,8 @@ module.exports = {
 				DIC: hostInput.DIC,
 				IBAN: hostInput.IBAN,
 				SWIFT: hostInput.SWIFT,
-				stampUrl: hostInput.stampUrl,
+				signatureUrl: hostInput.signatureUrl,
+				logoUrl: hostInput.signatureUrl,
 			});
 			const res = await host.save();
 
@@ -91,7 +76,8 @@ module.exports = {
 				DIC: hostInput.DIC,
 				IBAN: hostInput.IBAN,
 				SWIFT: hostInput.SWIFT,
-				stampUrl: hostInput.stampUrl,
+				signatureUrl: hostInput.signatureUrl,
+				logoUrl: hostInput.signatureUrl,
 			};
 			const host = await Host.findOneAndUpdate({ _id: hostId }, update, {
 				new: true,

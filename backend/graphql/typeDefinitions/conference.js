@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server-express");
 
 module.exports = gql`
 	type Speaker {
@@ -47,6 +47,8 @@ module.exports = gql`
 		name: String!
 		start: Date!
 		end: Date!
+		regStart: Date!
+		regEnd: Date!
 		venue: Venue
 		host: Host!
 		ticketPrice: Int!
@@ -57,12 +59,17 @@ module.exports = gql`
 	}
 
 	input ConferenceInput {
-		name: String
-		start: Date
-		end: Date
-		regStart: Date
-		regEnd: Date
-		ticketPrice: Float
+		name: String!
+		host: String!
+		start: Date!
+		end: Date!
+		regStart: Date!
+		regEnd: Date!
+		ticketPrice: Float!
+	}
+	input VenueInput {
+		name: String!
+		address: AddressInput
 	}
 
 	extend type Query {
@@ -70,7 +77,10 @@ module.exports = gql`
 		getConference(conferenceId: ID!): Conference
 	}
 	extend type Mutation {
-		createConference(conferenceInput: ConferenceInput): Conference!
+		createConference(
+			conferenceInput: ConferenceInput!
+			venueInput: VenueInput!
+		): Conference!
 		updateConference(conferenceId: ID!): Conference!
 		deleteConference(conferenceId: ID!): String!
 	}

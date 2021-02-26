@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server-express");
 
 module.exports = gql`
 	type User {
@@ -49,12 +49,12 @@ module.exports = gql`
 		getUser(userId: ID!): User
 	}
 	extend type Mutation {
-		register(registerInput: RegisterInput, billingInput: BillingInput): User!
+		register(registerInput: RegisterInput!, billingInput: BillingInput!): User!
 		login(email: String!, password: String!): User!
 		updateUser(
 			userId: ID!
-			userInput: RegisterInput
-			billingInput: BillingInput
+			userInput: RegisterInput!
+			billingInput: BillingInput!
 		): User!
 		deleteUser(userId: ID!): String!
 	}
