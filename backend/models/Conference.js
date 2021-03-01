@@ -21,10 +21,6 @@ const speakerSchema = new Schema(
 			abstract: String,
 			keywords: String,
 			url: String,
-			reviewed: {
-				type: Boolean,
-				default: false,
-			},
 		},
 		accepted: {
 			type: Boolean,

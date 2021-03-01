@@ -46,7 +46,7 @@ module.exports = {
 			const user = await User.findOne({ _id: userId });
 			if (user) {
 				await user.remove();
-				return "User has been deleted";
+				return "User has been deleted.";
 			} else {
 				throw new Error("User not found.");
 			}
@@ -64,7 +64,7 @@ module.exports = {
 			if (emailExists && emailExists._id != userId) {
 				throw new UserInputError("Email taken!", {
 					errors: {
-						email: "Submitted email address is already taken",
+						email: "Submitted email address is already taken!",
 					},
 				});
 			}
@@ -97,7 +97,7 @@ module.exports = {
 			if (user) {
 				return user;
 			} else {
-				throw new Error("User not found");
+				throw new Error("User not found.");
 			}
 		},
 		async register(_, { registerInput, billingInput }) {

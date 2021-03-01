@@ -53,7 +53,45 @@ module.exports = {
 
 			return res;
 		},
-		async updateConference() {},
+		async updateConference(
+			parent,
+			{ conferenceId, conferenceInput, venueInput }
+		) {
+			const { errors, valid } = validateConference({
+				conference: { ...conferenceInput },
+				venue: { ...venueInput },
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const update = {
+				name: conferenceInput.name,
+				start: conferenceInput.start,
+				end: conferenceInput.end,
+				regStart: conferenceInput.regStart,
+				regEnd: conferenceInput.regEnd,
+				ticketPrice: conferenceInput.ticketPrice,
+				"venue.name": venueInput.name,
+				"venue.address.street": venueInput.address.street,
+				"venue.address.city": venueInput.address.city,
+				"venue.address.postal": venueInput.address.postal,
+				"venue.address.country": venueInput.address.country,
+				host: conferenceInput.host,
+			};
+
+			const res = await Conference.findOneAndUpdate(
+				{ _id: conferenceId },
+				update,
+				{ new: true }
+			).populate("host");
+
+			if (res) {
+				return res;
+			} else {
+				throw new Error("Conference not found!");
+			}
+		},
 		async deleteConference(parent, { conferenceId }) {
 			const conference = await Conference.findOne({ _id: conferenceId });
 			if (conference) {

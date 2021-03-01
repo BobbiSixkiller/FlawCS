@@ -81,7 +81,11 @@ module.exports = gql`
 			conferenceInput: ConferenceInput!
 			venueInput: VenueInput!
 		): Conference!
-		updateConference(conferenceId: ID!): Conference!
+		updateConference(
+			conferenceId: ID!
+			conferenceInput: ConferenceInput!
+			venueInput: VenueInput!
+		): Conference!
 		deleteConference(conferenceId: ID!): String!
 	}
 `;

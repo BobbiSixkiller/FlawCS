@@ -125,17 +125,17 @@ module.exports.validateConference = (fields) => {
 	if (fields.conference.host.trim() === "") {
 		errors.conference.host = "Please submit name of the host organisation.";
 	}
-	if (fields.conference.start.trim() === "") {
+	if (fields.conference.start === undefined) {
 		errors.conference.name = "Please submit start date of the conference.";
 	}
-	if (fields.conference.end.trim() === "") {
+	if (fields.conference.end === undefined) {
 		errors.conference.name = "Please submit end date of the conference.";
 	}
-	if (fields.conference.regStart.trim() === "") {
+	if (fields.conference.regStart === undefined) {
 		errors.conference.regStart =
 			"Please submit date when the registration starts.";
 	}
-	if (fields.conference.regEnd.trim() === "") {
+	if (fields.conference.regEnd === undefined) {
 		errors.conference.regEnd = "Please submit date when the registration ends.";
 	}
 	if (fields.conference.ticketPrice === 0) {
@@ -145,16 +145,16 @@ module.exports.validateConference = (fields) => {
 	if (fields.venue.name.trim() === "") {
 		errors.venue.name = "Please submit name of the venue.";
 	}
-	if (fields.venue.street.trim() === "") {
+	if (fields.venue.address.street.trim() === "") {
 		errors.venue.street = "Please submit name of the city.";
 	}
-	if (fields.venue.city.trim() === "") {
+	if (fields.venue.address.city.trim() === "") {
 		errors.venue.city = "Please submit name and number of the street.";
 	}
-	if (fields.venue.postal.trim() === "") {
+	if (fields.venue.address.postal.trim() === "") {
 		errors.venue.postal = "Please submit postal code of the venue.";
 	}
-	if (fields.venue.country.trim() === "") {
+	if (fields.venue.address.country.trim() === "") {
 		errors.venue.country = "Please submit name of the country.";
 	}
 
