@@ -15,16 +15,12 @@ module.exports = {
 				throw new Error(err);
 			}
 		},
-		async getConference(parent, { conferenceId }, context, info) {
-			try {
-				const conference = await Conference.findOne({ _id: conferenceId });
-				if (conference) {
-					return conference;
-				} else {
-					throw new Error("Conference not found.");
-				}
-			} catch (err) {
-				throw new Error(err);
+		async getConference(parent, { conferenceId }) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				return conference;
+			} else {
+				throw new Error("Conference not found.");
 			}
 		},
 	},
@@ -58,6 +54,14 @@ module.exports = {
 			return res;
 		},
 		async updateConference() {},
-		async deleteConference() {},
+		async deleteConference(parent, { conferenceId }) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				await conference.remove();
+				return "Conference has been deleted.";
+			} else {
+				throw new Error("Conference not found.");
+			}
+		},
 	},
 };

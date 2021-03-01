@@ -41,19 +41,19 @@ module.exports.validateRegister = (fields) => {
 		errors.confirmPassword = "Submitted passwords do not match.";
 	}
 	if (fields.name.trim() === "") {
-		errors.name = "Please submit your billing name";
+		errors.name = "Please submit your billing name.";
 	}
 	if (fields.address.street.trim() === "") {
-		errors.address.street = "Please submit your address";
+		errors.address.street = "Please submit your address.";
 	}
 	if (fields.address.city.trim() === "") {
-		errors.city = "Please submit your city";
+		errors.city = "Please submit your city.";
 	}
 	if (fields.address.postal.trim() === "") {
-		errors.postal = "Please submit your postal code";
+		errors.postal = "Please submit your postal code.";
 	}
 	if (fields.address.country.trim() === "") {
-		errors.country = "Please submit your country";
+		errors.country = "Please submit your country.";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
@@ -116,8 +116,52 @@ module.exports.validateHost = (fields) => {
 
 module.exports.validateConference = (fields) => {
 	const errors = {};
+	errors.conference = {};
+	errors.venue = {};
 
-	console.log(fields);
+	if (fields.conference.name.trim() === "") {
+		errors.conference.name = "Please submit name of the conference.";
+	}
+	if (fields.conference.host.trim() === "") {
+		errors.conference.host = "Please submit name of the host organisation.";
+	}
+	if (fields.conference.start.trim() === "") {
+		errors.conference.name = "Please submit start date of the conference.";
+	}
+	if (fields.conference.end.trim() === "") {
+		errors.conference.name = "Please submit end date of the conference.";
+	}
+	if (fields.conference.regStart.trim() === "") {
+		errors.conference.regStart =
+			"Please submit date when the registration starts.";
+	}
+	if (fields.conference.regEnd.trim() === "") {
+		errors.conference.regEnd = "Please submit date when the registration ends.";
+	}
+	if (fields.conference.ticketPrice === 0) {
+		errors.conference.regEnd = "Please submit price of the ticket.";
+	}
 
-	return { errors, valid: Object.keys(errors).length === 0 };
+	if (fields.venue.name.trim() === "") {
+		errors.venue.name = "Please submit name of the venue.";
+	}
+	if (fields.venue.street.trim() === "") {
+		errors.venue.street = "Please submit name of the city.";
+	}
+	if (fields.venue.city.trim() === "") {
+		errors.venue.city = "Please submit name and number of the street.";
+	}
+	if (fields.venue.postal.trim() === "") {
+		errors.venue.postal = "Please submit postal code of the venue.";
+	}
+	if (fields.venue.country.trim() === "") {
+		errors.venue.country = "Please submit name of the country.";
+	}
+
+	return {
+		errors,
+		valid:
+			Object.keys(errors.conference).length === 0 &&
+			Object.keys(errors.venue).length === 0,
+	};
 };
