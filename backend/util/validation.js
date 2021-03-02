@@ -122,8 +122,8 @@ module.exports.validateConference = (fields) => {
 	if (fields.conference.name.trim() === "") {
 		errors.conference.name = "Please submit name of the conference.";
 	}
-	if (fields.conference.host.trim() === "") {
-		errors.conference.host = "Please submit name of the host organisation.";
+	if (fields.conference.hostId.trim() === "") {
+		errors.conference.hostId = "Please submit name of the host organisation.";
 	}
 	if (fields.conference.start === undefined) {
 		errors.conference.name = "Please submit start date of the conference.";
@@ -164,4 +164,17 @@ module.exports.validateConference = (fields) => {
 			Object.keys(errors.conference).length === 0 &&
 			Object.keys(errors.venue).length === 0,
 	};
+};
+
+module.exports.validateSection = (name, topic) => {
+	const errors = {};
+
+	if (name.trim() === "") {
+		errors.name = "Please submit name of the section.";
+	}
+	if (topic.trim() === "") {
+		errors.topic = "Please submit topic of the section";
+	}
+
+	return { errors, valid: Object.keys(errors).length === 0 };
 };

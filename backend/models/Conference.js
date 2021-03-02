@@ -51,7 +51,7 @@ const coordinatorSchema = new Schema(
 const sectionSchema = new Schema(
 	{
 		name: String,
-		title: String,
+		topic: String,
 		garants: [garantSchema],
 		coordinators: [coordinatorSchema],
 		speakers: [speakerSchema],

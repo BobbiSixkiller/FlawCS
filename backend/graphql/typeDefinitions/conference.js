@@ -3,22 +3,25 @@ const { gql } = require("apollo-server-express");
 module.exports = gql`
 	type Speaker {
 		id: ID!
-		submission: Submission
+		name: String!
+		userId: String!
+		submission: Submission!
+		accepted: Boolean!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 	type Garant {
 		id: ID!
 		name: String!
-		garantID: String!
+		userId: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 	type Attendee {
 		id: ID!
 		name: String!
-		attendeeID: String!
-		invoiceID: String!
+		userId: String!
+		invoiceId: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
@@ -27,13 +30,12 @@ module.exports = gql`
 		abstract: String!
 		keywords: String!
 		url: String
-		reviewed: Boolean!
 	}
 	type Section {
 		id: ID!
 		name: String!
-		title: String!
-		garants: [User]!
+		topic: String!
+		garants: [Garant]!
 		speakers: [Speaker]!
 		createdAt: Date!
 		updatedAt: Date!
@@ -50,17 +52,17 @@ module.exports = gql`
 		regStart: Date!
 		regEnd: Date!
 		venue: Venue
-		host: Host!
+		host: Host
 		ticketPrice: Int!
 		sections: [Section]!
-		attendees: [User]!
+		attendees: [Attendee]!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 
 	input ConferenceInput {
 		name: String!
-		host: String!
+		hostId: String!
 		start: Date!
 		end: Date!
 		regStart: Date!
@@ -73,8 +75,8 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getConferences: [Conference]
-		getConference(conferenceId: ID!): Conference
+		getConferences: [Conference]!
+		getConference(conferenceId: ID!): Conference!
 	}
 	extend type Mutation {
 		createConference(
@@ -87,5 +89,14 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
+		#otestovat spravanie pri apollo clientovi ci bude cashovat tak ze spoji Section object s Conference objectom pokial mutacia vrati len Section object
+		createSection(conferenceId: ID!, name: String!, topic: String!): Conference!
+		updateSection(
+			conferenceId: ID!
+			sectionId: ID!
+			name: String!
+			topic: String!
+		): Conference!
+		deleteSection(conferenceId: ID!, sectionId: ID!): Conference!
 	}
 `;
