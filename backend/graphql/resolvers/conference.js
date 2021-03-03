@@ -185,7 +185,7 @@ module.exports = {
 				const section = conference.sections.id(sectionId);
 				if (section) {
 					const garantExists = section.garants.find(
-						(garant) => garant.name === name
+						(garant) => garant.garant === garant
 					);
 					if (garantExists) {
 						throw new UserInputError("Errors", {

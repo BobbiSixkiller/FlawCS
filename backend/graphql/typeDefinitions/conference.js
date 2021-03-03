@@ -4,7 +4,7 @@ module.exports = gql`
 	type Speaker {
 		id: ID!
 		name: String!
-		userId: String!
+		speaker: String!
 		submission: Submission!
 		accepted: Boolean!
 		createdAt: Date!
@@ -13,14 +13,14 @@ module.exports = gql`
 	type Garant {
 		id: ID!
 		name: String!
-		userId: String!
+		garant: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 	type Attendee {
 		id: ID!
 		name: String!
-		userId: String!
+		attendee: String!
 		invoiceId: String!
 		createdAt: Date!
 		updatedAt: Date!
