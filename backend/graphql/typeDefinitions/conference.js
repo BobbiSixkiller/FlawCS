@@ -90,7 +90,7 @@ module.exports = gql`
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
 		#otestovat spravanie pri apollo clientovi ci bude cashovat tak ze spoji Section object s Conference objectom pokial mutacia vrati len Section object
-		createSection(conferenceId: ID!, name: String!, topic: String!): Conference!
+		addSection(conferenceId: ID!, name: String!, topic: String!): Conference!
 		updateSection(
 			conferenceId: ID!
 			sectionId: ID!
@@ -98,5 +98,11 @@ module.exports = gql`
 			topic: String!
 		): Conference!
 		deleteSection(conferenceId: ID!, sectionId: ID!): Conference!
+		addGarant(
+			conferenceId: ID!
+			sectionId: ID!
+			name: String!
+			garant: String!
+		): Conference!
 	}
 `;

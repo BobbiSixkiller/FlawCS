@@ -4,6 +4,7 @@ const Conference = require("../../models/Conference");
 const {
 	validateConference,
 	validateSection,
+	validateGarant,
 } = require("../../util/validation");
 
 module.exports = {
@@ -104,7 +105,7 @@ module.exports = {
 				throw new Error("Conference not found.");
 			}
 		},
-		async createSection(parent, { conferenceId, name, topic }) {
+		async addSection(parent, { conferenceId, name, topic }) {
 			const { errors, valid } = validateSection(name, topic);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
@@ -126,8 +127,7 @@ module.exports = {
 				throw new Error("Conference not found.");
 			}
 
-			const section = { name, topic };
-			conference.sections.push(section);
+			conference.sections.push({ name, topic });
 			const res = await conference.save();
 
 			return res;
@@ -155,11 +155,14 @@ module.exports = {
 			}
 
 			const section = conference.sections.id(sectionId);
-			section.name = name;
-			section.topic = topic;
-			const res = await conference.save();
-
-			return res;
+			if (section) {
+				section.name = name;
+				section.topic = topic;
+				const res = await conference.save();
+				return res;
+			} else {
+				throw new Error("Section not found.");
+			}
 		},
 		async deleteSection(parent, { conferenceId, sectionId }) {
 			const conference = await Conference.findOne({ _id: conferenceId });
@@ -170,6 +173,36 @@ module.exports = {
 			} else {
 				throw new Error("Conference not found.");
 			}
+		},
+		async addGarant(parent, { conferenceId, sectionId, name, garant }) {
+			const { errors, valid } = validateGarant(name);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const garantExists = section.garants.find(
+						(garant) => garant.name === name
+					);
+					if (garantExists) {
+						throw new UserInputError("Errors", {
+							errors: { name: "Garant has been submitted already." },
+						});
+					}
+					section.garants.push({ name, garant });
+				} else {
+					throw new Error("Section not found.");
+				}
+			} else {
+				throw new Error("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
 		},
 	},
 };
