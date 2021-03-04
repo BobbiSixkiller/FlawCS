@@ -104,5 +104,13 @@ module.exports = gql`
 			name: String!
 			garant: String!
 		): Conference!
+		updateGarant(
+			conferenceId: ID!
+			sectionId: ID!
+			garantId: ID!
+			name: String!
+			garant: String!
+		): Conference!
+		deleteGarant(conferenceId: ID!, sectionId: ID!, garantId: ID!): Conference!
 	}
 `;

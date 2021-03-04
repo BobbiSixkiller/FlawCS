@@ -179,10 +179,10 @@ module.exports.validateSection = (name, topic) => {
 	return { errors, valid: Object.keys(errors).length === 0 };
 };
 
-module.exports.validateGarant = (name) => {
+module.exports.validateGarant = (name, garant) => {
 	const errors = {};
 
-	if (name.trim() === "") {
+	if (name.trim() === "" || garant.trim() === "") {
 		errors.name = "Please submit name of the section's garant.";
 	}
 

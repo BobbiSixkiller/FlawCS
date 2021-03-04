@@ -175,7 +175,7 @@ module.exports = {
 			}
 		},
 		async addGarant(parent, { conferenceId, sectionId, name, garant }) {
-			const { errors, valid } = validateGarant(name);
+			const { errors, valid } = validateGarant(name, garant);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
@@ -184,9 +184,7 @@ module.exports = {
 			if (conference) {
 				const section = conference.sections.id(sectionId);
 				if (section) {
-					const garantExists = section.garants.find(
-						(garant) => garant.garant === garant
-					);
+					const garantExists = section.garants.find((g) => g.garant == garant);
 					if (garantExists) {
 						throw new UserInputError("Errors", {
 							errors: { name: "Garant has been submitted already." },
@@ -203,6 +201,39 @@ module.exports = {
 			const res = await conference.save();
 
 			return res;
+		},
+		async deleteGarant(parent, { conferenceId, sectionId, garantId }) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const garant = section.garants.id(garantId);
+					if (garant) {
+						garant.remove();
+					} else {
+						throw new Error("Garant not found.");
+					}
+				} else {
+					throw new Error("Section not found.");
+				}
+			} else {
+				throw new Error("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async updateGarant(
+			parent,
+			{ conferenceId, sectionId, garantId, name, garant }
+		) {
+			const { errors, valid } = validateGarant(name, garant);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const conference = await Conference.findOne({ _id: conferenceId });
 		},
 	},
 };
