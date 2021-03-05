@@ -5,6 +5,7 @@ const {
 	validateConference,
 	validateSection,
 	validateGarant,
+	validateSubmission,
 } = require("../../util/validation");
 
 module.exports = {
@@ -224,16 +225,42 @@ module.exports = {
 
 			return res;
 		},
-		async updateGarant(
+		async addSpeaker(
 			parent,
-			{ conferenceId, sectionId, garantId, name, garant }
+			{ conferenceId, sectionId, submission },
+			{ user: { id, name } }
 		) {
-			const { errors, valid } = validateGarant(name, garant);
+			const { errors, valid } = validateSubmission(submission);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
 
 			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const speakerExists = section.speakers.find((s) => s.speaker == id);
+					if (speakerExists) {
+						throw new Error(
+							"You have already provided your submission to this conference."
+						);
+					}
+					const speaker = {
+						name,
+						speaker: id,
+						submission,
+					};
+					section.speakers.push(speaker);
+				} else {
+					throw new Error("Section not found.");
+				}
+			} else {
+				throw new Error("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
 		},
 	},
 };

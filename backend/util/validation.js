@@ -188,3 +188,19 @@ module.exports.validateGarant = (name, garant) => {
 
 	return { errors, valid: Object.keys(errors).length === 0 };
 };
+
+module.exports.validateSubmission = (fields) => {
+	const errors = {};
+
+	if (fields.name.trim() === "") {
+		errors.name = "Please submit name of your submission.";
+	}
+	if (fields.abstract.trim() === "") {
+		errors.abstract = "Please submit abstract of your submission.";
+	}
+	if (fields.keywords.length === 0 || fields.keywords[0].keyword === "") {
+		errors.keywords = "You must provide at least 1 keyword.";
+	}
+
+	return { errors, valid: Object.keys(errors).length === 0 };
+};

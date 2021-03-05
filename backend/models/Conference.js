@@ -19,7 +19,7 @@ const speakerSchema = new Schema(
 		submission: {
 			name: String,
 			abstract: String,
-			keywords: String,
+			keywords: [{ keyword: String }],
 			url: String,
 		},
 		accepted: {
@@ -63,6 +63,7 @@ const sectionSchema = new Schema(
 
 const conferenceSchema = new Schema(
 	{
+		host: { type: Schema.Types.ObjectId, ref: "Host" },
 		name: String,
 		start: Date,
 		end: Date,
@@ -73,7 +74,6 @@ const conferenceSchema = new Schema(
 			name: String,
 			address,
 		},
-		host: { type: Schema.Types.ObjectId, ref: "Host" },
 		sections: [sectionSchema],
 		attendees: [attendeeSchema],
 	},
