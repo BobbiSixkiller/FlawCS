@@ -7,29 +7,20 @@ const attendeeSchema = new Schema(
 		attendee: { type: Schema.Types.ObjectId, ref: "User" },
 		invoice: { type: Schema.Types.ObjectId, ref: "Invoice" },
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true }
 );
 
 const speakerSchema = new Schema(
 	{
 		name: String,
 		speaker: { type: Schema.Types.ObjectId, ref: "User" },
-		submission: {
-			name: String,
-			abstract: String,
-			keywords: [{ keyword: String }],
-			url: String,
-		},
+		submission: { type: Schema.Types.ObjectId, ref: "Submission" },
 		accepted: {
 			type: Boolean,
 			default: false,
 		},
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true }
 );
 
 const garantSchema = new Schema(
@@ -56,9 +47,7 @@ const sectionSchema = new Schema(
 		coordinators: [coordinatorSchema],
 		speakers: [speakerSchema],
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true }
 );
 
 const conferenceSchema = new Schema(
@@ -77,9 +66,7 @@ const conferenceSchema = new Schema(
 		sections: [sectionSchema],
 		attendees: [attendeeSchema],
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true }
 );
 
 module.exports = model("Conference", conferenceSchema);
