@@ -118,10 +118,15 @@ module.exports = gql`
 			garant: String!
 		): Conference!
 		deleteGarant(conferenceId: ID!, sectionId: ID!, garantId: ID!): Conference!
-		addSpeaker(
+		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
 			submission: SubmissionInput!
+		): Conference!
+		deleteSpeaker(
+			conferenceId: ID!
+			sectionId: ID!
+			speakerId: ID!
 		): Conference!
 	}
 `;

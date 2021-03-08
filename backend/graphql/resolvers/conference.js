@@ -225,7 +225,7 @@ module.exports = {
 
 			return res;
 		},
-		async addSpeaker(
+		async addSubmission(
 			parent,
 			{ conferenceId, sectionId, submission },
 			{ user: { id, name } }
@@ -251,6 +251,28 @@ module.exports = {
 						submission,
 					};
 					section.speakers.push(speaker);
+				} else {
+					throw new Error("Section not found.");
+				}
+			} else {
+				throw new Error("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async deleteSpeaker(parent, { conferenceId, sectionId, speakerId }) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const speaker = section.speakers.id(speakerId);
+					if (speaker) {
+						speaker.remove();
+					} else {
+						throw new Error("Speaker not found");
+					}
 				} else {
 					throw new Error("Section not found.");
 				}
