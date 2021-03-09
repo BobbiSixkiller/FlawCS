@@ -1,6 +1,7 @@
 const { UserInputError } = require("apollo-server-express");
 
 const Conference = require("../../models/Conference");
+const Submission = require("../../models/Submission");
 const {
 	validateConference,
 	validateSection,
@@ -51,7 +52,7 @@ module.exports = {
 				"venue.address.city": venueInput.address.city,
 				"venue.address.postal": venueInput.address.postal,
 				"venue.address.country": venueInput.address.country,
-				host: conferenceInput.host,
+				host: conferenceInput.hostId,
 			});
 
 			const res = await conference.save();
@@ -245,10 +246,12 @@ module.exports = {
 							"You have already provided your submission to this conference."
 						);
 					}
+					const newSubmission = new Submission({ ...submission, user: id });
+					const submission = await newSubmission.save();
 					const speaker = {
 						name,
 						speaker: id,
-						submission,
+						submission: submission._id,
 					};
 					section.speakers.push(speaker);
 				} else {

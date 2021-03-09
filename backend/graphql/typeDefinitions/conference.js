@@ -30,6 +30,7 @@ module.exports = gql`
 		keyword: String!
 	}
 	type Submission {
+		id: ID!
 		name: String!
 		abstract: String!
 		keywords: [Keyword]!
@@ -55,7 +56,7 @@ module.exports = gql`
 		end: Date!
 		regStart: Date!
 		regEnd: Date!
-		venue: Venue
+		venue: Venue!
 		host: Host
 		ticketPrice: Int!
 		sections: [Section]!
