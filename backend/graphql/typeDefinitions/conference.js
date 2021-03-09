@@ -5,7 +5,7 @@ module.exports = gql`
 		id: ID!
 		name: String!
 		speaker: String!
-		submission: Submission!
+		submission: String!
 		accepted: Boolean!
 		createdAt: Date!
 		updatedAt: Date!
@@ -122,7 +122,7 @@ module.exports = gql`
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
-			submission: SubmissionInput!
+			submissionInput: SubmissionInput!
 		): Conference!
 		deleteSpeaker(
 			conferenceId: ID!

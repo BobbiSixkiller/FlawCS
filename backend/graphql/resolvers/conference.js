@@ -20,9 +20,12 @@ module.exports = {
 			}
 		},
 		async getConference(parent, { conferenceId }) {
+			// const conference = await Conference.findOne({
+			// 	_id: conferenceId,
+			// }).populate("host");
 			const conference = await Conference.findOne({
 				_id: conferenceId,
-			}).populate("host");
+			});
 			if (conference) {
 				return conference;
 			} else {
@@ -228,10 +231,10 @@ module.exports = {
 		},
 		async addSubmission(
 			parent,
-			{ conferenceId, sectionId, submission },
+			{ conferenceId, sectionId, submissionInput },
 			{ user: { id, name } }
 		) {
-			const { errors, valid } = validateSubmission(submission);
+			const { errors, valid } = validateSubmission(submissionInput);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
@@ -246,8 +249,13 @@ module.exports = {
 							"You have already provided your submission to this conference."
 						);
 					}
-					const newSubmission = new Submission({ ...submission, user: id });
-					const submission = await newSubmission.save();
+					const submission = new Submission({
+						...submissionInput,
+						user: id,
+					});
+					await submission.save();
+					console.log(submission._id);
+
 					const speaker = {
 						name,
 						speaker: id,
