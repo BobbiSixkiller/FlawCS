@@ -26,12 +26,14 @@ const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "SUPERVISOR");
 });
 
-//needs testing once graphQL resolvers are implemented
-const isGarant = rule({ cache: "contextual" })(
-	async (parent, args, { user }) => {
-		const garant = await Conference.findOne({
+const isGarant = rule({ cache: "strict" })(
+	async (parent, { sectionId }, { user }) => {
+		const conference = await Conference.findOne({
 			"sections.garants.garant": user.id,
 		});
+		const garant = conference.sections
+			.id(sectionId)
+			.garants.find((g) => g.garant == user.id);
 		return garant !== null;
 	}
 );
@@ -48,6 +50,7 @@ module.exports = shield(
 			createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			deleteHost: and(isAuthenticated, isAdmin),
+			approveSpeaker: and(isAuthenticated, or(isAdmin, isSupervisor, isGarant)),
 		},
 	},
 	{ allowExternalErrors: true }

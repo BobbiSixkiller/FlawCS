@@ -1,4 +1,4 @@
-const { UserInputError } = require("apollo-server-express");
+const { UserInputError, chainResolvers } = require("apollo-server-express");
 
 const Conference = require("../../models/Conference");
 const Submission = require("../../models/Submission");
@@ -8,6 +8,7 @@ const {
 	validateGarant,
 	validateSubmission,
 } = require("../../util/validation");
+const conference = require("../typeDefinitions/conference");
 
 module.exports = {
 	Query: {
@@ -20,12 +21,9 @@ module.exports = {
 			}
 		},
 		async getConference(parent, { conferenceId }) {
-			// const conference = await Conference.findOne({
-			// 	_id: conferenceId,
-			// }).populate("host");
 			const conference = await Conference.findOne({
 				_id: conferenceId,
-			});
+			}).populate("host");
 			if (conference) {
 				return conference;
 			} else {
@@ -281,6 +279,28 @@ module.exports = {
 					const speaker = section.speakers.id(speakerId);
 					if (speaker) {
 						speaker.remove();
+					} else {
+						throw new Error("Speaker not found");
+					}
+				} else {
+					throw new Error("Section not found.");
+				}
+			} else {
+				throw new Error("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async approveSpeaker(parent, { conferenceId, sectionId, speakerId }) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const speaker = section.speakers.id(speakerId);
+					if (speaker) {
+						speaker.accepted = !speaker.accepted;
 					} else {
 						throw new Error("Speaker not found");
 					}

@@ -103,7 +103,6 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
-		#otestovat spravanie pri apollo clientovi ci bude cashovat tak ze spoji Section object s Conference objectom pokial mutacia vrati len Section object
 		addSection(conferenceId: ID!, name: String!, topic: String!): Conference!
 		updateSection(
 			conferenceId: ID!
@@ -125,6 +124,11 @@ module.exports = gql`
 			submissionInput: SubmissionInput!
 		): Conference!
 		deleteSpeaker(
+			conferenceId: ID!
+			sectionId: ID!
+			speakerId: ID!
+		): Conference!
+		approveSpeaker(
 			conferenceId: ID!
 			sectionId: ID!
 			speakerId: ID!

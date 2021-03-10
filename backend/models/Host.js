@@ -16,4 +16,11 @@ const hostSchema = new Schema(
 	{ timestamps: true }
 );
 
+hostSchema.virtual("conferences", {
+	ref: "Host",
+	localField: "_id",
+	foreignField: "host",
+	justOne: false,
+});
+
 module.exports = model("Host", hostSchema);
