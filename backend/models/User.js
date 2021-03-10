@@ -36,6 +36,13 @@ userSchema.virtual("conferences", {
 	justOne: false,
 });
 
+userSchema.virtual("submissions", {
+	ref: "Submission",
+	localField: "_id",
+	foreignField: "user",
+	justOne: false,
+});
+
 userSchema.virtual("invoices", {
 	ref: "Invoice",
 	localField: "_id",

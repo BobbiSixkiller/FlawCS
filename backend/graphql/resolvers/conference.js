@@ -1,4 +1,4 @@
-const { UserInputError, chainResolvers } = require("apollo-server-express");
+const { UserInputError } = require("apollo-server-express");
 
 const Conference = require("../../models/Conference");
 const Submission = require("../../models/Submission");
@@ -8,7 +8,6 @@ const {
 	validateGarant,
 	validateSubmission,
 } = require("../../util/validation");
-const conference = require("../typeDefinitions/conference");
 
 module.exports = {
 	Query: {
@@ -252,7 +251,6 @@ module.exports = {
 						user: id,
 					});
 					await submission.save();
-					console.log(submission._id);
 
 					const speaker = {
 						name,
@@ -278,9 +276,17 @@ module.exports = {
 				if (section) {
 					const speaker = section.speakers.id(speakerId);
 					if (speaker) {
+						const submission = await Submission.findOne({
+							_id: speaker.submission,
+						});
+						if (submission) {
+							await submission.remove();
+						} else {
+							throw new Error("Submission not found.");
+						}
 						speaker.remove();
 					} else {
-						throw new Error("Speaker not found");
+						throw new Error("Speaker not found.");
 					}
 				} else {
 					throw new Error("Section not found.");

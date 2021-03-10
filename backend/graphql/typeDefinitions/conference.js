@@ -29,13 +29,6 @@ module.exports = gql`
 		id: ID!
 		keyword: String!
 	}
-	type Submission {
-		id: ID!
-		name: String!
-		abstract: String!
-		keywords: [Keyword]!
-		url: String
-	}
 	type Section {
 		id: ID!
 		name: String!
