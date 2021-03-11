@@ -26,7 +26,7 @@ module.exports = {
 			if (conference) {
 				return conference;
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 		},
 	},
@@ -104,7 +104,7 @@ module.exports = {
 				await conference.remove();
 				return "Conference has been deleted.";
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 		},
 		async addSection(parent, { conferenceId, name, topic }) {
@@ -126,7 +126,7 @@ module.exports = {
 					});
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 
 			conference.sections.push({ name, topic });
@@ -153,7 +153,7 @@ module.exports = {
 					});
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 
 			const section = conference.sections.id(sectionId);
@@ -163,7 +163,7 @@ module.exports = {
 				const res = await conference.save();
 				return res;
 			} else {
-				throw new Error("Section not found.");
+				throw new UserInputError("Section not found.");
 			}
 		},
 		async deleteSection(parent, { conferenceId, sectionId }) {
@@ -173,7 +173,7 @@ module.exports = {
 				const res = await conference.save();
 				return res;
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 		},
 		async addGarant(parent, { conferenceId, sectionId, name, garant }) {
@@ -194,10 +194,10 @@ module.exports = {
 					}
 					section.garants.push({ name, garant });
 				} else {
-					throw new Error("Section not found.");
+					throw new UserInputError("Section not found.");
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 
 			const res = await conference.save();
@@ -213,13 +213,71 @@ module.exports = {
 					if (garant) {
 						garant.remove();
 					} else {
-						throw new Error("Garant not found.");
+						throw new UserInputError("Garant not found.");
 					}
 				} else {
-					throw new Error("Section not found.");
+					throw new UserInputError("Section not found.");
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async addCoordinator(
+			parent,
+			{ conferenceId, sectionId, name, coordinator }
+		) {
+			const { errors, valid } = validateGarant(name, coordinator);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const coordinatorExists = section.coordinators.find(
+						(c) => c.coordinator == coordinator
+					);
+					if (coordinatorExists) {
+						throw new UserInputError("Errors", {
+							errors: { name: "Coordinator has been submitted already." },
+						});
+					}
+					section.coordinators.push({ name, coordinator });
+				} else {
+					throw new UserInputError("Section not found.");
+				}
+			} else {
+				throw new UserInputError("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async deleteCoordinator(
+			parent,
+			{ conferenceId, sectionId, coordinatorId }
+		) {
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const coordinator = section.coordinators.id(coordinatorId);
+					if (coordinator) {
+						coordinator.remove();
+					} else {
+						throw new UserInputError("Coordinator not found.");
+					}
+				} else {
+					throw new UserInputError("Section not found.");
+				}
+			} else {
+				throw new UserInputError("Conference not found.");
 			}
 
 			const res = await conference.save();
@@ -242,13 +300,14 @@ module.exports = {
 				if (section) {
 					const speakerExists = section.speakers.find((s) => s.speaker == id);
 					if (speakerExists) {
-						throw new Error(
+						throw new UserInputError(
 							"You have already provided your submission to this conference."
 						);
 					}
 					const submission = new Submission({
 						...submissionInput,
 						user: id,
+						conference: conferenceId,
 					});
 					await submission.save();
 
@@ -259,10 +318,55 @@ module.exports = {
 					};
 					section.speakers.push(speaker);
 				} else {
-					throw new Error("Section not found.");
+					throw new UserInputError("Section not found.");
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
+			}
+
+			const res = await conference.save();
+
+			return res;
+		},
+		async addSpeaker(
+			parent,
+			{ conferenceId, sectionId, userId, name, submissionInput }
+		) {
+			const { errors, valid } = validateSubmission(submissionInput);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+
+			const conference = await Conference.findOne({ _id: conferenceId });
+			if (conference) {
+				const section = conference.sections.id(sectionId);
+				if (section) {
+					const speakerExists = section.speakers.find(
+						(s) => s.speaker == userId
+					);
+					if (speakerExists) {
+						throw new UserInputError(
+							"Selected user have already provided submission to this conference."
+						);
+					}
+					const submission = new Submission({
+						...submissionInput,
+						user: userId,
+						conference: conferenceId,
+					});
+					await submission.save();
+
+					const speaker = {
+						name,
+						speaker: userId,
+						submission: submission._id,
+					};
+					section.speakers.push(speaker);
+				} else {
+					throw new UserInputError("Section not found.");
+				}
+			} else {
+				throw new UserInputError("Conference not found.");
 			}
 
 			const res = await conference.save();
@@ -282,17 +386,17 @@ module.exports = {
 						if (submission) {
 							await submission.remove();
 						} else {
-							throw new Error("Submission not found.");
+							throw new UserInputError("Submission not found.");
 						}
 						speaker.remove();
 					} else {
-						throw new Error("Speaker not found.");
+						throw new UserInputError("Speaker not found.");
 					}
 				} else {
-					throw new Error("Section not found.");
+					throw new UserInputError("Section not found.");
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 
 			const res = await conference.save();
@@ -308,13 +412,13 @@ module.exports = {
 					if (speaker) {
 						speaker.accepted = !speaker.accepted;
 					} else {
-						throw new Error("Speaker not found");
+						throw new UserInputError("Speaker not found");
 					}
 				} else {
-					throw new Error("Section not found.");
+					throw new UserInputError("Section not found.");
 				}
 			} else {
-				throw new Error("Conference not found.");
+				throw new UserInputError("Conference not found.");
 			}
 
 			const res = await conference.save();

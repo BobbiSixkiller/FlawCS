@@ -179,11 +179,11 @@ module.exports.validateSection = (name, topic) => {
 	return { errors, valid: Object.keys(errors).length === 0 };
 };
 
-module.exports.validateGarant = (name, garant) => {
+module.exports.validateGarant = (name, id) => {
 	const errors = {};
 
-	if (name.trim() === "" || garant.trim() === "") {
-		errors.name = "Please submit name of the section's garant.";
+	if (name.trim() === "" || id.trim() === "") {
+		errors.name = "Please submit name of the section's staff.";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };

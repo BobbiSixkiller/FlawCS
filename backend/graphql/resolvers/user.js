@@ -1,6 +1,7 @@
 const { UserInputError } = require("apollo-server-express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const User = require("../../models/User");
 const { validateRegister, validateLogin } = require("../../util/validation");
 
@@ -30,15 +31,11 @@ module.exports = {
 			}
 		},
 		async getUser(_parent, { userId }, _context, _info) {
-			try {
-				const user = await User.findOne({ _id: userId });
-				if (user) {
-					return user;
-				} else {
-					throw new Error("User not found.");
-				}
-			} catch (err) {
-				throw new Error(err);
+			const user = await User.findOne({ _id: userId });
+			if (user) {
+				return user;
+			} else {
+				throw new UserInputError("User not found.");
 			}
 		},
 	},
@@ -49,7 +46,7 @@ module.exports = {
 				await user.remove();
 				return "User has been deleted.";
 			} else {
-				throw new Error("User not found.");
+				throw new UserInputError("User not found.");
 			}
 		},
 		async updateUser(_, { userId, userInput, billingInput }) {
@@ -98,7 +95,7 @@ module.exports = {
 			if (user) {
 				return user;
 			} else {
-				throw new Error("User not found.");
+				throw new UserInputError("User not found.");
 			}
 		},
 		async register(_, { registerInput, billingInput }) {

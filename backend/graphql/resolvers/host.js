@@ -1,3 +1,5 @@
+const { UserInputError } = require("apollo-server-express");
+
 const Host = require("../../models/Host");
 const { validateHost } = require("../../util/validation");
 
@@ -86,7 +88,7 @@ module.exports = {
 			if (host) {
 				return host;
 			} else {
-				throw new Error("Host not found");
+				throw new UserInputError("Host not found");
 			}
 		},
 		async deleteHost(_, { hostId }) {
@@ -95,7 +97,7 @@ module.exports = {
 				await host.remove();
 				return "Host has been deleted";
 			} else {
-				throw new Error("Host not found");
+				throw new UserInputError("Host not found");
 			}
 		},
 	},

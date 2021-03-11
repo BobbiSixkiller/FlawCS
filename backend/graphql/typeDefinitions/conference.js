@@ -17,6 +17,13 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type Coordinator {
+		id: ID!
+		name: String!
+		coordinator: String!
+		createdAt: Date!
+		updatedAt: Date!
+	}
 	type Attendee {
 		id: ID!
 		name: String!
@@ -34,6 +41,7 @@ module.exports = gql`
 		name: String!
 		topic: String!
 		garants: [Garant]!
+		coordinators: [Coordinator]!
 		speakers: [Speaker]!
 		createdAt: Date!
 		updatedAt: Date!
@@ -71,15 +79,6 @@ module.exports = gql`
 		name: String!
 		address: AddressInput
 	}
-	input KeywordInput {
-		keyword: String!
-	}
-	input SubmissionInput {
-		name: String!
-		abstract: String!
-		keywords: [KeywordInput]!
-		url: String
-	}
 
 	extend type Query {
 		getConferences: [Conference]!
@@ -111,9 +110,27 @@ module.exports = gql`
 			garant: String!
 		): Conference!
 		deleteGarant(conferenceId: ID!, sectionId: ID!, garantId: ID!): Conference!
+		addCoordinator(
+			conferenceId: ID!
+			sectionId: ID!
+			name: String!
+			coordinator: String!
+		): Conference!
+		deleteCoordinator(
+			conferenceId: ID!
+			sectionId: ID!
+			coordinatorId: ID!
+		): Conference!
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
+			submissionInput: SubmissionInput!
+		): Conference!
+		addSpeaker(
+			conferenceId: ID!
+			sectionId: ID!
+			userId: String!
+			name: String!
 			submissionInput: SubmissionInput!
 		): Conference!
 		deleteSpeaker(
