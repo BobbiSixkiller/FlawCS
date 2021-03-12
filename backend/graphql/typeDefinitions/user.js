@@ -45,8 +45,8 @@ module.exports = gql`
 	}
 
 	type Query {
-		getUsers: [User]
-		getUser(userId: ID!): User
+		getUsers: [User]!
+		getUser(userId: ID!): User!
 	}
 	extend type Mutation {
 		register(registerInput: RegisterInput!, billingInput: BillingInput!): User!

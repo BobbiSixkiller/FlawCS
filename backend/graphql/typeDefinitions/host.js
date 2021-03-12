@@ -28,8 +28,8 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getHosts: [Host]
-		getHost(hostId: ID!): Host
+		getHosts: [Host]!
+		getHost(hostId: ID!): Host!
 	}
 	extend type Mutation {
 		createHost(hostInput: HostInput!): Host!

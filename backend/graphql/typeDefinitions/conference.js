@@ -1,51 +1,6 @@
 const { gql } = require("apollo-server-express");
 
 module.exports = gql`
-	type Speaker {
-		id: ID!
-		name: String!
-		speaker: String!
-		submission: String!
-		accepted: Boolean!
-		createdAt: Date!
-		updatedAt: Date!
-	}
-	type Garant {
-		id: ID!
-		name: String!
-		garant: String!
-		createdAt: Date!
-		updatedAt: Date!
-	}
-	type Coordinator {
-		id: ID!
-		name: String!
-		coordinator: String!
-		createdAt: Date!
-		updatedAt: Date!
-	}
-	type Attendee {
-		id: ID!
-		name: String!
-		attendee: String!
-		invoiceId: String!
-		createdAt: Date!
-		updatedAt: Date!
-	}
-	type Keyword {
-		id: ID!
-		keyword: String!
-	}
-	type Section {
-		id: ID!
-		name: String!
-		topic: String!
-		garants: [Garant]!
-		coordinators: [Coordinator]!
-		speakers: [Speaker]!
-		createdAt: Date!
-		updatedAt: Date!
-	}
 	type Venue {
 		name: String!
 		address: Address
@@ -62,6 +17,14 @@ module.exports = gql`
 		ticketPrice: Int!
 		sections: [Section]!
 		attendees: [Attendee]!
+		createdAt: Date!
+		updatedAt: Date!
+	}
+	type Attendee {
+		id: ID!
+		name: String!
+		attendee: String!
+		invoiceId: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
@@ -95,53 +58,5 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
-		addSection(conferenceId: ID!, name: String!, topic: String!): Conference!
-		updateSection(
-			conferenceId: ID!
-			sectionId: ID!
-			name: String!
-			topic: String!
-		): Conference!
-		deleteSection(conferenceId: ID!, sectionId: ID!): Conference!
-		addGarant(
-			conferenceId: ID!
-			sectionId: ID!
-			name: String!
-			garant: String!
-		): Conference!
-		deleteGarant(conferenceId: ID!, sectionId: ID!, garantId: ID!): Conference!
-		addCoordinator(
-			conferenceId: ID!
-			sectionId: ID!
-			name: String!
-			coordinator: String!
-		): Conference!
-		deleteCoordinator(
-			conferenceId: ID!
-			sectionId: ID!
-			coordinatorId: ID!
-		): Conference!
-		addSubmission(
-			conferenceId: ID!
-			sectionId: ID!
-			submissionInput: SubmissionInput!
-		): Conference!
-		addSpeaker(
-			conferenceId: ID!
-			sectionId: ID!
-			userId: String!
-			name: String!
-			submissionInput: SubmissionInput!
-		): Conference!
-		deleteSpeaker(
-			conferenceId: ID!
-			sectionId: ID!
-			speakerId: ID!
-		): Conference!
-		approveSpeaker(
-			conferenceId: ID!
-			sectionId: ID!
-			speakerId: ID!
-		): Conference!
 	}
 `;

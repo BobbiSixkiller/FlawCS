@@ -12,6 +12,10 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type Keyword {
+		id: ID!
+		keyword: String!
+	}
 
 	input KeywordInput {
 		keyword: String!
