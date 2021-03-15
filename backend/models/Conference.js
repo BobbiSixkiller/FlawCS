@@ -23,7 +23,12 @@ const conferenceSchema = new Schema(
 			name: String,
 			address,
 		},
-		sections: [{ type: Schema.Types.ObjectId, ref: "Section" }],
+		sections: [
+			{
+				name: String,
+				section: { type: Schema.Types.ObjectId, ref: "Section" },
+			},
+		],
 		attendees: [attendeeSchema],
 	},
 	{ timestamps: true }

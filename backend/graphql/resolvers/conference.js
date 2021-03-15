@@ -5,9 +5,11 @@ const { validateConference } = require("../../util/validation");
 
 module.exports = {
 	Query: {
-		async getConferences() {
+		async getHostConferences(parent, { hostId }) {
 			try {
-				const conferences = await Conference.find().sort({ updatedAt: -1 });
+				const conferences = await Conference.find({ host: hostId })
+					.populate("host")
+					.sort({ updatedAt: -1 });
 				return conferences;
 			} catch (err) {
 				throw new Error(err);
@@ -20,7 +22,6 @@ module.exports = {
 				.populate("host")
 				.populate("sections");
 			if (conference) {
-				console.log(conference);
 				return conference;
 			} else {
 				throw new UserInputError("Conference not found.");

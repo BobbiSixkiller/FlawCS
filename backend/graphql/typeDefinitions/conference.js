@@ -44,7 +44,7 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getConferences: [Conference]!
+		getHostConferences(hostId: ID!): [Conference]!
 		getConference(conferenceId: ID!): Conference!
 	}
 	extend type Mutation {

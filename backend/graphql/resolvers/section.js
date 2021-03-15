@@ -8,7 +8,7 @@ module.exports = {
 	Query: {
 		async getSections() {
 			try {
-				const sections = await Section.find();
+				const sections = await Section.find().sort({ createdAt: -1 });
 				return sections;
 			} catch (err) {
 				throw new Error(err);
@@ -31,67 +31,51 @@ module.exports = {
 			}
 
 			const conference = await Conference.findOne({ _id: conferenceId });
-			if (conference) {
-				const sectionExists = conference.sections.find(
-					(section) => section.name === name
-				);
-				if (sectionExists) {
-					throw new UserInputError("Errors", {
-						errors: {
-							name: "Conference already has a section with this name.",
-						},
-					});
-				}
-			} else {
+			if (!conference) {
 				throw new UserInputError("Conference not found.");
 			}
-
 			const section = new Section({ name, topic });
-			const res = await section.save();
+			await section.save();
 
 			conference.sections.push({ name, section: section._id });
 			await conference.save();
 
-			return res;
+			return conference;
 		},
-		async updateSection(parent, { conferenceId, sectionId, name, topic }) {
+		async updateSection(
+			parent,
+			{ conferenceId, sectionId, name, topic, start, end }
+		) {
 			const { errors, valid } = validateSection(name, topic);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
-
 			const conference = await Conference.findOne({ _id: conferenceId });
 			if (conference) {
-				const section = conference.sections.find(
-					(s) => s.section === sectionId
-				);
-				console.log(section);
-				if (section) {
-					section.name = name;
-					await conference.save();
-				}
+				const section = conference.sections.find((s) => s.section == sectionId);
+				section.name = name;
 			} else {
 				throw new UserInputError("Conference not found.");
 			}
 
-			const section = conference.sections.id(sectionId);
-			if (section) {
-				section.name = name;
-				section.topic = topic;
-				const res = await conference.save();
+			const res = Section.findOneAndUpdate(
+				{ _id: sectionId },
+				{ name, topic, start, end },
+				{ new: true }
+			);
+			if (res) {
 				return res;
 			} else {
 				throw new UserInputError("Section not found.");
 			}
 		},
-		async deleteSection(parent, { conferenceId, sectionId }) {
-			const conference = await Conference.findOne({ _id: conferenceId });
-			if (conference) {
-				conference.sections.id(sectionId).remove();
-				const res = await conference.save();
-				return res;
+		async deleteSection(parent, { sectionId }) {
+			const section = await Section.findOne({ _id: sectionId });
+			if (section) {
+				await section.remove();
+				return "Section has been deleted.";
 			} else {
-				throw new UserInputError("Conference not found.");
+				throw new UserInputError("Section not found.");
 			}
 		},
 		async addGarant(parent, { conferenceId, sectionId, name, garant }) {

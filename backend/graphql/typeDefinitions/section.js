@@ -42,16 +42,23 @@ module.exports = gql`
 		getSection(sectionId: ID!): Section!
 	}
 	extend type Mutation {
-		createSection(conferenceId: ID!, name: String!, topic: String!): Section!
+		createSection(
+			conferenceId: ID!
+			name: String!
+			topic: String!
+			start: Date
+			end: Date
+		): Conference!
 		updateSection(
 			conferenceId: ID!
 			sectionId: ID!
 			name: String!
 			topic: String!
-			start: Date!
-			end: Date!
+			start: Date
+			end: Date
 		): Section!
-		deleteSection(conferenceId: ID!, sectionId: ID!): Conference!
+		deleteSection(sectionId: ID!): String!
+		#REFACTOR ZVYSOK
 		addGarant(
 			conferenceId: ID!
 			sectionId: ID!

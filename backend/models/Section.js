@@ -42,4 +42,14 @@ const sectionSchema = new Schema(
 	{ timestamps: true }
 );
 
+sectionSchema.pre("remove", async function () {
+	const section = this;
+	await section
+		.model("Conference")
+		.findOneAndUpdate(
+			{ sections: section._id },
+			{ $pull: { sections: section._id } }
+		);
+});
+
 module.exports = model("Section", sectionSchema);
