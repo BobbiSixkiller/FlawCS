@@ -5,22 +5,28 @@ const { validateConference } = require("../../util/validation");
 
 module.exports = {
 	Query: {
-		async getHostConferences(parent, { hostId }) {
-			try {
-				const conferences = await Conference.find({ host: hostId })
-					.populate("host")
-					.sort({ updatedAt: -1 });
-				return conferences;
-			} catch (err) {
-				throw new Error(err);
+		async getUpcomingConferences() {
+			const conferences = await Conference.find({
+				regEnd: { $gt: Date.now() },
+			});
+			if (conferences.length === 0) {
+				throw new Error("No upcoming conferences.");
 			}
+			return conferences;
+		},
+		async getConferences(parent, { hostId }) {
+			const filter = hostId.length !== 0 ? { host: hostId } : {};
+
+			const conferences = await Conference.find(filter).sort({
+				updatedAt: -1,
+			});
+			return conferences;
 		},
 		async getConference(parent, { conferenceId }) {
 			const conference = await Conference.findOne({
 				_id: conferenceId,
-			})
-				.populate("host")
-				.populate("sections");
+			}).populate("host");
+
 			if (conference) {
 				return conference;
 			} else {

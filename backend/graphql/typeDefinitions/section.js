@@ -16,7 +16,7 @@ module.exports = gql`
 	type Speaker {
 		id: ID!
 		name: String!
-		speaker: String!
+		userId: String!
 		submission: String!
 		accepted: Boolean!
 		createdAt: Date!
@@ -25,20 +25,20 @@ module.exports = gql`
 	type Garant {
 		id: ID!
 		name: String!
-		garant: String!
+		userId: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 	type Coordinator {
 		id: ID!
 		name: String!
-		coordinator: String!
+		userId: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
 
 	extend type Query {
-		getSections: [Section]!
+		getSections(conferenceId: ID!): [Section]!
 		getSection(sectionId: ID!): Section!
 	}
 	extend type Mutation {
@@ -59,45 +59,18 @@ module.exports = gql`
 		): Section!
 		deleteSection(sectionId: ID!): String!
 		#REFACTOR ZVYSOK
-		addGarant(
-			conferenceId: ID!
-			sectionId: ID!
-			name: String!
-			garant: String!
-		): Conference!
-		deleteGarant(conferenceId: ID!, sectionId: ID!, garantId: ID!): Conference!
-		addCoordinator(
-			conferenceId: ID!
-			sectionId: ID!
-			name: String!
-			coordinator: String!
-		): Conference!
-		deleteCoordinator(
-			conferenceId: ID!
-			sectionId: ID!
-			coordinatorId: ID!
-		): Conference!
-		addSubmission(
-			conferenceId: ID!
-			sectionId: ID!
-			submissionInput: SubmissionInput!
-		): Conference!
+		addGarant(sectionId: ID!, name: String!, userId: String!): Section!
+		deleteGarant(sectionId: ID!, userId: ID!): Section!
+		addCoordinator(sectionId: ID!, name: String!, userId: String!): Section!
+		deleteCoordinator(sectionId: ID!, userId: ID!): Section!
+		addSubmission(sectionId: ID!, submissionInput: SubmissionInput!): Section!
 		addSpeaker(
-			conferenceId: ID!
 			sectionId: ID!
 			userId: String!
 			name: String!
 			submissionInput: SubmissionInput!
-		): Conference!
-		deleteSpeaker(
-			conferenceId: ID!
-			sectionId: ID!
-			speakerId: ID!
-		): Conference!
-		approveSpeaker(
-			conferenceId: ID!
-			sectionId: ID!
-			speakerId: ID!
-		): Conference!
+		): Section!
+		deleteSpeaker(sectionId: ID!, userId: ID!): Section!
+		approveSpeaker(sectionId: ID!, userId: ID!): Section!
 	}
 `;

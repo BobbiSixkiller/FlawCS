@@ -15,15 +15,20 @@ module.exports = gql`
 		venue: Venue!
 		host: Host
 		ticketPrice: Int!
-		sections: [Section]!
+		sections: [ConferenceSection]!
 		attendees: [Attendee]!
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type ConferenceSection {
+		id: ID!
+		name: String!
+		sectionId: ID!
+	}
 	type Attendee {
 		id: ID!
 		name: String!
-		attendee: String!
+		attendee: ID!
 		invoiceId: String!
 		createdAt: Date!
 		updatedAt: Date!
@@ -31,7 +36,7 @@ module.exports = gql`
 
 	input ConferenceInput {
 		name: String!
-		hostId: String!
+		hostId: ID!
 		start: Date!
 		end: Date!
 		regStart: Date!
@@ -44,7 +49,8 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getHostConferences(hostId: ID!): [Conference]!
+		getUpcomingConferences: [Conference]!
+		getConferences(hostId: ID): [Conference]!
 		getConference(conferenceId: ID!): Conference!
 	}
 	extend type Mutation {

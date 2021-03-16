@@ -32,21 +32,21 @@ const userSchema = new Schema(
 userSchema.virtual("conferences", {
 	ref: "Conference",
 	localField: "_id",
-	foreignField: "attendees.attendee",
+	foreignField: "attendees.userId",
 	justOne: false,
 });
 
 userSchema.virtual("submissions", {
 	ref: "Submission",
 	localField: "_id",
-	foreignField: "user",
+	foreignField: "userId",
 	justOne: false,
 });
 
 userSchema.virtual("invoices", {
 	ref: "Invoice",
 	localField: "_id",
-	foreignField: "user",
+	foreignField: "userId",
 	justOne: false,
 });
 

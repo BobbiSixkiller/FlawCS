@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const garantSchema = new Schema(
 	{
 		name: String,
-		garant: { type: Schema.Types.ObjectId, ref: "User" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true }
 );
@@ -11,7 +11,7 @@ const garantSchema = new Schema(
 const coordinatorSchema = new Schema(
 	{
 		name: String,
-		coordinator: { type: Schema.Types.ObjectId, ref: "User" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true }
 );
@@ -19,8 +19,8 @@ const coordinatorSchema = new Schema(
 const speakerSchema = new Schema(
 	{
 		name: String,
-		speaker: { type: Schema.Types.ObjectId, ref: "User" },
-		submission: { type: Schema.Types.ObjectId, ref: "Submission" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
+		submissionId: { type: Schema.Types.ObjectId, ref: "Submission" },
 		accepted: {
 			type: Boolean,
 			default: false,
@@ -47,8 +47,8 @@ sectionSchema.pre("remove", async function () {
 	await section
 		.model("Conference")
 		.findOneAndUpdate(
-			{ sections: section._id },
-			{ $pull: { sections: section._id } }
+			{ "sections.sectionId": section._id },
+			{ $pull: { sections: { sectionId: section._id } } }
 		);
 });
 

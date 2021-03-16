@@ -4,8 +4,8 @@ const { address } = require("./utilSchemas");
 const attendeeSchema = new Schema(
 	{
 		name: String,
-		attendee: { type: Schema.Types.ObjectId, ref: "User" },
-		invoice: { type: Schema.Types.ObjectId, ref: "Invoice" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
+		invoiceId: { type: Schema.Types.ObjectId, ref: "Invoice" },
 	},
 	{ timestamps: true }
 );
@@ -26,12 +26,18 @@ const conferenceSchema = new Schema(
 		sections: [
 			{
 				name: String,
-				section: { type: Schema.Types.ObjectId, ref: "Section" },
+				sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
 			},
 		],
 		attendees: [attendeeSchema],
 	},
 	{ timestamps: true }
 );
+
+conferenceSchema.pre("remove", async function () {
+	const objectIds = this.sections.map((section) => section.sectionId);
+
+	await this.model("Section").deleteMany({ _id: { $in: objectIds } });
+});
 
 module.exports = model("Conference", conferenceSchema);

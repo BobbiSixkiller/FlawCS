@@ -6,12 +6,12 @@ const submissionSchema = new Schema(
 		abstract: String,
 		keywords: [{ keyword: String }],
 		url: String,
-		user: { type: Schema.Types.ObjectId, ref: "User" },
-		conference: { type: Schema.Types.ObjectId, ref: "Conference" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
+		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
 	},
 	{ timestamps: true }
 );
-
+//needs refactor
 submissionSchema.pre("remove", async function () {
 	const submission = this;
 	await submission

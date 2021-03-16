@@ -35,8 +35,8 @@ const invoiceSchema = new Schema(
 				tax: Number,
 			},
 		},
-		conference: { type: Schema.Types.ObjectId, ref: "Conference" },
-		user: { type: Schema.Types.ObjectId, ref: "User" },
+		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
+		userId: { type: Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true }
 );
