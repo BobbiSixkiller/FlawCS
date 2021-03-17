@@ -50,7 +50,6 @@ module.exports = shield(
 			createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			deleteHost: and(isAuthenticated, isAdmin),
-			approveSpeaker: and(isAuthenticated, or(isAdmin, isSupervisor, isGarant)),
 		},
 	},
 	{ allowExternalErrors: true }
