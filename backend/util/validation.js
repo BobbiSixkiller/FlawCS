@@ -1,3 +1,4 @@
+//refactor using regex/Joi validator
 module.exports.validateRegister = (fields) => {
 	const errors = {};
 	if (fields.titleBefore.trim().length > 20) {
@@ -166,14 +167,17 @@ module.exports.validateConference = (fields) => {
 	};
 };
 
-module.exports.validateSection = (name, topic) => {
+module.exports.validateSection = (fields) => {
 	const errors = {};
 
-	if (name.trim() === "") {
+	if (fields.name.trim() === "") {
 		errors.name = "Please submit name of the section.";
 	}
-	if (topic.trim() === "") {
+	if (fields.topic.trim() === "") {
 		errors.topic = "Please submit topic of the section";
+	}
+	if (fields.languages.length === 0 || fields.languages[0] === "") {
+		errors.languages = "You must provide at least 1 language.";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
@@ -198,7 +202,7 @@ module.exports.validateSubmission = (fields) => {
 	if (fields.abstract.trim() === "") {
 		errors.abstract = "Please submit abstract of your submission.";
 	}
-	if (fields.keywords.length === 0 || fields.keywords[0].keyword === "") {
+	if (fields.keywords.length === 0 || fields.keywords[0] === "") {
 		errors.keywords = "You must provide at least 1 keyword.";
 	}
 

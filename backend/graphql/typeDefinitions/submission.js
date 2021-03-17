@@ -3,27 +3,20 @@ const { gql } = require("apollo-server-express");
 module.exports = gql`
 	type Submission {
 		id: ID!
-		user: String!
-		conference: String!
+		userId: ID!
+		conferenceId: ID!
 		name: String!
 		abstract: String!
-		keywords: [Keyword]!
+		keywords: [String]!
 		url: String
 		createdAt: Date!
 		updatedAt: Date!
 	}
-	type Keyword {
-		id: ID!
-		keyword: String!
-	}
 
-	input KeywordInput {
-		keyword: String!
-	}
 	input SubmissionInput {
 		name: String!
 		abstract: String!
-		keywords: [KeywordInput]!
+		keywords: [String]!
 		url: String
 	}
 

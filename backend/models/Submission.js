@@ -4,9 +4,13 @@ const submissionSchema = new Schema(
 	{
 		name: String,
 		abstract: String,
-		keywords: [{ keyword: String }],
+		keywords: [{ type: String }],
 		url: String,
-		userId: { type: Schema.Types.ObjectId, ref: "User" },
+		authors: [{ type: Schema.Types.ObjectId, ref: "User" }],
+		accepted: {
+			type: Boolean,
+			default: false,
+		},
 		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
 	},
 	{ timestamps: true }
@@ -15,10 +19,10 @@ const submissionSchema = new Schema(
 submissionSchema.pre("remove", async function () {
 	const submission = this;
 	await submission
-		.model("Conference")
+		.model("Section")
 		.updateMany(
-			{ "sections.speakers.submission": submission._id },
-			{ $pull: { "sections.$.speakers": { submission: submission._id } } }
+			{ "speakers.submissionId": submission._id },
+			{ $pull: { speakers: { submissionId: submission._id } } }
 		);
 });
 

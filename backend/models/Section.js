@@ -16,10 +16,10 @@ const coordinatorSchema = new Schema(
 	{ timestamps: true }
 );
 
-const speakerSchema = new Schema(
+//refactor podla doda
+const submissionSchema = new Schema(
 	{
 		name: String,
-		userId: { type: Schema.Types.ObjectId, ref: "User" },
 		submissionId: { type: Schema.Types.ObjectId, ref: "Submission" },
 		accepted: {
 			type: Boolean,
@@ -35,9 +35,10 @@ const sectionSchema = new Schema(
 		topic: String,
 		start: Date,
 		end: Date,
+		languages: [{ type: String }],
 		garants: [garantSchema],
 		coordinators: [coordinatorSchema],
-		speakers: [speakerSchema],
+		submissions: [submissionSchema],
 	},
 	{ timestamps: true }
 );
