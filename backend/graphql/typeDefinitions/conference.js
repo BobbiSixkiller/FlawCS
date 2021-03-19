@@ -24,6 +24,8 @@ module.exports = gql`
 		id: ID!
 		name: String!
 		sectionId: ID!
+		createdAt: Date!
+		updatedAt: Date!
 	}
 	type Attendee {
 		id: ID!
@@ -49,7 +51,7 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getUpcomingConferences: [Conference]!
+		getUpcomingConferences(hostId: ID): [Conference]!
 		getConferences(hostId: ID): [Conference]!
 		getConference(conferenceId: ID!): Conference!
 	}

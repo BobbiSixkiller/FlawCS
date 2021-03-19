@@ -7,23 +7,42 @@ const submissionSchema = new Schema(
 		keywords: [{ type: String }],
 		url: String,
 		authors: [{ type: Schema.Types.ObjectId, ref: "User" }],
+		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
+		sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
 		accepted: {
 			type: Boolean,
 			default: false,
 		},
-		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
 	},
 	{ timestamps: true }
 );
-//needs refactor
+
 submissionSchema.pre("remove", async function () {
-	const submission = this;
-	await submission
-		.model("Section")
-		.updateMany(
-			{ "speakers.submissionId": submission._id },
-			{ $pull: { speakers: { submissionId: submission._id } } }
+	await this.model("Section").updateMany(
+		{ "submissions.submissionId": this._id },
+		{ $pull: { submissions: { submissionId: this._id } } }
+	);
+});
+
+submissionSchema.pre("save", async function () {
+	if (this.isModified()) {
+		await this.model("Section").updateOne(
+			{ "submissions.submissionId": this._id },
+			{
+				"submissions.$.name": this.name,
+				"submissions.$.accepted": this.accepted,
+				"submissions.$.updatedAt": this.updatedAt,
+			}
 		);
+		await this.model("Conference").updateOne(
+			{ "sections.sectionId": this.sectionId },
+			{ "sections.$.updatedAt": this.updatedAt }
+		);
+	}
+});
+
+submissionSchema.post("save", async function (submission) {
+	await submission.populate("authors").execPopulate();
 });
 
 module.exports = model("Submission", submissionSchema);

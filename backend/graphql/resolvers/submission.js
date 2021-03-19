@@ -7,14 +7,18 @@ module.exports = {
 	Query: {
 		async getSubmissions() {
 			try {
-				const submissions = await Submission.find().sort({ updatedAt: -1 });
+				const submissions = await Submission.find()
+					.populate("authors")
+					.sort({ updatedAt: -1 });
 				return submissions;
 			} catch (err) {
 				throw new Error(err);
 			}
 		},
 		async getSubmission(parent, { submissionId }) {
-			const submission = await Submission.findOne({ _id: submissionId });
+			const submission = await Submission.findOne({
+				_id: submissionId,
+			}).populate("authors");
 			if (submission) {
 				return submission;
 			} else {
@@ -23,21 +27,28 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async updateSubmission(parent, { submissionId, submissionInput }) {
+		async updateSubmission(
+			parent,
+			{ submissionId, submissionInput, authors, accepted }
+		) {
 			const { errors, valid } = validateSubmission(submissionInput);
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
-			const update = await Submission.findOneAndUpdate(
-				{ _id: submissionId },
-				submissionInput,
-				{ new: true }
-			);
-			if (update) {
-				return update;
-			} else {
+			const submission = await Submission.findOne({ _id: submissionId });
+			if (!submission) {
 				throw new UserInputError("Submission not found.");
 			}
+			submission.name = submissionInput.name;
+			submission.abstract = submissionInput.abstract;
+			submission.keywords = submissionInput.keywords;
+			submission.url = submissionInput.url;
+			submission.accepted = accepted;
+			submission.authors = authors;
+
+			const res = await submission.save();
+
+			return res;
 		},
 		async deleteSubmission(parent, { submissionId }) {
 			const submission = await Submission.findOne({ _id: submissionId });

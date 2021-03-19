@@ -39,7 +39,7 @@ userSchema.virtual("conferences", {
 userSchema.virtual("submissions", {
 	ref: "Submission",
 	localField: "_id",
-	foreignField: "userId",
+	foreignField: "authors",
 	justOne: false,
 });
 

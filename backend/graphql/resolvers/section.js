@@ -1,13 +1,13 @@
 const { UserInputError } = require("apollo-server-express");
 
-const Section = require("../../models/Section");
 const Conference = require("../../models/Conference");
+const Section = require("../../models/Section");
+const Submission = require("../../models/Submission");
 const {
 	validateSection,
 	validateGarant,
 	validateSubmission,
 } = require("../../util/validation");
-const Submission = require("../../models/Submission");
 
 module.exports = {
 	Query: {
@@ -30,7 +30,6 @@ module.exports = {
 	},
 	Mutation: {
 		async createSection(parent, { conferenceId, sectionInput }) {
-			console.log(sectionInput);
 			const { errors, valid } = validateSection({ ...sectionInput });
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
@@ -40,6 +39,15 @@ module.exports = {
 			if (!conference) {
 				throw new UserInputError("Conference not found.");
 			}
+			const sectionExists = conference.sections.find(
+				(s) => s.name == sectionInput.name
+			);
+			if (sectionExists) {
+				throw new UserInputError("Errors", {
+					errors: { name: "Section with provided name already exists." },
+				});
+			}
+
 			const section = new Section({ ...sectionInput });
 			conference.sections.push({ name: section.name, sectionId: section._id });
 
@@ -47,22 +55,15 @@ module.exports = {
 
 			return conference;
 		},
-		async updateSection(parent, { conferenceId, sectionId, sectionInput }) {
+		async updateSection(parent, { sectionId, sectionInput }) {
 			const { errors, valid } = validateSection({ ...sectionInput });
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });
 			}
-
-			const [conference, section] = await Promise.all([
-				Conference.findOne({ _id: conferenceId }),
-				Section.findOne({ _id: sectionId }),
-			]);
-			if (!conference || !section) {
-				throw new UserInputError("Conference or section not found.");
+			const section = await Section.findOne({ _id: sectionId });
+			if (!section) {
+				throw new UserInputError("Section not found.");
 			}
-
-			const confSec = conference.sections.find((s) => s.sectionId == sectionId);
-			confSec.name = sectionInput.name;
 
 			section.name = sectionInput.name;
 			section.topic = sectionInput.topic;
@@ -70,9 +71,9 @@ module.exports = {
 			section.end = sectionInput.end;
 			section.languages = sectionInput.languages;
 
-			const res = await Promise.all([conference.save(), section.save()]);
+			const res = await section.save();
 
-			return res[1];
+			return res;
 		},
 		async deleteSection(parent, { sectionId }) {
 			const section = await Section.findOne({ _id: sectionId });
@@ -151,8 +152,8 @@ module.exports = {
 		},
 		async addSubmission(
 			parent,
-			{ conferenceId, sectionId, submissionInput },
-			{ user: { id, name } }
+			{ conferenceId, sectionId, authors, submissionInput },
+			{ user: { id } }
 		) {
 			const { errors, valid } = validateSubmission(submissionInput);
 			if (!valid) {
@@ -160,27 +161,32 @@ module.exports = {
 			}
 			const submission = new Submission({
 				...submissionInput,
-				userId: id,
+				authors: authors ? authors : id,
 				conferenceId,
+				sectionId,
 			});
 
 			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
 			}
-			section.speakers.push({ name, userId: id, submissionId: submission._id });
+			const submissionExists = section.submissions.find(
+				(s) => s.name == submission.name
+			);
+			if (submissionExists) {
+				throw new UserInputError(
+					"Section already contains a submission with provided name."
+				);
+			}
+
+			section.submissions.push({
+				name: submission.name,
+				submissionId: submission._id,
+			});
 
 			const res = await Promise.all([submission.save(), section.save()]);
 
 			return res[1];
 		},
-		async addSpeaker(parent, { sectionId, userId, name, submissionInput }) {
-			const { errors, valid } = validateSubmission(submissionInput);
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
-		},
-		async deleteSpeaker(parent, { sectionId, userId }) {},
-		async approveSpeaker(parent, { sectionId, userId }) {},
 	},
 };

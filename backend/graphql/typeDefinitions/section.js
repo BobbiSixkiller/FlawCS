@@ -10,14 +10,13 @@ module.exports = gql`
 		languages: [String]!
 		garants: [Garant]!
 		coordinators: [Coordinator]!
-		speakers: [Speaker]!
+		submissions: [SectionSubmission]!
 		createdAt: Date!
 		updatedAt: Date!
 	}
-	type Speaker {
+	type SectionSubmission {
 		id: ID!
 		name: String!
-		userId: ID!
 		submissionId: ID!
 		accepted: Boolean!
 		createdAt: Date!
@@ -52,11 +51,7 @@ module.exports = gql`
 	}
 	extend type Mutation {
 		createSection(conferenceId: ID!, sectionInput: SectionInput!): Conference!
-		updateSection(
-			conferenceId: ID!
-			sectionId: ID!
-			sectionInput: SectionInput!
-		): Section!
+		updateSection(sectionId: ID!, sectionInput: SectionInput!): Section!
 		deleteSection(sectionId: ID!): String!
 		addGarant(sectionId: ID!, name: String!, userId: String!): Section!
 		removeGarant(sectionId: ID!, userId: ID!): Section!
@@ -65,15 +60,8 @@ module.exports = gql`
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
+			authors: [ID]
 			submissionInput: SubmissionInput!
 		): Section!
-		addSpeaker(
-			sectionId: ID!
-			userId: String!
-			name: String!
-			submissionInput: SubmissionInput!
-		): Section!
-		deleteSpeaker(sectionId: ID!, userId: ID!): Section!
-		approveSpeaker(sectionId: ID!, userId: ID!): Section!
 	}
 `;

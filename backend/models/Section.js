@@ -16,7 +16,6 @@ const coordinatorSchema = new Schema(
 	{ timestamps: true }
 );
 
-//refactor podla doda
 const submissionSchema = new Schema(
 	{
 		name: String,
@@ -44,13 +43,24 @@ const sectionSchema = new Schema(
 );
 
 sectionSchema.pre("remove", async function () {
-	const section = this;
-	await section
-		.model("Conference")
-		.findOneAndUpdate(
-			{ "sections.sectionId": section._id },
-			{ $pull: { sections: { sectionId: section._id } } }
-		);
+	await this.model("Conference").findOneAndUpdate(
+		{ "sections.sectionId": this._id },
+		{ $pull: { sections: { sectionId: this._id } } }
+	);
+	await this.model("Submission").deleteMany({ sectionId: this._id });
+});
+
+sectionSchema.pre("save", async function () {
+	await this.model("Conference").findOneAndUpdate(
+		{
+			"sections.sectionId": this._id,
+		},
+		{
+			"sections.$.name": this.name,
+			"sections.$.topic": this.topic,
+			"sections.$.updatedAt": this.updatedAt,
+		}
+	);
 });
 
 module.exports = model("Section", sectionSchema);

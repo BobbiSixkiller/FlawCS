@@ -10,25 +10,30 @@ const attendeeSchema = new Schema(
 	{ timestamps: true }
 );
 
+const sectionSchema = new Schema(
+	{
+		name: String,
+		topic: String,
+		languages: [{ type: String }],
+		sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
+	},
+	{ timestamps: true }
+);
+
 const conferenceSchema = new Schema(
 	{
 		host: { type: Schema.Types.ObjectId, ref: "Host" },
 		name: String,
-		start: Date,
-		end: Date,
 		regStart: Date,
 		regEnd: Date,
+		start: Date,
+		end: Date,
 		ticketPrice: Number,
 		venue: {
 			name: String,
 			address,
 		},
-		sections: [
-			{
-				name: String,
-				sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
-			},
-		],
+		sections: [sectionSchema],
 		attendees: [attendeeSchema],
 	},
 	{ timestamps: true }
@@ -38,6 +43,7 @@ conferenceSchema.pre("remove", async function () {
 	const objectIds = this.sections.map((section) => section.sectionId);
 
 	await this.model("Section").deleteMany({ _id: { $in: objectIds } });
+	await this.model("Submission").deleteMany({ conferenceId: this._id });
 });
 
 module.exports = model("Conference", conferenceSchema);

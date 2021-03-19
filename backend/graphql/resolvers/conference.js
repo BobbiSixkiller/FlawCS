@@ -5,17 +5,19 @@ const { validateConference } = require("../../util/validation");
 
 module.exports = {
 	Query: {
-		async getUpcomingConferences() {
-			const conferences = await Conference.find({
-				regEnd: { $gt: Date.now() },
-			});
+		async getUpcomingConferences(parent, { hostId }) {
+			const filter = hostId
+				? { host: hostId, regEnd: { $gt: Date.now() } }
+				: { regEnd: { $gt: Date.now() } };
+
+			const conferences = await Conference.find(filter).populate("host");
 			if (conferences.length === 0) {
 				throw new Error("No upcoming conferences.");
 			}
 			return conferences;
 		},
 		async getConferences(parent, { hostId }) {
-			const filter = hostId.length !== 0 ? { host: hostId } : {};
+			const filter = hostId ? { host: hostId } : {};
 
 			const conferences = await Conference.find(filter).sort({
 				updatedAt: -1,
