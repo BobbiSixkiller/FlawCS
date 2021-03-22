@@ -46,7 +46,7 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getSections(conferenceId: ID!): [Section]!
+		getSections: [Section]!
 		getSection(sectionId: ID!): Section!
 	}
 	extend type Mutation {

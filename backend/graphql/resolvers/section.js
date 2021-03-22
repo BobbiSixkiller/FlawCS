@@ -11,13 +11,10 @@ const {
 
 module.exports = {
 	Query: {
-		async getSections(parent, { conferenceId }) {
-			try {
-				const sections = await Section.find().sort({ createdAt: -1 });
-				return sections;
-			} catch (err) {
-				throw new Error(err);
-			}
+		//development resolver, might not be needed in production
+		async getSections() {
+			const sections = await Section.find().sort({ createdAt: -1 });
+			return sections;
 		},
 		async getSection(parent, { sectionId }) {
 			const section = await Section.findOne({ _id: sectionId });

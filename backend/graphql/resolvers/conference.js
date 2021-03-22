@@ -1,6 +1,7 @@
 const { UserInputError } = require("apollo-server-express");
 
 const Conference = require("../../models/Conference");
+const User;
 const { validateConference } = require("../../util/validation");
 
 module.exports = {
@@ -112,6 +113,21 @@ module.exports = {
 			} else {
 				throw new UserInputError("Conference not found.");
 			}
+		},
+		async addAttendee(parent, { conferenceId, userId }, { user: { id } }) {
+			const conference = await Conference.findOne({
+				_id: conferenceId,
+			}).populated("host");
+			if (!conference) {
+				throw new UserInputError("Conference not found.");
+			}
+			const userExists = conference.attendees.find((a) => a.userId == userId);
+			if (userExists) {
+				throw new UserInputError(
+					"You are already signed up for the conference."
+				);
+			}
+			const user = conference.attendees.push({});
 		},
 	},
 };

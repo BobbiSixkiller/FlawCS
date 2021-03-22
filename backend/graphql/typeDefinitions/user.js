@@ -15,6 +15,7 @@ module.exports = gql`
 		role: String!
 		createdAt: Date!
 		updatedAt: Date!
+		submissions: [Submission]!
 	}
 	type Billing {
 		name: String!

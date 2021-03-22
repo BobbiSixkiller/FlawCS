@@ -31,7 +31,7 @@ module.exports = {
 			}
 		},
 		async getUser(_parent, { userId }, _context, _info) {
-			const user = await User.findOne({ _id: userId });
+			const user = await User.findOne({ _id: userId }).populate("submissions");
 			if (user) {
 				return user;
 			} else {

@@ -66,5 +66,6 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
+		addAttendee(conferenceId: ID!, userId: ID, name: String): Conference!
 	}
 `;

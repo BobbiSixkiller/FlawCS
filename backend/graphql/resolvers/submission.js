@@ -5,6 +5,7 @@ const { validateSubmission } = require("../../util/validation");
 
 module.exports = {
 	Query: {
+		//development resolver, might not be needed in production
 		async getSubmissions() {
 			try {
 				const submissions = await Submission.find()
