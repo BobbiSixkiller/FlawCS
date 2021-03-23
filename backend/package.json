@@ -20,7 +20,7 @@
     "graphql-shield": "^7.5.0",
     "graphql-upload": "^11.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.16",
+    "mongoose": "^5.12.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

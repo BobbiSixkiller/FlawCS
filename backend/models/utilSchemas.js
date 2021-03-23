@@ -7,5 +7,4 @@ module.exports.address = new Schema(
 		postal: String,
 		country: String,
 	},
-	{ timestamps: true }
 );

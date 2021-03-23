@@ -41,8 +41,8 @@ const isGarant = rule({ cache: "strict" })(
 module.exports = shield(
 	{
 		Query: {
-			getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+			//getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			//getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
 		},
 		Mutation: {
 			deleteUser: and(isAuthenticated, isAdmin),

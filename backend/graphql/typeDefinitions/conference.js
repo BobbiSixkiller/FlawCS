@@ -30,7 +30,7 @@ module.exports = gql`
 	type Attendee {
 		id: ID!
 		name: String!
-		attendee: ID!
+		userId: ID!
 		invoiceId: String!
 		createdAt: Date!
 		updatedAt: Date!
@@ -66,6 +66,6 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
-		addAttendee(conferenceId: ID!, userId: ID, name: String): Conference!
+		addAttendee(conferenceId: ID!, userId: ID): Conference!
 	}
 `;

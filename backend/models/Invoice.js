@@ -1,4 +1,4 @@
-const { Schema, Model } = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { address } = require("./utilSchemas");
 
 const invoiceSchema = new Schema(
@@ -11,7 +11,8 @@ const invoiceSchema = new Schema(
 			DIC: String,
 			IBAN: String,
 			SWIFT: String,
-			stampUrl: String,
+			logoUrl: String,
+			signatureUrl: String,
 		},
 		payer: {
 			name: String,
@@ -41,4 +42,4 @@ const invoiceSchema = new Schema(
 	{ timestamps: true }
 );
 
-module.exports = Model("Invoice", invoiceSchema);
+module.exports = model("Invoice", invoiceSchema);
