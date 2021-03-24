@@ -5,7 +5,7 @@ module.exports = gql`
 		id: ID!
 		firstName: String!
 		lastName: String!
-		fullName: String!
+		fullName: String
 		email: String!
 		telephone: String!
 		organisation: String!
@@ -32,8 +32,8 @@ module.exports = gql`
 		email: String!
 		telephone: String!
 		organisation: String!
-		titleBefore: String!
-		titleAfter: String!
+		titleBefore: String
+		titleAfter: String
 	}
 	input BillingInput {
 		name: String!

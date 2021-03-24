@@ -53,14 +53,14 @@ module.exports = {
 			_,
 			{ userId, role, userInput, addressInput, billingInput }
 		) {
-			const { valid, errors } = validateRegister({
-				...userInput,
-				...addressInput,
-				...billingInput,
-			});
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+			// const { valid, errors } = validateRegister({
+			// 	...userInput,
+			// 	...addressInput,
+			// 	...billingInput,
+			// });
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
 			const emailExists = await User.findOne({ email: userInput.email });
 			if (emailExists && emailExists._id != userId) {
@@ -74,14 +74,14 @@ module.exports = {
 			const password = await bcrypt.hash(userInput.password, 12);
 
 			const update = {
-				titleBefore: registerInput.titleBefore,
-				firstName: registerInput.firstName,
-				lastName: registerInput.lastName,
-				titleAfter: registerInput.titleAfter,
-				email: registerInput.email,
-				telephone: registerInput.telephone,
+				titleBefore: userInput.titleBefore,
+				firstName: userInput.firstName,
+				lastName: userInput.lastName,
+				titleAfter: userInput.titleAfter,
+				email: userInput.email,
+				telephone: userInput.telephone,
 				password,
-				organisation: registerInput.organisation,
+				organisation: userInput.organisation,
 				address: addressInput,
 				billing: billingInput,
 				role,
@@ -97,16 +97,14 @@ module.exports = {
 			}
 		},
 		async register(_, { registerInput, addressInput, billingInput }) {
-			console.log(billingInput);
-			const { valid, errors } = validateRegister({
-				...registerInput,
-				...addressInput,
-				...billingInput,
-			});
-
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+			// const { valid, errors } = validateRegister({
+			// 	...registerInput,
+			// 	...addressInput,
+			// 	...billingInput,
+			// });
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
 			const emailExists = await User.findOne({ email: registerInput.email });
 			if (emailExists) {

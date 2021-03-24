@@ -26,9 +26,16 @@ const userSchema = new Schema(
 );
 
 userSchema.virtual("fullName").get(function () {
-	return this.titleAfter.length === 0
-		? `${this.titleBefore} ${this.firstName} ${this.lastName}`
-		: `${this.titleBefore} ${this.firstName} ${this.lastName}, ${this.titleAfter}`;
+	if (this.titleBefore && this.titleAfter) {
+		return;
+	}
+	if (this.titleBefore) {
+		return `${this.titleBefore} ${this.firstName} ${this.lastName}`;
+	}
+	if (this.titleAfter) {
+		return `${this.firstName} ${this.lastName}, ${this.titleAfter}`;
+	}
+	return `${this.firstName} ${this.lastName}`;
 });
 
 userSchema.virtual("isFlaw").get(function () {

@@ -23,8 +23,9 @@ module.exports = gql`
 	}
 	type ConferenceSection {
 		id: ID!
-		name: String!
 		sectionId: ID!
+		name: String!
+		topic: String!
 		createdAt: Date!
 		updatedAt: Date!
 	}
