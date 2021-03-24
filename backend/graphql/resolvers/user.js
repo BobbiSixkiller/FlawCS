@@ -49,9 +49,13 @@ module.exports = {
 				throw new UserInputError("User not found.");
 			}
 		},
-		async updateUser(_, { userId, userInput, billingInput }) {
+		async updateUser(
+			_,
+			{ userId, role, userInput, addressInput, billingInput }
+		) {
 			const { valid, errors } = validateRegister({
 				...userInput,
+				...addressInput,
 				...billingInput,
 			});
 			if (!valid) {
@@ -70,23 +74,17 @@ module.exports = {
 			const password = await bcrypt.hash(userInput.password, 12);
 
 			const update = {
-				titleBefore: userInput.titleBefore,
-				firstName: userInput.firstName,
-				lastName: userInput.lastName,
-				titleAfter: userInput.titleAfter,
-				email: userInput.email,
-				telephone: userInput.telephone,
+				titleBefore: registerInput.titleBefore,
+				firstName: registerInput.firstName,
+				lastName: registerInput.lastName,
+				titleAfter: registerInput.titleAfter,
+				email: registerInput.email,
+				telephone: registerInput.telephone,
 				password,
-				organisation: userInput.organisation,
-				role: userInput.role,
-				"billing.name": billingInput.name,
-				"billing.DIC": billingInput.DIC,
-				"billing.ICO": billingInput.ICO,
-				"billing.ICDPH": billingInput.ICDPH,
-				"billing.address.street": billingInput.address.street,
-				"billing.address.city": billingInput.address.city,
-				"billing.address.postal": billingInput.address.postal,
-				"billing.address.country": billingInput.address.country,
+				organisation: registerInput.organisation,
+				address: addressInput,
+				billing: billingInput,
+				role,
 			};
 			const user = await User.findOneAndUpdate({ _id: userId }, update, {
 				new: true,
@@ -98,10 +96,11 @@ module.exports = {
 				throw new UserInputError("User not found.");
 			}
 		},
-		async register(_, { registerInput, billingInput }) {
+		async register(_, { registerInput, addressInput, billingInput }) {
 			console.log(billingInput);
 			const { valid, errors } = validateRegister({
 				...registerInput,
+				...addressInput,
 				...billingInput,
 			});
 
@@ -131,15 +130,9 @@ module.exports = {
 				telephone: registerInput.telephone,
 				password,
 				organisation: registerInput.organisation,
-				"billing.name": billingInput.name,
-				"billing.DIC": billingInput.DIC,
-				"billing.ICO": billingInput.ICO,
-				"billing.ICDPH": billingInput.ICDPH,
-				"billing.address.street": billingInput.address.street,
-				"billing.address.city": billingInput.address.city,
-				"billing.address.postal": billingInput.address.postal,
-				"billing.address.country": billingInput.address.country,
-				role: users === 0 ? "ADMIN" : registerInput.role,
+				address: addressInput,
+				billing: billingInput,
+				role: users === 0 ? "ADMIN" : "BASIC",
 			});
 
 			const res = await user.save();

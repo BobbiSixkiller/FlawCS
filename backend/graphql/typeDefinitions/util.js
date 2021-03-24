@@ -13,8 +13,6 @@ module.exports = gql`
 		city: String!
 		postal: String!
 		country: String!
-		createdAt: Date!
-		updatedAt: Date!
 	}
 
 	input AddressInput {

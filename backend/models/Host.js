@@ -3,13 +3,13 @@ const { address } = require("./utilSchemas");
 
 const hostSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		address,
-		ICO: String,
-		ICDPH: String,
-		DIC: String,
-		IBAN: String,
-		SWIFT: String,
+		ICO: { type: String, trim: true },
+		ICDPH: { type: String, trim: true },
+		DIC: { type: String, trim: true },
+		IBAN: { type: String, trim: true },
+		SWIFT: { type: String, trim: true },
 		signatureUrl: String,
 		logoUrl: String,
 	},

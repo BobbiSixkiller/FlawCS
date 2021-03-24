@@ -2,9 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const submissionSchema = new Schema(
 	{
-		name: String,
-		abstract: String,
-		keywords: [{ type: String }],
+		name: { type: String, trim: true },
+		abstract: { type: String, trim: true },
+		keywords: [{ type: String, trim: true }],
 		url: String,
 		authors: [{ type: Schema.Types.ObjectId, ref: "User" }],
 		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },

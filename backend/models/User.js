@@ -1,64 +1,59 @@
 const { model, Schema } = require("mongoose");
-const { address } = require("./utilSchemas");
+const { address, billing } = require("./utilSchemas");
 
 const userSchema = new Schema(
-  {
-    firstName: String,
-    lastName: String,
-    email: String,
-    password: String,
-    telephone: String,
-    organisation: String,
-    titleBefore: String,
-    titleAfter: String,
-    role: {
-      type: String,
-      enum: ["BASIC", "SUPERVISOR", "ADMIN"],
-      default: "BASIC",
-    },
-    billing: {
-      name: String,
-      ICO: String,
-      DIC: String,
-      ICDPH: String,
-      address,
-    },
-  },
-  {
-    timestamps: true,
-    toObject: { virtuals: true },
-  }
+	{
+		firstName: { type: String, trim: true },
+		lastName: { type: String, trim: true },
+		email: { type: String, trim: true },
+		password: { type: String, trim: true },
+		telephone: { type: String, trim: true },
+		organisation: { type: String, trim: true },
+		titleBefore: { type: String, trim: true },
+		titleAfter: { type: String, trim: true },
+		role: {
+			type: String,
+			enum: ["BASIC", "SUPERVISOR", "ADMIN"],
+			default: "BASIC",
+		},
+		address,
+		billing,
+	},
+	{
+		timestamps: true,
+		toObject: { virtuals: true },
+	}
 );
 
 userSchema.virtual("fullName").get(function () {
-  return this.titleAfter.length === 0
-    ? `${this.titleBefore} ${this.firstName} ${this.lastName}`
-    : `${this.titleBefore} ${this.firstName} ${this.lastName}, ${this.titleAfter}`;
+	return this.titleAfter.length === 0
+		? `${this.titleBefore} ${this.firstName} ${this.lastName}`
+		: `${this.titleBefore} ${this.firstName} ${this.lastName}, ${this.titleAfter}`;
 });
 
 userSchema.virtual("isFlaw").get(function () {
-  return this.email.slice(this.email.indexOf("@") + 1) === "flaw.uniba.sk";
+	return this.email.slice(this.email.indexOf("@") + 1) === "flaw.uniba.sk";
 });
 
 userSchema.virtual("conferences", {
-  ref: "Conference",
-  localField: "_id",
-  foreignField: "attendees.userId",
-  justOne: false,
+	ref: "Conference",
+	localField: "_id",
+	foreignField: "attendees.userId",
+	justOne: false,
 });
 
 userSchema.virtual("submissions", {
-  ref: "Submission",
-  localField: "_id",
-  foreignField: "authors",
-  justOne: false,
+	ref: "Submission",
+	localField: "_id",
+	foreignField: "authors",
+	justOne: false,
 });
 
 userSchema.virtual("invoices", {
-  ref: "Invoice",
-  localField: "_id",
-  foreignField: "userId",
-  justOne: false,
+	ref: "Invoice",
+	localField: "_id",
+	foreignField: "userId",
+	justOne: false,
 });
 
 module.exports = model("User", userSchema);

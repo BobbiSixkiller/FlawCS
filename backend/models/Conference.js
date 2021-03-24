@@ -23,14 +23,15 @@ const sectionSchema = new Schema(
 const conferenceSchema = new Schema(
 	{
 		host: { type: Schema.Types.ObjectId, ref: "Host" },
-		name: String,
+		name: { type: String, trim: true },
 		regStart: Date,
 		regEnd: Date,
 		start: Date,
 		end: Date,
 		ticketPrice: Number,
+		variableSymbol: { type: String, trim: true },
 		venue: {
-			name: String,
+			name: { type: String, trim: true },
 			address,
 		},
 		sections: [sectionSchema],

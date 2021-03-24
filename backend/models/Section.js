@@ -30,11 +30,11 @@ const submissionSchema = new Schema(
 
 const sectionSchema = new Schema(
 	{
-		name: String,
-		topic: String,
+		name: { type: String, trim: true },
+		topic: { type: String, trim: true },
 		start: Date,
 		end: Date,
-		languages: [{ type: String }],
+		languages: [{ type: String, trim: true }],
 		garants: [garantSchema],
 		coordinators: [coordinatorSchema],
 		submissions: [submissionSchema],

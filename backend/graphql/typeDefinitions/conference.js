@@ -3,7 +3,7 @@ const { gql } = require("apollo-server-express");
 module.exports = gql`
 	type Venue {
 		name: String!
-		address: Address
+		address: Address!
 	}
 	type Conference {
 		id: ID!
@@ -15,6 +15,7 @@ module.exports = gql`
 		venue: Venue!
 		host: Host
 		ticketPrice: Int!
+		variableSymbol: String!
 		sections: [ConferenceSection]!
 		attendees: [Attendee]!
 		createdAt: Date!
@@ -44,10 +45,11 @@ module.exports = gql`
 		regStart: Date!
 		regEnd: Date!
 		ticketPrice: Float!
+		variableSymbol: String!
 	}
 	input VenueInput {
 		name: String!
-		address: AddressInput
+		address: AddressInput!
 	}
 
 	extend type Query {
