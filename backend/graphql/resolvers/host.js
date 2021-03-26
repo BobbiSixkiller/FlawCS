@@ -23,64 +23,41 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async createHost(_, { hostInput }) {
-			const { errors, valid } = validateHost(hostInput);
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+		async createHost(_, { hostInput: { billing, signatureUrl, logoUrl } }) {
+			// const { errors, valid } = validateHost(hostInput);
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
-			const hostExists = await Host.findOne({ name: hostInput.name });
+			const hostExists = await Host.findOne({ "billing.name": billing.name });
 			if (hostExists) {
 				throw new UserInputError("Host exists", {
-					errors: { name: "Host with the submitted name already exists!" },
+					errors: { name: "Host with the submitted name already exists." },
 				});
 			}
 
-			const host = new Host({
-				name: hostInput.name,
-				"address.street": hostInput.address.street,
-				"address.city": hostInput.address.city,
-				"address.postal": hostInput.address.postal,
-				"address.country": hostInput.address.country,
-				ICO: hostInput.ICO,
-				ICDPH: hostInput.ICDPH,
-				DIC: hostInput.DIC,
-				IBAN: hostInput.IBAN,
-				SWIFT: hostInput.SWIFT,
-				signatureUrl: hostInput.signatureUrl,
-				logoUrl: hostInput.signatureUrl,
-			});
+			const host = new Host({ billing, signatureUrl, logoUrl });
 			const res = await host.save();
 
 			return res;
 		},
-		async updateHost(_, { hostId, hostInput }) {
-			const { errors, valid } = validateHost(hostInput);
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+		async updateHost(
+			_,
+			{ hostId, hostInput: { billing, signatureUrl, logoUrl } }
+		) {
+			// const { errors, valid } = validateHost(hostInput);
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
-			const hostExists = await Host.findOne({ name: hostInput.name });
+			const hostExists = await Host.findOne({ "billing.name": billing.name });
 			if (hostExists) {
 				throw new UserInputError("Host exists", {
 					errors: { name: "Host with the submitted name already exists!" },
 				});
 			}
 
-			const update = {
-				name: hostInput.name,
-				"address.street": hostInput.address.street,
-				"address.city": hostInput.address.city,
-				"address.postal": hostInput.address.postal,
-				"address.country": hostInput.address.country,
-				ICO: hostInput.ICO,
-				ICDPH: hostInput.ICDPH,
-				DIC: hostInput.DIC,
-				IBAN: hostInput.IBAN,
-				SWIFT: hostInput.SWIFT,
-				signatureUrl: hostInput.signatureUrl,
-				logoUrl: hostInput.signatureUrl,
-			};
+			const update = { billing, signatureUrl, logoUrl };
 			const host = await Host.findOneAndUpdate({ _id: hostId }, update, {
 				new: true,
 			});

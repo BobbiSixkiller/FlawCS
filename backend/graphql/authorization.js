@@ -45,11 +45,11 @@ module.exports = shield(
 			//getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
 		},
 		Mutation: {
-			deleteUser: and(isAuthenticated, isAdmin),
-			updateUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
-			createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			deleteHost: and(isAuthenticated, isAdmin),
+			// deleteUser: and(isAuthenticated, isAdmin),
+			// updateUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+			// createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			// updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			// deleteHost: and(isAuthenticated, isAdmin),
 		},
 	},
 	{ allowExternalErrors: true }

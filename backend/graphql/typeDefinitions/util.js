@@ -14,12 +14,30 @@ module.exports = gql`
 		postal: String!
 		country: String!
 	}
+	type Billing {
+		name: String!
+		address: Address!
+		DIC: String
+		ICO: String
+		ICDPH: String
+		IBAN: String
+		SWIFT: String
+	}
 
 	input AddressInput {
 		street: String!
 		city: String!
 		postal: String!
 		country: String!
+	}
+	input BillingInput {
+		name: String!
+		address: AddressInput!
+		DIC: String
+		ICO: String
+		ICDPH: String
+		IBAN: String
+		SWIFT: String
 	}
 
 	type Mutation {

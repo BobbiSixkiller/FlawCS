@@ -1,5 +1,5 @@
 const { model, Schema } = require("mongoose");
-const { address, billing } = require("./utilSchemas");
+const { billing } = require("./utilSchemas");
 
 const userSchema = new Schema(
 	{
@@ -10,13 +10,13 @@ const userSchema = new Schema(
 		telephone: { type: String, trim: true },
 		organisation: { type: String, trim: true },
 		titleBefore: { type: String, trim: true },
-		titleAfter: { type: String, trim: true },
+		titleAfter: { type: String, trim: true, required: true },
 		role: {
 			type: String,
 			enum: ["BASIC", "SUPERVISOR", "ADMIN"],
 			default: "BASIC",
+			//required: true,
 		},
-		address,
 		billing,
 	},
 	{

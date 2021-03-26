@@ -2,13 +2,7 @@ const { gql } = require("apollo-server-express");
 module.exports = gql`
 	type Host {
 		id: ID!
-		name: String!
-		address: Address
-		ICO: String!
-		ICDPH: String!
-		DIC: String!
-		IBAN: String!
-		SWIFT: String!
+		billing: Billing!
 		signatureUrl: String!
 		logoUrl: String!
 		createdAt: Date!
@@ -16,13 +10,7 @@ module.exports = gql`
 	}
 
 	input HostInput {
-		name: String!
-		address: AddressInput
-		ICO: String!
-		ICDPH: String!
-		DIC: String!
-		IBAN: String!
-		SWIFT: String!
+		billing: BillingInput!
 		signatureUrl: String!
 		logoUrl: String!
 	}

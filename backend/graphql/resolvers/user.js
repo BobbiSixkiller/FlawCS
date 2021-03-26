@@ -49,10 +49,7 @@ module.exports = {
 				throw new UserInputError("User not found.");
 			}
 		},
-		async updateUser(
-			_,
-			{ userId, role, userInput, addressInput, billingInput }
-		) {
+		async updateUser(_, { userId, role, userInput, billingInput }) {
 			// const { valid, errors } = validateRegister({
 			// 	...userInput,
 			// 	...addressInput,
@@ -70,33 +67,37 @@ module.exports = {
 					},
 				});
 			}
+			const user = await User.findOne({ _id: userId });
 
 			const password = await bcrypt.hash(userInput.password, 12);
 
-			const update = {
-				titleBefore: userInput.titleBefore,
-				firstName: userInput.firstName,
-				lastName: userInput.lastName,
-				titleAfter: userInput.titleAfter,
-				email: userInput.email,
-				telephone: userInput.telephone,
-				password,
-				organisation: userInput.organisation,
-				address: addressInput,
-				billing: billingInput,
-				role,
-			};
-			const user = await User.findOneAndUpdate({ _id: userId }, update, {
-				new: true,
-			});
+			user.role = role;
+			const res = await user.save();
 
-			if (user) {
-				return user;
-			} else {
-				throw new UserInputError("User not found.");
-			}
+			// const update = {
+			// 	titleBefore: userInput.titleBefore,
+			// 	firstName: userInput.firstName,
+			// 	lastName: userInput.lastName,
+			// 	titleAfter: userInput.titleAfter,
+			// 	email: userInput.email,
+			// 	telephone: userInput.telephone,
+			// 	password,
+			// 	organisation: userInput.organisation,
+			// 	billing: billingInput,
+			// 	role,
+			// };
+			// const user = await User.findOneAndUpdate({ _id: userId }, update, {
+			// 	new: true,
+			// });
+
+			// if (user) {
+			// 	return user;
+			// } else {
+			// 	throw new UserInputError("User not found.");
+			// }
+			return res;
 		},
-		async register(_, { registerInput, addressInput, billingInput }) {
+		async register(_, { registerInput, billingInput }) {
 			// const { valid, errors } = validateRegister({
 			// 	...registerInput,
 			// 	...addressInput,
@@ -128,7 +129,6 @@ module.exports = {
 				telephone: registerInput.telephone,
 				password,
 				organisation: registerInput.organisation,
-				address: addressInput,
 				billing: billingInput,
 				role: users === 0 ? "ADMIN" : "BASIC",
 			});

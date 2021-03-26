@@ -1,15 +1,9 @@
 const { model, Schema } = require("mongoose");
-const { address } = require("./utilSchemas");
+const { billing } = require("./utilSchemas");
 
 const hostSchema = new Schema(
 	{
-		name: { type: String, trim: true },
-		address,
-		ICO: { type: String, trim: true },
-		ICDPH: { type: String, trim: true },
-		DIC: { type: String, trim: true },
-		IBAN: { type: String, trim: true },
-		SWIFT: { type: String, trim: true },
+		billing,
 		signatureUrl: String,
 		logoUrl: String,
 	},
