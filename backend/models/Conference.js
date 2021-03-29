@@ -29,7 +29,7 @@ const conferenceSchema = new Schema(
 		start: Date,
 		end: Date,
 		ticketPrice: Number,
-		variableSymbol: { type: String, trim: true },
+		variableSymbol: Number,
 		venue: {
 			name: { type: String, trim: true },
 			address,

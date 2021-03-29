@@ -26,6 +26,12 @@ const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "SUPERVISOR");
 });
 
+const isAuthor = rule({
+	cache: "strict",
+})((parent, { authors }, { user }) => {
+	return authors.includes(user.id);
+});
+
 const isGarant = rule({ cache: "strict" })(
 	async (parent, { sectionId }, { user }) => {
 		const conference = await Conference.findOne({

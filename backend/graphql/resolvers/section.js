@@ -149,8 +149,7 @@ module.exports = {
 		},
 		async addSubmission(
 			parent,
-			{ conferenceId, sectionId, authors, submissionInput },
-			{ user }
+			{ conferenceId, sectionId, authors, submissionInput }
 		) {
 			const { errors, valid } = validateSubmission(submissionInput);
 			if (!valid) {
@@ -158,7 +157,7 @@ module.exports = {
 			}
 			const submission = new Submission({
 				...submissionInput,
-				authors: authors ? authors : user.id,
+				authors,
 				conferenceId,
 				sectionId,
 			});

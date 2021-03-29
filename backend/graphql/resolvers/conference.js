@@ -117,42 +117,35 @@ module.exports = {
 				throw new UserInputError("Conference not found.");
 			}
 		},
-		async addAttendee(parent, { conferenceId, userId }, { user }) {
+		async addAttendee(parent, { conferenceId, userId }) {
+			const attendee = await User.findOne({ _id: userId });
+			if (!attendee) {
+				throw new UserInputError("User not found.");
+			}
 			const conference = await Conference.findOne({
 				_id: conferenceId,
 			}).populate("host");
 			if (!conference) {
 				throw new UserInputError("Conference not found.");
 			}
-			const userExists = conference.attendees.find(
-				(a) => a.userId == userId || a.userId == user.id
-			);
+			const userExists = conference.attendees.find((a) => a.userId == userId);
 			if (userExists) {
 				throw new UserInputError(
 					"You are already signed up for the conference."
 				);
 			}
 
-			const userFilter = userId ? { _id: userId } : { _id: user.id };
-			const attendee = await User.findOne(userFilter);
-
 			const invoice = new Invoice({
-				issuer: {
-					name: conference.host.name,
-					address: conference.host.address,
-					ICO: conference.host.ICO,
-					ICDPH: conference.host.ICDPH,
-					IBAN: conference.host.IBAN,
-					SWIFT: conference.host.SWIFT,
-					logoUrl: conference.host.logoUrl,
-					signatureUrl: conference.host.signatureUrl,
-				},
+				issuer: conference.host,
 				payer: attendee.billing,
 				payment: {
-					form: "Faktura - danovy doklad",
 					variableSymbol: conference.variableSymbol,
+					ticketPrice: conference.ticketPrice,
+					tax: attendee.isFlaw ? 0 : conference.ticketPrice * 0.2,
 				},
-				invoice: {},
+				invoice: {
+					type: "Faktúra",
+				},
 				conferenceId: conference._id,
 				userId: attendee._id,
 			});

@@ -14,8 +14,8 @@ module.exports = gql`
 		regEnd: Date!
 		venue: Venue!
 		host: Host
-		ticketPrice: Int!
-		variableSymbol: String!
+		ticketPrice: Float!
+		variableSymbol: Int!
 		sections: [ConferenceSection]!
 		attendees: [Attendee]!
 		createdAt: Date!
@@ -46,7 +46,7 @@ module.exports = gql`
 		regStart: Date!
 		regEnd: Date!
 		ticketPrice: Float!
-		variableSymbol: String!
+		variableSymbol: Int!
 	}
 	input VenueInput {
 		name: String!
@@ -69,6 +69,7 @@ module.exports = gql`
 			venueInput: VenueInput!
 		): Conference!
 		deleteConference(conferenceId: ID!): String!
-		addAttendee(conferenceId: ID!, userId: ID): Conference!
+		addAttendee(conferenceId: ID!, userId: ID!): Conference!
+		removeAttendee(conferenceId: ID!, userId: ID!): Conference!
 	}
 `;

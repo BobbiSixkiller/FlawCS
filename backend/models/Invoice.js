@@ -1,32 +1,18 @@
 const { Schema, model } = require("mongoose");
-const { address } = require("./utilSchemas");
+const { billing } = require("./utilSchemas");
 
 const invoiceSchema = new Schema(
 	{
 		issuer: {
-			name: { type: String, trim: true },
-			address,
-			ICO: { type: String, trim: true },
-			ICDPH: { type: String, trim: true },
-			DIC: { type: String, trim: true },
-			IBAN: { type: String, trim: true },
-			SWIFT: { type: String, trim: true },
+			billing,
 			logoUrl: { type: String, trim: true },
 			signatureUrl: { type: String, trim: true },
 		},
-		payer: {
-			name: { type: String, trim: true },
-			address,
-			ICO: { type: String, trim: true },
-			ICDPH: { type: String, trim: true },
-			DIC: { type: String, trim: true },
-		},
+		payer: billing,
 		payment: {
-			form: { type: String, trim: true },
 			variableSymbol: { type: String, trim: true },
-			constantSymbol: { type: String, trim: true },
-			ticketPrice: { type: String, trim: true },
-			tax: { type: String, trim: true },
+			ticketPrice: Number,
+			tax: Number,
 		},
 		invoice: {
 			type: { type: String, trim: true },

@@ -60,7 +60,7 @@ module.exports = gql`
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
-			authors: [ID]
+			authors: [ID]!
 			submissionInput: SubmissionInput!
 		): Section!
 	}
