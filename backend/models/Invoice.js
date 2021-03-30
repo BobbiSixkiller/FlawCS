@@ -17,7 +17,7 @@ const invoiceSchema = new Schema(
 		invoice: {
 			type: { type: String, trim: true },
 			issueDate: Date,
-			DPHDate: Date,
+			vatDate: Date,
 			dueDate: Date,
 			body: { type: String, trim: true },
 			comment: { type: String, trim: true },

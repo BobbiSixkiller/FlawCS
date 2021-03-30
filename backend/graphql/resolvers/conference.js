@@ -135,22 +135,53 @@ module.exports = {
 				);
 			}
 
+			const date = new Date();
+			const dueDate = date.setDate(date.getDate() + 30);
+
 			const invoice = new Invoice({
 				issuer: conference.host,
 				payer: attendee.billing,
 				payment: {
-					variableSymbol: conference.variableSymbol,
+					variableSymbol:
+						conference.variableSymbol +
+						Math.floor(Math.random() * 9000 + 1000).toString(),
 					ticketPrice: conference.ticketPrice,
 					tax: attendee.isFlaw ? 0 : conference.ticketPrice * 0.2,
 				},
 				invoice: {
 					type: "Faktúra",
+					issueDate: Date.now(),
+					vatDate: Date.now(),
+					dueDate,
+					body: `This invoice is issued to ${
+						attendee.fullName
+					} and covers fee for conference "${conference.name}" hosted by ${
+						conference.host.billing.name
+					} that will take place in ${
+						conference.venue.name
+					}. The conference is beginning on ${conference.start.toLocaleDateString(
+						"en-GB",
+						{ timeZone: "UTC" }
+					)} and ending on ${conference.end.toLocaleDateString("en-GB", {
+						timeZone: "UTC",
+					})}.`,
+					comment: `The hosting organisation is reserving the right to cancel attendee registration in case of not paying the fee in due time.`,
 				},
 				conferenceId: conference._id,
 				userId: attendee._id,
 			});
-
-			console.log(invoice);
+			const options = {
+				weekday: "long",
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			};
+			//console.log(invoice);
+			console.log(
+				conference.start.toLocaleString("sk-SK", { timeZone: "UTC" })
+			);
+			console.log(conference.start.toString());
+			console.log(new Date(Date.now()).toLocaleString("sk-SK"));
 
 			return conference;
 		},
