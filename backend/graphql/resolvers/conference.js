@@ -159,11 +159,11 @@ module.exports = {
 						conference.host.billing.name
 					} that will take place in ${
 						conference.venue.name
-					}. The conference is beginning on ${conference.start.toLocaleDateString(
+					}. The conference is beginning on ${conference.start.toLocaleString(
 						"en-GB",
-						{ timeZone: "UTC" }
-					)} and ending on ${conference.end.toLocaleDateString("en-GB", {
-						timeZone: "UTC",
+						{ timeZone: "GMT" }
+					)} and ending on ${conference.end.toLocaleString("en-GB", {
+						timeZone: "GMT",
 					})}.`,
 					comment: `The hosting organisation is reserving the right to cancel attendee registration in case of not paying the fee in due time.`,
 				},
@@ -176,11 +176,10 @@ module.exports = {
 				month: "long",
 				day: "numeric",
 			};
-			//console.log(invoice);
-			console.log(
-				conference.start.toLocaleString("sk-SK", { timeZone: "UTC" })
-			);
+			console.log(invoice);
+
 			console.log(conference.start.toString());
+			console.log(conference.start.toLocaleString("sk-SK"));
 			console.log(new Date(Date.now()).toLocaleString("sk-SK"));
 
 			return conference;
