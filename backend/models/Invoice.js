@@ -12,7 +12,7 @@ const invoiceSchema = new Schema(
 		payment: {
 			variableSymbol: { type: String, trim: true },
 			ticketPrice: Number,
-			tax: Number,
+			vat: Number,
 		},
 		invoice: {
 			type: { type: String, trim: true },

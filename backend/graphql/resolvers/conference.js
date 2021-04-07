@@ -1,4 +1,5 @@
 const { UserInputError } = require("apollo-server-express");
+require("dotenv").config();
 
 const Conference = require("../../models/Conference");
 const User = require("../../models/User");
@@ -146,7 +147,7 @@ module.exports = {
 						conference.variableSymbol +
 						Math.floor(Math.random() * 9000 + 1000).toString(),
 					ticketPrice: conference.ticketPrice,
-					tax: attendee.isFlaw ? 0 : conference.ticketPrice * 0.2,
+					vat: attendee.isFlaw ? 0 : conference.ticketPrice * process.env.VAT,
 				},
 				invoice: {
 					type: "Faktúra",
@@ -178,9 +179,14 @@ module.exports = {
 			};
 			console.log(invoice);
 
-			console.log(conference.start.toString());
-			console.log(conference.start.toLocaleString("sk-SK"));
-			console.log(new Date(Date.now()).toLocaleString("sk-SK"));
+			console.log(invoice.invoice.issueDate.toLocaleString("sk-SK"));
+			//console.log(conference.start.toLocaleString("sk-SK"));
+			//console.log(new Date(Date.now()).toLocaleString("sk-SK"));
+			//console.log(new Date(Date.now()).toLocaleString("sk-SK"));
+
+			//save invoice
+			//create attendee object and push to conference.attendees array
+			//save conference
 
 			return conference;
 		},
