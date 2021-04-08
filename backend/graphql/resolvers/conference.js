@@ -4,6 +4,8 @@ require("dotenv").config();
 const Conference = require("../../models/Conference");
 const User = require("../../models/User");
 const Invoice = require("../../models/Invoice");
+const mail = require("../../util/mail");
+const invoiceTemplate = require("../../util/invoice");
 const { validateConference } = require("../../util/validation");
 
 module.exports = {
@@ -160,33 +162,28 @@ module.exports = {
 						conference.host.billing.name
 					} that will take place in ${
 						conference.venue.name
-					}. The conference is beginning on ${conference.start.toLocaleString(
-						"en-GB",
-						{ timeZone: "GMT" }
-					)} and ending on ${conference.end.toLocaleString("en-GB", {
-						timeZone: "GMT",
-					})}.`,
+					}. The conference is beginning on ${conference.start.toLocaleString()} and ending on ${conference.end.toLocaleString()}.`,
 					comment: `The hosting organisation is reserving the right to cancel attendee registration in case of not paying the fee in due time.`,
 				},
 				conferenceId: conference._id,
 				userId: attendee._id,
 			});
-			const options = {
-				weekday: "long",
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-			};
 			console.log(invoice);
-
-			console.log(invoice.invoice.issueDate.toLocaleString("sk-SK"));
-			//console.log(conference.start.toLocaleString("sk-SK"));
-			//console.log(new Date(Date.now()).toLocaleString("sk-SK"));
-			//console.log(new Date(Date.now()).toLocaleString("sk-SK"));
 
 			//save invoice
 			//create attendee object and push to conference.attendees array
 			//save conference
+
+			const send = await mail(
+				"zebracik@zebracik.sk",
+				"spredmet",
+				"text",
+				invoiceTemplate(invoice)
+			);
+			console.log(send);
+			if (send.rejected.length === 0) {
+				console.log("mail sent successfully");
+			}
 
 			return conference;
 		},

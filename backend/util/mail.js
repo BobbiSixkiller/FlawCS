@@ -9,13 +9,13 @@ const transport = nodemailer.createTransport({
 	},
 });
 
-module.exports = async function send(options) {
+module.exports = async function send(to, subject, text, html) {
 	const mailOptions = {
 		from: `FlawCS <noreply@flaw.uniba.sk>`,
-		to: options.to.email,
-		subject: options.subject,
-		text: options.text,
-		html: options.html,
+		to,
+		subject,
+		text,
+		html,
 	};
 
 	return await transport.sendMail(mailOptions);
