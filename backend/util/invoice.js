@@ -1,5 +1,6 @@
 module.exports = (data) => {
 	const { issuer, payer, payment, invoice } = data;
+
 	return `<!DOCTYPE html>
         <html>
             <head>
@@ -62,20 +63,18 @@ module.exports = (data) => {
                     <div class="content">
                         <div class="issuer">
                             <h2>Issuer</h2>
-                            <p>Name: ${issuer.billing.name}</p>
-                            <p>Address: ${
-															(issuer.billing.address.street,
-															issuer.billing.address.city,
-															issuer.billing.address.postal,
-															issuer.billing.address.state)
-														}</p>
+                            <p>${issuer.billing.name}</p>
+                            <p>${issuer.billing.address.street}</p>
+                            <p>${issuer.billing.address.postal}, ${
+		issuer.billing.address.city
+	}</p>
                             <p>ICO: ${issuer.billing.ICO}, DIC: ${
 		issuer.billing.DIC
 	}</p>
                             <p>IC DPH: ${issuer.billing.ICDPH}</p>
-                            <p>Issue Date: ${invoice.issueDate}</p>
-                            <p>Due Date: ${invoice.dueDate}</p>
-                            <p>VAT Date: ${invoice.vatDate}</p>
+                            <p>Issue Date: ${invoice.issueDate.toLocaleDateString()}</p>
+                            <p>Due Date: ${invoice.dueDate.toLocaleDateString()}</p>
+                            <p>VAT Date: ${invoice.vatDate.toLocaleDateString()}</p>
                             <strong>Bank connection</strong>
                             <p>IBAN: ${issuer.billing.IBAN}</p>
                             <p>SWIFT: ${issuer.billing.SWIFT}</p>
@@ -84,15 +83,18 @@ module.exports = (data) => {
                         </div>
                         <div class="payer">
                             <h2>Payer</h2>
-                            <p>Name: ${payer.name}</p>
-                            <p>Address: ${
-															(payer.address.street,
-															payer.address.city,
-															payer.address.postal,
-															payer.address.state)
-														}</p>
-                            <p>ICO: ${payer.ICO}, DIC: ${payer.DIC}</p>
-                            <p>IC DPH: ${payer.ICDPH}</p>
+                            <p>${payer.name}</p>
+                            <p>${payer.address.street}</p>
+                            <p>${payer.address.postal}, ${
+		payer.address.city
+	}</p>
+                            <p>${payer.address.country}</p>
+                            ${
+															payer.ICO &&
+															`<p>ICO: ${payer.ICO}, DIC: ${payer.DIC}</p>`
+														}
+                            ${payer.ICDPH && `<p>IC DPH: ${payer.ICDPH}</p>`}
+                            
                         </div>
                     </div>
                     <p>${invoice.body}</p>

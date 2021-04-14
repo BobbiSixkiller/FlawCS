@@ -20,6 +20,7 @@
     "graphql-shield": "^7.5.0",
     "graphql-upload": "^11.0.0",
     "jsonwebtoken": "^8.5.1",
+    "jspdf": "^2.3.1",
     "mongoose": "^5.12.2",
     "nodemailer": "^6.5.0",
     "uuid": "^8.3.2"
