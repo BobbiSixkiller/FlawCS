@@ -9,14 +9,14 @@ const transport = nodemailer.createTransport({
 	},
 });
 
-module.exports = async function send(to, subject, text, html, pdf) {
+module.exports = async function send(to, subject, text, html, attachments) {
 	const mailOptions = {
 		from: `FlawCS <noreply@flaw.uniba.sk>`,
 		to,
 		subject,
 		text,
 		html,
-		attachments: [pdf],
+		attachments,
 	};
 
 	return await transport.sendMail(mailOptions);

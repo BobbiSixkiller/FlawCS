@@ -118,11 +118,10 @@ module.exports = (data) => {
                         </tr>
                     </table>
                     <div class="footer">
-                        <strong>Vystavil:</strong>
+                        <strong>Issued By:</strong>
                         <img src="https://via.placeholder.com/200x75">
                     </div>
                 </div>
             </body>
-        </html>
-    `;
+        </html>`;
 };
