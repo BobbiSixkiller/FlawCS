@@ -146,18 +146,16 @@ module.exports = {
 			const invoice = new Invoice({
 				issuer: conference.host,
 				payer: attendee.billing,
-				payment: {
-					variableSymbol:
-						conference.variableSymbol +
-						Math.floor(Math.random() * 9000 + 1000).toString(),
-					ticketPrice: conference.ticketPrice,
-					vat: attendee.isFlaw ? 0 : conference.ticketPrice * process.env.VAT,
-				},
 				invoice: {
 					type: "Faktúra",
 					issueDate: Date.now(),
 					vatDate: Date.now(),
 					dueDate: date.setDate(date.getDate() + 30),
+					variableSymbol:
+						conference.variableSymbol +
+						Math.floor(Math.random() * 9000 + 1000).toString(),
+					ticketPrice: conference.ticketPrice,
+					vat: attendee.isFlaw ? 0 : conference.ticketPrice * process.env.VAT,
 					body: `This invoice is issued to ${
 						attendee.fullName
 					} and covers fee for conference "${conference.name}" hosted by ${

@@ -1,5 +1,5 @@
 module.exports = (data) => {
-	const { issuer, payer, payment, invoice } = data;
+	const { issuer, payer, invoice, invoice } = data;
 
 	return `<!DOCTYPE html>
         <html>
@@ -57,7 +57,7 @@ module.exports = (data) => {
                     <div class="header">
                         <img src="http://localhost:5000/images/Praf-UK-logo.png">
                         <h1>Fakturka - danovy doklad - ${
-													payment.variableSymbol
+													invoice.variableSymbol
 												}</h1>
                     </div>
                     <div class="content">
@@ -106,15 +106,15 @@ module.exports = (data) => {
                         </tr>
                         <tr>
                             <td>Conference ticket price</td>
-                            <td>${payment.ticketPrice}</td>
+                            <td>${invoice.ticketPrice}</td>
                         </tr>
                         <tr>
                             <td>VAT</td>
-                            <td>${payment.vat}</td>
+                            <td>${invoice.vat}</td>
                         </tr>
                         <tr>
                             <td>SUM</td>
-                            <td>${payment.ticketPrice + payment.vat}</td>
+                            <td>${invoice.ticketPrice + invoice.vat}</td>
                         </tr>
                     </table>
                     <div class="footer">
