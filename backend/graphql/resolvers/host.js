@@ -57,10 +57,13 @@ module.exports = {
 				});
 			}
 
-			const update = { billing, signatureUrl, logoUrl };
-			const host = await Host.findOneAndUpdate({ _id: hostId }, update, {
-				new: true,
-			});
+			const host = await Host.findOneAndUpdate(
+				{ _id: hostId },
+				{ billing, signatureUrl, logoUrl },
+				{
+					new: true,
+				}
+			);
 
 			if (host) {
 				return host;

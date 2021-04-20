@@ -53,12 +53,11 @@ module.exports = {
 		},
 		async deleteSubmission(parent, { submissionId }) {
 			const submission = await Submission.findOne({ _id: submissionId });
-			if (submission) {
-				await submission.remove();
-				return "Submission has been deleted";
-			} else {
+			if (!submission) {
 				throw new UserInputError("Submission not found.");
 			}
+			await submission.remove();
+			return "Submission has been deleted";
 		},
 	},
 };

@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-module.exports = async (html) => {
+module.exports.generatePDF = async (html) => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 
@@ -9,8 +9,8 @@ module.exports = async (html) => {
 		path: "./public/invoice/invoice.pdf",
 		format: "A4",
 	});
+
 	await browser.close();
-	console.log("PDF Generated");
 
 	return pdf;
 };

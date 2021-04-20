@@ -1,6 +1,12 @@
 const { gql } = require("apollo-server-express");
 
 module.exports = gql`
+	enum Role {
+		BASIC
+		SUPERVISOR
+		ADMIN
+	}
+
 	type User {
 		id: ID!
 		token: String
@@ -11,7 +17,7 @@ module.exports = gql`
 		telephone: String!
 		organisation: String!
 		billing: Billing!
-		role: String!
+		role: Role!
 		createdAt: Date!
 		updatedAt: Date!
 		submissions: [Submission]!

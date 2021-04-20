@@ -42,7 +42,7 @@ userSchema.virtual("fullName").get(function () {
 userSchema.virtual("isFlaw").get(function () {
 	return (
 		this.email.slice(this.email.indexOf("@") + 1) === "flaw.uniba.sk" ||
-		"uniba.sk"
+		"uniba.sk "
 	);
 });
 
