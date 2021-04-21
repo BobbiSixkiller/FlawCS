@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-module.exports.generatePDF = async (html) => {
+module.exports = async (html) => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
 

@@ -1,5 +1,5 @@
 module.exports = (data) => {
-	const { issuer, payer, invoice, invoice } = data;
+	const { issuer, payer, invoice } = data;
 
 	return `<!DOCTYPE html>
         <html>

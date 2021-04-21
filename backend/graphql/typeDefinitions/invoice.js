@@ -5,16 +5,18 @@ module.exports = gql`
 		id: ID!
 		issuer: Issuer!
 		payer: Billing!
-		invoice: Invoice!
+		invoice: InvoiceData!
 		userId: ID!
 		conferenceId: ID!
+		createdAt: Date!
+		updatedAt: Date!
 	}
 	type Issuer {
 		billing: Billing!
 		logoUrl: String!
 		signatureUrl: String!
 	}
-	type invoice {
+	type InvoiceData {
 		type: String!
 		issueDate: Date!
 		vatDate: Date!
@@ -24,5 +26,16 @@ module.exports = gql`
 		vat: Float!
 		body: String!
 		comment: String!
+	}
+
+	input Invoice {
+		
+	}
+
+	extend type Query {
+		getInvoice(invoiceId: ID!): Invoice!
+	}
+	extend type Mutation {
+		updateInvoice(invoiceId: ID!): Invoice!
 	}
 `;

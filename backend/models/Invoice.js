@@ -26,4 +26,8 @@ const invoiceSchema = new Schema(
 	{ timestamps: true }
 );
 
+invoiceSchema.pre("save", async function () {
+	console.log(this);
+});
+
 module.exports = model("Invoice", invoiceSchema);
