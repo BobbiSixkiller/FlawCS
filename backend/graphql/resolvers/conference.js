@@ -3,6 +3,7 @@ require("dotenv").config();
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
+const Host = require("../../models/Host");
 const Conference = require("../../models/Conference");
 const User = require("../../models/User");
 const Invoice = require("../../models/Invoice");
@@ -55,19 +56,8 @@ module.exports = {
 			}
 
 			const conference = new Conference({
-				name: conferenceInput.name,
-				start: conferenceInput.start,
-				end: conferenceInput.end,
-				regStart: conferenceInput.regStart,
-				regEnd: conferenceInput.regEnd,
-				ticketPrice: conferenceInput.ticketPrice,
-				variableSymbol: conferenceInput.variableSymbol,
-				"venue.name": venueInput.name,
-				"venue.address.street": venueInput.address.street,
-				"venue.address.city": venueInput.address.city,
-				"venue.address.postal": venueInput.address.postal,
-				"venue.address.country": venueInput.address.country,
-				host: conferenceInput.hostId,
+				...conferenceInput,
+				venue: { ...venueInput },
 			});
 
 			const res = await conference.save();
@@ -86,21 +76,7 @@ module.exports = {
 				throw new UserInputError("Errors", { errors });
 			}
 
-			const update = {
-				name: conferenceInput.name,
-				start: conferenceInput.start,
-				end: conferenceInput.end,
-				regStart: conferenceInput.regStart,
-				regEnd: conferenceInput.regEnd,
-				ticketPrice: conferenceInput.ticketPrice,
-				variableSymbol: conferenceInput.variableSymbol,
-				"venue.name": venueInput.name,
-				"venue.address.street": venueInput.address.street,
-				"venue.address.city": venueInput.address.city,
-				"venue.address.postal": venueInput.address.postal,
-				"venue.address.country": venueInput.address.country,
-				host: conferenceInput.hostId,
-			};
+			const update = { ...conferenceInput, venue: { ...venueInput } };
 
 			const res = await Conference.findOneAndUpdate(
 				{ _id: conferenceId },
@@ -130,9 +106,13 @@ module.exports = {
 			}
 			const conference = await Conference.findOne({
 				_id: conferenceId,
-			}).populate("host");
+			});
 			if (!conference) {
 				throw new UserInputError("Conference not found.");
+			}
+			const host = await Host.findOne({ _id: conference.host });
+			if (!host) {
+				throw new UserInputError("");
 			}
 			const userExists = conference.attendees.find((a) => a.userId == userId);
 			if (userExists) {
