@@ -28,14 +28,29 @@ module.exports = gql`
 		comment: String!
 	}
 
+	input InvoiceData {
+		type: String!
+		issueDate: Date!
+		vatDate: Date!
+		dueDate: Date!
+		variableSymbol: String!
+		ticketPrice: Float!
+		vat: Float!
+		body: String!
+		comment: String!
+	}
 	input Invoice {
-		
+		issuer: HostInput!
+		payer: BillingInput!
+		invoice: InvoiceData!
+		userId: String!
+		conferenceId: String!
 	}
 
 	extend type Query {
 		getInvoice(invoiceId: ID!): Invoice!
 	}
 	extend type Mutation {
-		updateInvoice(invoiceId: ID!): Invoice!
+		updateInvoice(invoiceId: ID!, update: InvoiceData!): Invoice!
 	}
 `;

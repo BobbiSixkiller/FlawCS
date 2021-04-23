@@ -1,5 +1,12 @@
 module.exports = (data) => {
 	const { issuer, payer, invoice } = data;
+	let payerBilling;
+	if (!payer.ICO) {
+		payerBilling = `<p></p>`;
+	} else {
+		payerBilling = `<p>ICO: ${payer.ICO}, DIC: ${payer.DIC}</p>							
+        <p>IC DPH: ${payer.ICDPH}</p> `;
+	}
 
 	return `<!DOCTYPE html>
         <html>
@@ -12,7 +19,7 @@ module.exports = (data) => {
                         font-family: 'Roboto', sans-serif;	
                     }
                     .header img {
-                        max-width: 150px;  
+                        max-width: 100px;  
                     }
                     .footer img {
                         max-width: 250px;
@@ -43,6 +50,8 @@ module.exports = (data) => {
                         display: flex;
                         flex-direction: row;
                         justify-content: space-between;
+                        margin-left: 50px;
+                        margin-right: 50px;
                     }
                     .footer {
                         margin-top: 15px;
@@ -56,9 +65,7 @@ module.exports = (data) => {
                 <div class="container">
                     <div class="header">
                         <img src="http://localhost:5000/images/Praf-UK-logo.png">
-                        <h1>Fakturka - danovy doklad - ${
-													invoice.variableSymbol
-												}</h1>
+                        <h1>Invoice - ${invoice.variableSymbol}</h1>
                     </div>
                     <div class="content">
                         <div class="issuer">
@@ -68,6 +75,7 @@ module.exports = (data) => {
                             <p>${issuer.billing.address.postal}, ${
 		issuer.billing.address.city
 	}</p>
+    <p>${issuer.billing.address.country}</p>
                             <p>ICO: ${issuer.billing.ICO}, DIC: ${
 		issuer.billing.DIC
 	}</p>
@@ -89,12 +97,7 @@ module.exports = (data) => {
 		payer.address.city
 	}</p>
                             <p>${payer.address.country}</p>
-                            ${
-															payer.ICO &&
-															`<p>ICO: ${payer.ICO}, DIC: ${payer.DIC}</p>`
-														}
-                            ${payer.ICDPH && `<p>IC DPH: ${payer.ICDPH}</p>`}
-                            
+							${payerBilling}
                         </div>
                     </div>
                     <p>${invoice.body}</p>
@@ -105,16 +108,16 @@ module.exports = (data) => {
                             <th>Price</th>
                         </tr>
                         <tr>
-                            <td>Conference ticket price</td>
-                            <td>${invoice.ticketPrice}</td>
+                            <td>Conference ticket</td>
+                            <td>${invoice.ticketPrice} €</td>
                         </tr>
                         <tr>
                             <td>VAT</td>
-                            <td>${invoice.vat}</td>
+                            <td>${invoice.vat} €</td>
                         </tr>
                         <tr>
                             <td>SUM</td>
-                            <td>${invoice.ticketPrice + invoice.vat}</td>
+                            <td>${invoice.ticketPrice + invoice.vat} €</td>
                         </tr>
                     </table>
                     <div class="footer">

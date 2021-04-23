@@ -40,7 +40,7 @@ module.exports = gql`
 
 	input ConferenceInput {
 		name: String!
-		hostId: ID!
+		host: ID!
 		start: Date!
 		end: Date!
 		regStart: Date!
