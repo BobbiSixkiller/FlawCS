@@ -26,12 +26,6 @@ const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "SUPERVISOR");
 });
 
-const isAuthor = rule({
-	cache: "strict",
-})((parent, { authors }, { user }) => {
-	return authors.includes(user.id);
-});
-
 const isGarant = rule({ cache: "strict" })(
 	async (parent, { sectionId }, { user }) => {
 		const conference = await Conference.findOne({
@@ -56,6 +50,9 @@ module.exports = shield(
 			// createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			// updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			// deleteHost: and(isAuthenticated, isAdmin),
+		},
+		Conference: {
+			//attendees: and(isAuthenticated, or(isAdmin, isSupervisor)),
 		},
 	},
 	{ allowExternalErrors: true }

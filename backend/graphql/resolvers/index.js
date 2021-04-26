@@ -1,4 +1,5 @@
 const userResolver = require("./user");
+const invoiceResolver = require("./invoice");
 const submissionResolver = require("./submission");
 const conferenceResolver = require("./conference");
 const sectionResolver = require("./section");
@@ -13,6 +14,7 @@ module.exports = {
 	Upload: GraphQLUpload,
 	Query: {
 		...userResolver.Query,
+		...invoiceResolver.Query,
 		...submissionResolver.Query,
 		...conferenceResolver.Query,
 		...sectionResolver.Query,
@@ -20,6 +22,7 @@ module.exports = {
 	},
 	Mutation: {
 		...userResolver.Mutation,
+		...invoiceResolver.Mutation,
 		...submissionResolver.Mutation,
 		...conferenceResolver.Mutation,
 		...sectionResolver.Mutation,
