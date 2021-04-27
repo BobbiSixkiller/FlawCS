@@ -27,7 +27,12 @@ const invoiceSchema = new Schema(
 );
 
 invoiceSchema.pre("save", async function () {
-	console.log(this);
+	if (this.isModified()) {
+		await this.model("Conference").updateOne(
+			{ "attendees.invoiceId": this._id },
+			{ "attendees.$.updatedAt": this._updatedAt }
+		);
+	}
 });
 
 module.exports = model("Invoice", invoiceSchema);
