@@ -13,7 +13,7 @@ module.exports = (req) => {
 				throw new AuthenticationError("Token is invalid or expired!");
 			}
 		} else {
-			throw new Error("Authentication header must be 'Bearer [token]'");
+			throw new Error("Authentication header must be: 'Bearer [token]'.");
 		}
 	} else {
 		return null;

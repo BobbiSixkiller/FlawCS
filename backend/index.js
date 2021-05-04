@@ -11,11 +11,13 @@ const typeDefs = require("./graphql/typeDefinitions");
 const resolvers = require("./graphql/resolvers");
 const checkAuth = require("./util/checkAuth");
 const authorization = require("./graphql/authorization");
+const download = require("./rest/download");
 
 const app = new express();
 app.use(graphqlUploadExpress());
 app.use(express.static("public"));
 app.use(cors());
+app.use("/rest", download);
 
 const server = new ApolloServer({
 	schema: applyMiddleware(
@@ -42,7 +44,7 @@ mongoose
 		console.log("MongoDB connected!");
 		return app.listen({ port: process.env.PORT }, () =>
 			console.log(
-				`Server is running at http://localhost:${process.env.PORT}${server.graphqlPath}`
+				`GraphQL server is running at http://localhost:${process.env.PORT}${server.graphqlPath}`
 			)
 		);
 	});
