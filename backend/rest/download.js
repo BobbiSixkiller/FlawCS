@@ -14,7 +14,6 @@ function verifyAuth(req, res, next) {
 		if (token) {
 			try {
 				const user = jwt.verify(token, process.env.SECRET);
-				req.token = token;
 				req.user = user;
 				next();
 			} catch (err) {
