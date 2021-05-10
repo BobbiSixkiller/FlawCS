@@ -5,6 +5,15 @@ const fs = require("fs");
 require("dotenv").config();
 
 module.exports = {
+	MutationResponse: {
+		__resolveType(mutationRes, context, info) {
+			if (mutationRes.conference) {
+				return "Conference";
+			}
+
+			return null; // GraphQLError is thrown
+		},
+	},
 	Mutation: {
 		async uploadFile(parent, { file }) {
 			const { createReadStream, filename, mimetype, encoding } = await file;

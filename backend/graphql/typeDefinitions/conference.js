@@ -37,6 +37,10 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type ConferenceMutationRes implements MutationResponse {
+		message: String!
+		conference: Conference
+	}
 
 	input ConferenceInput {
 		name: String!
@@ -62,14 +66,14 @@ module.exports = gql`
 		createConference(
 			conferenceInput: ConferenceInput!
 			venueInput: VenueInput!
-		): Conference!
+		): ConferenceMutationRes!
 		updateConference(
 			conferenceId: ID!
 			conferenceInput: ConferenceInput!
 			venueInput: VenueInput!
-		): Conference!
-		deleteConference(conferenceId: ID!): String!
-		addAttendee(conferenceId: ID!, userId: ID!): Conference!
-		removeAttendee(conferenceId: ID!, userId: ID!): Conference!
+		): ConferenceMutationRes!
+		deleteConference(conferenceId: ID!): ConferenceMutationRes!
+		addAttendee(conferenceId: ID!, userId: ID!): ConferenceMutationRes!
+		removeAttendee(conferenceId: ID!, userId: ID!): ConferenceMutationRes!
 	}
 `;

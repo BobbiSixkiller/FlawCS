@@ -12,6 +12,7 @@ const { GraphQLUpload } = require("graphql-upload");
 module.exports = {
 	Date: Date,
 	Upload: GraphQLUpload,
+	MutationResponse: { ...utilResolver.MutationResponse },
 	Query: {
 		...userResolver.Query,
 		...invoiceResolver.Query,

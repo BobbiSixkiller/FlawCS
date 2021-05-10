@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = async (html) => {
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
-	const path = `./public/invoice/${uuidv4()}-invoice.pdf`;
+	const path = `./temp/${uuidv4()}-invoice.pdf`;
 
 	await page.setContent(html);
 	const pdf = await page.pdf({

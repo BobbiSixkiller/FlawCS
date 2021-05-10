@@ -45,13 +45,13 @@ module.exports = {
 	},
 	Mutation: {
 		async createConference(parent, { conferenceInput, venueInput }) {
-			const { errors, valid } = validateConference({
-				conference: { ...conferenceInput },
-				venue: { ...venueInput },
-			});
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+			// const { errors, valid } = validateConference({
+			// 	conference: { ...conferenceInput },
+			// 	venue: { ...venueInput },
+			// });
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
 			const conference = new Conference({
 				...conferenceInput,
@@ -60,7 +60,10 @@ module.exports = {
 
 			const res = await conference.save();
 
-			return res;
+			return {
+				message: `${conference.name} conference has been created.`,
+				conference,
+			};
 		},
 		async updateConference(
 			parent,
@@ -74,16 +77,17 @@ module.exports = {
 			// 	throw new UserInputError("Errors", { errors });
 			// }
 
-			const update = { ...conferenceInput, venue: { ...venueInput } };
-
-			const res = await Conference.findOneAndUpdate(
+			const conference = await Conference.findOneAndUpdate(
 				{ _id: conferenceId },
-				update,
+				{ ...conferenceInput, venue: { ...venueInput } },
 				{ new: true }
 			).populate("host");
 
-			if (res) {
-				return res;
+			if (conference) {
+				return {
+					message: `${conference.name} conference has been updated.`,
+					conference,
+				};
 			} else {
 				throw new UserInputError("Conference not found!");
 			}
@@ -92,9 +96,12 @@ module.exports = {
 			const conference = await Conference.findOne({ _id: conferenceId });
 			if (conference) {
 				await conference.remove();
-				return "Conference has been deleted.";
+				return {
+					message: `${conference.name} conference has been deleted.`,
+					conference,
+				};
 			} else {
-				throw new UserInputError("Conference not found.");
+				throw new UserInputError("Conference not found!");
 			}
 		},
 		async addAttendee(parent, { conferenceId, userId }) {
@@ -105,19 +112,19 @@ module.exports = {
 				}).populate("host"),
 			]);
 			if (!user) {
-				throw new UserInputError("User not found.");
+				throw new UserInputError("User not found!");
 			}
 			if (!conference) {
-				throw new UserInputError("Conference not found.");
+				throw new UserInputError("Conference not found!");
 			}
 			if (!conference.host) {
-				throw new UserInputError("Host not found.");
+				throw new UserInputError("Host not found!");
 			}
 
 			const userExists = conference.attendees.find((a) => a.userId == userId);
 			if (userExists) {
 				throw new UserInputError(
-					"You are already signed up for the conference."
+					"You are already signed up for the conference!"
 				);
 			}
 
@@ -177,7 +184,10 @@ module.exports = {
 
 			await Promise.all([invoice.save(), conference.save()]);
 
-			return conference;
+			return {
+				message: `You've successfully applied to the ${conference.name} conference.`,
+				conference,
+			};
 		},
 		async removeAttendee(_, { conferenceId, userId }) {
 			const conference = await Conference.findOneAndUpdate(
@@ -198,7 +208,10 @@ module.exports = {
 			}
 			await invoice.remove();
 
-			return "Attendee removed.";
+			return {
+				message: "You've been successfully removed from the conference.",
+				conference,
+			};
 		},
 	},
 };

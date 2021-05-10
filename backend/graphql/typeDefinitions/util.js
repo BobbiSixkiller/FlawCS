@@ -7,7 +7,6 @@ module.exports = gql`
 	type File {
 		url: String!
 	}
-
 	type Address {
 		street: String!
 		city: String!
@@ -42,5 +41,11 @@ module.exports = gql`
 
 	type Mutation {
 		uploadFile(file: Upload!): File!
+	}
+
+	interface MutationResponse {
+		#code: String!
+		#success: Boolean!
+		message: String!
 	}
 `;
