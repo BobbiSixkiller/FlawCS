@@ -27,10 +27,10 @@ module.exports = {
 	},
 	Mutation: {
 		async createSection(parent, { conferenceId, sectionInput }) {
-			const { errors, valid } = validateSection({ ...sectionInput });
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+			// const { errors, valid } = validateSection({ ...sectionInput });
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 
 			const conference = await Conference.findOne({ _id: conferenceId });
 			if (!conference) {
