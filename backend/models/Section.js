@@ -50,6 +50,7 @@ sectionSchema.pre("remove", async function () {
 	await this.model("Submission").deleteMany({ sectionId: this._id });
 });
 
+//check to see if refactor is needed to use isModified
 sectionSchema.pre("save", async function () {
 	await this.model("Conference").findOneAndUpdate(
 		{

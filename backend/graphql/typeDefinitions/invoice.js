@@ -27,6 +27,10 @@ module.exports = gql`
 		body: String!
 		comment: String!
 	}
+	type InvoiceMutationRes implements MutationResponse {
+		message: String!
+		invoice: Invoice
+	}
 
 	input InvoiceInputData {
 		type: String!
@@ -51,6 +55,9 @@ module.exports = gql`
 		downloadInvoice(invoiceId: ID!, userId: ID): String!
 	}
 	extend type Mutation {
-		updateInvoice(invoiceId: ID!, invoiceInput: InvoiceInput!): Invoice!
+		updateInvoice(
+			invoiceId: ID!
+			invoiceInput: InvoiceInput!
+		): InvoiceMutationRes!
 	}
 `;

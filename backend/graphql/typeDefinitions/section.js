@@ -36,6 +36,12 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type SectionMutationRes implements MutationResponse {
+		message: String!
+		conference: Conference
+		section: Section
+		submission: Submission
+	}
 
 	input SectionInput {
 		name: String!
@@ -50,18 +56,32 @@ module.exports = gql`
 		getSection(sectionId: ID!): Section!
 	}
 	extend type Mutation {
-		createSection(conferenceId: ID!, sectionInput: SectionInput!): Conference!
-		updateSection(sectionId: ID!, sectionInput: SectionInput!): Section!
-		deleteSection(sectionId: ID!): String!
-		addGarant(sectionId: ID!, name: String!, userId: String!): Section!
-		removeGarant(sectionId: ID!, userId: ID!): Section!
-		addCoordinator(sectionId: ID!, name: String!, userId: String!): Section!
-		removeCoordinator(sectionId: ID!, userId: ID!): Section!
+		createSection(
+			conferenceId: ID!
+			sectionInput: SectionInput!
+		): SectionMutationRes!
+		updateSection(
+			sectionId: ID!
+			sectionInput: SectionInput!
+		): SectionMutationRes!
+		deleteSection(sectionId: ID!): SectionMutationRes!
+		addGarant(
+			sectionId: ID!
+			name: String!
+			userId: String!
+		): SectionMutationRes!
+		removeGarant(sectionId: ID!, userId: ID!): SectionMutationRes!
+		addCoordinator(
+			sectionId: ID!
+			name: String!
+			userId: String!
+		): SectionMutationRes!
+		removeCoordinator(sectionId: ID!, userId: ID!): SectionMutationRes!
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
 			authors: [ID]!
 			submissionInput: SubmissionInput!
-		): Section!
+		): SectionMutationRes!
 	}
 `;

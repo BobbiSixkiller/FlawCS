@@ -23,62 +23,68 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async createHost(_, { hostInput: { billing, signatureUrl, logoUrl } }) {
-			// const { errors, valid } = validateHost(hostInput);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
-
-			const hostExists = await Host.findOne({ "billing.name": billing.name });
-			if (hostExists) {
-				throw new UserInputError("Host exists", {
-					errors: { name: "Host with the submitted name already exists." },
-				});
-			}
-
-			const host = new Host({ billing, signatureUrl, logoUrl });
-			const res = await host.save();
-
-			return res;
-		},
-		async updateHost(
+		async createHost(
 			_,
-			{ hostId, hostInput: { billing, signatureUrl, logoUrl } }
+			{ hostInput: { name, billing, signatureUrl, logoUrl } }
 		) {
 			// const { errors, valid } = validateHost(hostInput);
 			// if (!valid) {
 			// 	throw new UserInputError("Errors", { errors });
 			// }
 
-			const hostExists = await Host.findOne({ "billing.name": billing.name });
+			const hostExists = await Host.findOne({ name });
 			if (hostExists) {
 				throw new UserInputError("Host exists", {
-					errors: { name: "Host with the submitted name already exists!" },
+					errors: { name: "Host with the submitted name already exists." },
 				});
 			}
 
-			const host = await Host.findOneAndUpdate(
-				{ _id: hostId },
-				{ billing, signatureUrl, logoUrl },
-				{
-					new: true,
-				}
-			);
+			const host = new Host({ name, billing, signatureUrl, logoUrl });
+			await host.save();
 
-			if (host) {
-				return host;
-			} else {
-				throw new UserInputError("Host not found");
+			return {
+				message: `Host ${host.name} has been created.`,
+				host,
+			};
+		},
+		async updateHost(
+			_,
+			{ hostId, hostInput: { name, billing, signatureUrl, logoUrl } }
+		) {
+			// const { errors, valid } = validateHost(hostInput);
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
+
+			const host = await Host.findOne({ _id: hostId });
+			if (!host) {
+				throw new UserInputError("Host not found!");
 			}
+
+			host.name = name;
+			host.billing = billing;
+			host.signatureUrl = signatureUrl;
+			host.logoUrl = logoUrl;
+
+			await host.save();
+
+			return {
+				message: `Host ${host.name} has been updated.`,
+				host,
+			};
 		},
 		async deleteHost(_, { hostId }) {
 			const host = await Host.findOne({ _id: hostId });
-			if (host) {
-				await host.remove();
-				return "Host has been deleted";
-			} else {
+			if (!host) {
 				throw new UserInputError("Host not found");
 			}
+
+			await host.remove();
+
+			return {
+				message: `Host ${host.name} has been deleted.`,
+				host,
+			};
 		},
 	},
 };

@@ -45,7 +45,10 @@ module.exports = {
 
 			await invoice.save();
 
-			return invoice;
+			return {
+				message: `Invoice has been updated.`,
+				invoice,
+			};
 		},
 	},
 };
