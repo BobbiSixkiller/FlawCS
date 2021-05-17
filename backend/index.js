@@ -1,4 +1,8 @@
-const { ApolloServer, makeExecutableSchema } = require("apollo-server-express");
+const {
+	ApolloServer,
+	makeExecutableSchema,
+	UserInputError,
+} = require("apollo-server-express");
 const { graphqlUploadExpress } = require("graphql-upload"); // The Express upload middleware.
 const express = require("express");
 
@@ -29,6 +33,12 @@ const server = new ApolloServer({
 
 		return { user };
 	},
+	// formatError(err) {
+	// 	console.log(err);
+	// 	if (err.originalError instanceof ValidationError) {
+	// 		return new UserInputError("Different authentication error message!");
+	// 	}
+	// },
 	//disable baked-in upload scalar in order to replace it with graphql-upload package
 	uploads: false,
 });

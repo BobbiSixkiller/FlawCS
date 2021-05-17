@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User");
-const { validateRegister, validateLogin } = require("../../util/validation");
+//const { validateRegister, validateLogin } = require("../../util/validation");
 
 function generateToken(user) {
 	return jwt.sign(
@@ -35,7 +35,7 @@ module.exports = {
 			if (user) {
 				return user;
 			} else {
-				throw new UserInputError("User not found.");
+				throw new UserInputError("User not found!");
 			}
 		},
 	},
@@ -43,10 +43,11 @@ module.exports = {
 		async deleteUser(_, { userId }) {
 			const user = await User.findOne({ _id: userId });
 			if (!user) {
-				throw new UserInputError("User not found.");
+				throw new UserInputError("User not found!");
 			}
 			await user.remove();
-			return "User has been deleted.";
+
+			return { message: "User has been deleted.", user };
 		},
 		async updateUser(_, { userId, role, userInput, billingInput }) {
 			// const { valid, errors } = validateRegister({
@@ -81,9 +82,9 @@ module.exports = {
 			user.telephone = userInput.telephone;
 			user.billing = billingInput;
 
-			const res = await user.save();
+			await user.save();
 
-			return res;
+			return { message: "User has been updated.", user };
 		},
 		async register(_, { registerInput, billingInput }) {
 			// const { valid, errors } = validateRegister({
@@ -122,10 +123,12 @@ module.exports = {
 			});
 
 			const res = await user.save();
-
 			const token = generateToken(res);
 
-			return { id: res._id, ...res._doc, token };
+			return {
+				message: "New user successfully registered.",
+				user: { id: res._id, ...res._doc, token },
+			};
 		},
 		async login(_, { email, password }) {
 			const { errors, valid } = validateLogin(email, password);
@@ -147,7 +150,10 @@ module.exports = {
 
 			const token = generateToken(user);
 
-			return { id: user._id, ...user._doc, token };
+			return {
+				message: "Welcome!",
+				user: { id: user._id, ...user._doc, token },
+			};
 		},
 	},
 };

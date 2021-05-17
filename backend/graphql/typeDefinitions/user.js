@@ -22,6 +22,10 @@ module.exports = gql`
 		updatedAt: Date!
 		submissions: [Submission]!
 	}
+	type UserMutationRes implements MutationResponse {
+		message: String!
+		user: User
+	}
 
 	input RegisterInput {
 		firstName: String!
@@ -40,14 +44,17 @@ module.exports = gql`
 		getUser(userId: ID!): User!
 	}
 	extend type Mutation {
-		register(registerInput: RegisterInput!, billingInput: BillingInput!): User!
-		login(email: String!, password: String!): User!
+		register(
+			registerInput: RegisterInput!
+			billingInput: BillingInput!
+		): UserMutationRes!
+		login(email: String!, password: String!): UserMutationRes!
 		updateUser(
 			userId: ID!
 			role: Role!
 			userInput: RegisterInput!
 			billingInput: BillingInput!
-		): User!
-		deleteUser(userId: ID!): String!
+		): UserMutationRes!
+		deleteUser(userId: ID!): UserMutationRes!
 	}
 `;

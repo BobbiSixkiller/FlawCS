@@ -14,6 +14,10 @@ module.exports = gql`
 		createdAt: Date!
 		updatedAt: Date!
 	}
+	type SubmissionMutationRes implements MutationResponse {
+		message: String!
+		submission: Submission
+	}
 
 	input SubmissionInput {
 		name: String!
@@ -32,7 +36,7 @@ module.exports = gql`
 			submissionInput: SubmissionInput!
 			accepted: Boolean!
 			authors: [ID]!
-		): Submission!
-		deleteSubmission(submissionId: ID!): String!
+		): SubmissionMutationRes!
+		deleteSubmission(submissionId: ID!): SubmissionMutationRes!
 	}
 `;

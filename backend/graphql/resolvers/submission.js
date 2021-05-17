@@ -47,9 +47,9 @@ module.exports = {
 			submission.accepted = accepted;
 			submission.authors = authors;
 
-			const res = await submission.save();
+			await submission.save();
 
-			return res;
+			return { message: "Your submission has been updated.", submission };
 		},
 		async deleteSubmission(parent, { submissionId }) {
 			const submission = await Submission.findOne({ _id: submissionId });
@@ -57,7 +57,8 @@ module.exports = {
 				throw new UserInputError("Submission not found.");
 			}
 			await submission.remove();
-			return "Submission has been deleted";
+
+			return { message: "Submission has been deleted!", submission };
 		},
 	},
 };
