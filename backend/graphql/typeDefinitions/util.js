@@ -4,6 +4,11 @@ module.exports = gql`
 	scalar Date
 	scalar Upload
 
+	enum FileType {
+		IMAGE
+		SUBMISSION
+	}
+
 	type File {
 		url: String!
 	}
@@ -40,7 +45,7 @@ module.exports = gql`
 	}
 
 	type Mutation {
-		uploadFile(file: Upload!): File!
+		uploadFile(file: Upload!, type: FileType!): File!
 	}
 
 	interface MutationResponse {

@@ -57,10 +57,10 @@ module.exports = {
 			};
 		},
 		async updateSection(parent, { sectionId, sectionInput }) {
-			const { errors, valid } = validateSection({ ...sectionInput });
-			if (!valid) {
-				throw new UserInputError("Errors", { errors });
-			}
+			// const { errors, valid } = validateSection({ ...sectionInput });
+			// if (!valid) {
+			// 	throw new UserInputError("Errors", { errors });
+			// }
 			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
@@ -166,7 +166,7 @@ module.exports = {
 				throw new UserInputError("Section not found.");
 			}
 			return {
-				message: `Coordinator has been removed from ${secton.name} section.`,
+				message: `Coordinator has been removed from ${section.name} section.`,
 				section,
 			};
 		},
@@ -205,12 +205,12 @@ module.exports = {
 				submissionId: submission._id,
 			});
 
-			const res = await Promise.all([submission.save(), section.save()]);
+			await Promise.all([submission.save(), section.save()]);
 
 			return {
 				message: `Submission has been added to ${secton.name} section.`,
-				submission: res[0],
-				section: res[1],
+				submission,
+				section,
 			};
 		},
 	},

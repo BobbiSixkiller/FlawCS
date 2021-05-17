@@ -7,15 +7,12 @@ require("dotenv").config();
 module.exports = {
 	MutationResponse: {
 		__resolveType(mutationRes, context, info) {
-			if (mutationRes.conference) {
-				return "Conference";
-			}
-
+			//specify return string types based on mutationRes object properties when using interface as a return statement of Query or Mutation
 			return null; // GraphQLError is thrown
 		},
 	},
 	Mutation: {
-		async uploadFile(parent, { file }) {
+		async uploadFile(parent, { file, type }) {
 			const { createReadStream, filename, mimetype, encoding } = await file;
 
 			if (
@@ -27,7 +24,7 @@ module.exports = {
 				throw new UserInputError("Supported file types: PDF, Word, jpeg");
 			}
 
-			const url = `/images/${
+			const url = `/${type.toLowerCase()}s/${
 				uuidv4() + "-" + filename.toLowerCase().split(" ").join("-")
 			}`;
 
