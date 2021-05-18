@@ -3,11 +3,7 @@ const { billing } = require("./utilSchemas");
 
 const userSchema = new Schema(
 	{
-		firstName: {
-			type: String,
-			trim: true,
-			required: [true, "Krstne sa musi uviezt!"],
-		},
+		firstName: { type: String, trim: true },
 		lastName: { type: String, trim: true },
 		email: { type: String, trim: true },
 		password: { type: String, trim: true },
@@ -19,7 +15,6 @@ const userSchema = new Schema(
 			type: String,
 			enum: ["BASIC", "SUPERVISOR", "ADMIN"],
 			default: "BASIC",
-			//required: true,
 		},
 		billing,
 	},

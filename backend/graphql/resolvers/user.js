@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User");
-//const { validateRegister, validateLogin } = require("../../util/validation");
+const { validateRegister, validateLogin } = require("../../util/validation");
 
 function generateToken(user) {
 	return jwt.sign(
@@ -50,14 +50,13 @@ module.exports = {
 			return { message: "User has been deleted.", user };
 		},
 		async updateUser(_, { userId, role, userInput, billingInput }) {
-			// const { valid, errors } = validateRegister({
-			// 	...userInput,
-			// 	...addressInput,
-			// 	...billingInput,
-			// });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { valid, errors } = validateRegister({
+				...userInput,
+				...billingInput,
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
 			const emailExists = await User.findOne({ email: userInput.email });
 			if (emailExists && emailExists._id != userId) {
@@ -87,14 +86,13 @@ module.exports = {
 			return { message: "User has been updated.", user };
 		},
 		async register(_, { registerInput, billingInput }) {
-			// const { valid, errors } = validateRegister({
-			// 	...registerInput,
-			// 	...addressInput,
-			// 	...billingInput,
-			// });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { valid, errors } = validateRegister({
+				...registerInput,
+				...billingInput,
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
 			const emailExists = await User.findOne({ email: registerInput.email });
 			if (emailExists) {

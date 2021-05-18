@@ -3,7 +3,7 @@ const { address } = require("./utilSchemas");
 
 const attendeeSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		userId: { type: Schema.Types.ObjectId, ref: "User" },
 		invoiceId: { type: Schema.Types.ObjectId, ref: "Invoice" },
 	},
@@ -12,9 +12,9 @@ const attendeeSchema = new Schema(
 
 const sectionSchema = new Schema(
 	{
-		name: String,
-		topic: String,
-		languages: [{ type: String }],
+		name: { type: String, trim: true },
+		topic: { type: String, trim: true },
+		languages: [{ type: String, trim: true }],
 		sectionId: { type: Schema.Types.ObjectId, ref: "Section" },
 	},
 	{ timestamps: true }

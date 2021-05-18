@@ -51,7 +51,7 @@ module.exports = gql`
 		login(email: String!, password: String!): UserMutationRes!
 		updateUser(
 			userId: ID!
-			role: Role!
+			role: String!
 			userInput: RegisterInput!
 			billingInput: BillingInput!
 		): UserMutationRes!

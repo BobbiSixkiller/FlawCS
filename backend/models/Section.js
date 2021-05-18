@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const garantSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		userId: { type: Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true }
@@ -10,7 +10,7 @@ const garantSchema = new Schema(
 
 const coordinatorSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		userId: { type: Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true }
@@ -18,7 +18,7 @@ const coordinatorSchema = new Schema(
 
 const submissionSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		submissionId: { type: Schema.Types.ObjectId, ref: "Submission" },
 		accepted: {
 			type: Boolean,

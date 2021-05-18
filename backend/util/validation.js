@@ -1,10 +1,15 @@
-//refactor using regex/Joi validator
+var checkEmail =
+	/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var checkAlphaNum = /^([a-zA-Z0-9 ]+)$/;
+//minimum eight characters, at least one letter and one number
+var passwordStrength = "^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$";
+
 module.exports.validateRegister = (fields) => {
 	const errors = {};
-	if (fields.titleBefore.trim().length > 20) {
+	if (fields.titleBefore && fields.titleBefore.trim().length > 20) {
 		errors.titleBefore = "Maximum length for title is 20 characters.";
 	}
-	if (fields.titleAfter.trim().length > 20) {
+	if (fields.titleAfter && fields.titleAfter.trim().length > 20) {
 		errors.titleAfter = "Maximum length for title is 20 characters.";
 	}
 	if (fields.firstName.trim() === "") {
@@ -30,31 +35,43 @@ module.exports.validateRegister = (fields) => {
 	if (fields.email.trim() === "") {
 		errors.email = "Please submit your email address.";
 	} else {
-		const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		if (!fields.email.trim().match(regEx)) {
+		if (!fields.email.trim().match(checkEmail)) {
 			errors.email = "Please submit a valid email address.";
 		}
 	}
 	if (fields.password.trim() === "") {
 		errors.password = "Please submit your password.";
+	} else if (!fields.password.trim().match(passwordStrength)) {
+		errors.password =
+			"Password must contain at least 8 characters, 1 letter and 1 number.";
 	}
 	if (fields.confirmPassword.trim() !== fields.password.trim()) {
 		errors.confirmPassword = "Submitted passwords do not match.";
 	}
 	if (fields.name.trim() === "") {
 		errors.name = "Please submit your billing name.";
+	} else if (fields.name.trim() > 70) {
+		errors.name = "Maximum length for billing name is 70 characters";
 	}
 	if (fields.address.street.trim() === "") {
 		errors.address.street = "Please submit your address.";
+	} else if (fields.address.street.trim() > 70) {
+		errors.address.street = "Maximum length for street name is 70 characters";
 	}
 	if (fields.address.city.trim() === "") {
 		errors.city = "Please submit your city.";
+	} else if (fields.address.city.trim() > 70) {
+		errors.address.city = "Maximum length for city name is 70 characters";
 	}
 	if (fields.address.postal.trim() === "") {
-		errors.postal = "Please submit your postal code.";
+		errors.address.postal = "Please submit your postal code.";
+	} else if (fields.address.postal.trim() > 10) {
+		errors.address.postal = "Maximum length for postal code is 10 characters";
 	}
 	if (fields.address.country.trim() === "") {
-		errors.country = "Please submit your country.";
+		errors.address.country = "Please submit your country.";
+	} else if (fields.address.street.trim() > 70) {
+		errors.address.country = "Maximum length for country name is 70 characters";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
@@ -64,6 +81,8 @@ module.exports.validateLogin = (email, password) => {
 	const errors = {};
 	if (email.trim() === "") {
 		errors.email = "Please submit your email.";
+	} else if (!fields.email.trim().match(checkEmail)) {
+		errors.email = "Please submit a valid email address.";
 	}
 	if (password.trim() === "") {
 		errors.password = "Please submit your password.";

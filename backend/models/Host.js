@@ -5,7 +5,7 @@ const { billing } = require("./utilSchemas");
 
 const hostSchema = new Schema(
 	{
-		name: String,
+		name: { type: String, trim: true },
 		billing,
 		signatureUrl: String,
 		logoUrl: String,
