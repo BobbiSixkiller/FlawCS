@@ -14,16 +14,16 @@ const isAuthenticated = rule({ cache: "contextual" })(
 	}
 );
 
-const isOwnUser = rule({ cache: "strict" })((parent, { userId }, { user }) => {
-	return userId === user.id;
-});
-
 const isAdmin = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "ADMIN");
 });
 
 const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "SUPERVISOR");
+});
+
+const isOwnUser = rule({ cache: "strict" })((parent, { userId }, { user }) => {
+	return userId === user.id;
 });
 
 const isOwnSubmission = rule({ cache: "strict" })(
