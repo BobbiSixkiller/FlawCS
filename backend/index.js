@@ -1,11 +1,11 @@
+require("dotenv").config();
 const { ApolloServer, makeExecutableSchema } = require("apollo-server-express");
 const { graphqlUploadExpress } = require("graphql-upload"); // The Express upload middleware.
-const express = require("express");
-
-const cors = require("cors");
 const { applyMiddleware } = require("graphql-middleware");
+
+const express = require("express");
 const mongoose = require("mongoose");
-require("dotenv").config();
+const cors = require("cors");
 
 const typeDefs = require("./graphql/typeDefinitions");
 const resolvers = require("./graphql/resolvers");
