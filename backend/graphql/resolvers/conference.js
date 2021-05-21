@@ -2,6 +2,7 @@ const { UserInputError } = require("apollo-server-express");
 const fs = require("fs");
 require("dotenv").config();
 
+const Host = require("../../models/Host");
 const Conference = require("../../models/Conference");
 const User = require("../../models/User");
 const Invoice = require("../../models/Invoice");
@@ -45,20 +46,26 @@ module.exports = {
 	},
 	Mutation: {
 		async createConference(parent, { conferenceInput, venueInput }) {
-			// const { errors, valid } = validateConference({
-			// 	conference: { ...conferenceInput },
-			// 	venue: { ...venueInput },
-			// });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateConference({
+				conference: { ...conferenceInput },
+				venue: { ...venueInput },
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
+			const host = await Host.findOne({ _id: conferenceInput.host });
+			if (!host) {
+				throw new UserInputError("Host removed", {
+					errors: { host: "Submitted host has been deleted." },
+				});
+			}
 
 			const conference = new Conference({
 				...conferenceInput,
 				venue: { ...venueInput },
 			});
 
-			const res = await conference.save();
+			await conference.save();
 
 			return {
 				message: `${conference.name} conference has been created.`,
@@ -69,13 +76,13 @@ module.exports = {
 			parent,
 			{ conferenceId, conferenceInput, venueInput }
 		) {
-			// const { errors, valid } = validateConference({
-			// 	conference: { ...conferenceInput },
-			// 	venue: { ...venueInput },
-			// });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateConference({
+				conference: { ...conferenceInput },
+				venue: { ...venueInput },
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
 			const conference = await Conference.findOneAndUpdate(
 				{ _id: conferenceId },
@@ -141,7 +148,10 @@ module.exports = {
 						conference.variableSymbol +
 						Math.floor(Math.random() * 9000 + 1000).toString(),
 					ticketPrice: conference.ticketPrice,
-					vat: user.isFlaw ? 0 : conference.ticketPrice * process.env.VAT,
+					vat:
+						user.isFlaw || user.billing.address.country != "Slovakia"
+							? 0
+							: conference.ticketPrice * process.env.VAT,
 					body: `This invoice is issued to ${
 						user.fullName
 					} and covers fee for conference "${conference.name}" hosted by ${

@@ -3,6 +3,7 @@ const { gql } = require("apollo-server-express");
 module.exports = gql`
 	type Section {
 		id: ID!
+		conferenceId: ID!
 		name: String!
 		topic: String!
 		start: Date
@@ -52,7 +53,7 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getSections: [Section]!
+		getConferenceSections(conferenceId: ID!): [Section]!
 		getSection(sectionId: ID!): Section!
 	}
 	extend type Mutation {
@@ -70,17 +71,16 @@ module.exports = gql`
 			name: String!
 			userId: String!
 		): SectionMutationRes!
-		removeGarant(sectionId: ID!, userId: ID!): SectionMutationRes!
+		removeGarant(sectionId: ID!, garantId: ID!): SectionMutationRes!
 		addCoordinator(
 			sectionId: ID!
 			name: String!
 			userId: String!
 		): SectionMutationRes!
-		removeCoordinator(sectionId: ID!, userId: ID!): SectionMutationRes!
+		removeCoordinator(sectionId: ID!, coordinatorId: ID!): SectionMutationRes!
 		addSubmission(
 			conferenceId: ID!
 			sectionId: ID!
-			authors: [ID]!
 			submissionInput: SubmissionInput!
 		): SectionMutationRes!
 	}

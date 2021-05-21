@@ -41,10 +41,12 @@ const conferenceSchema = new Schema(
 );
 
 conferenceSchema.pre("remove", async function () {
-	const objectIds = this.sections.map((section) => section.sectionId);
+	//const objectIds = this.sections.map((section) => section.sectionId);
 
-	await this.model("Section").deleteMany({ _id: { $in: objectIds } });
+	//await this.model("Section").deleteMany({ _id: { $in: objectIds } });
+	await this.model("Section").deleteMany({ conferenceId: this._id });
 	await this.model("Submission").deleteMany({ conferenceId: this._id });
+	await this.model("Invoice").deleteMany({ conferenceId: this._id });
 });
 
 module.exports = model("Conference", conferenceSchema);

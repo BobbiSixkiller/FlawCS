@@ -21,12 +21,14 @@ module.exports = gql`
 
 	input SubmissionInput {
 		name: String!
+		authors: [ID]!
 		abstract: String!
 		keywords: [String]!
 		url: String
 	}
 
 	extend type Query {
+		#development query, might not be needed in production
 		getSubmissions: [Submission]!
 		getSubmission(submissionId: ID!): Submission!
 	}
@@ -35,7 +37,6 @@ module.exports = gql`
 			submissionId: ID!
 			submissionInput: SubmissionInput!
 			accepted: Boolean!
-			authors: [ID]!
 		): SubmissionMutationRes!
 		deleteSubmission(submissionId: ID!): SubmissionMutationRes!
 	}

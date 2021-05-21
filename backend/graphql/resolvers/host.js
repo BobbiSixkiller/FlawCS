@@ -23,23 +23,20 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async createHost(
-			_,
-			{ hostInput: { name, billing, signatureUrl, logoUrl } }
-		) {
-			// const { errors, valid } = validateHost(hostInput);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+		async createHost(_, { hostInput }) {
+			const { errors, valid } = validateHost(hostInput);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
-			const hostExists = await Host.findOne({ name });
+			const hostExists = await Host.findOne({ name: hostInput.name });
 			if (hostExists) {
 				throw new UserInputError("Host exists", {
 					errors: { name: "Host with the submitted name already exists." },
 				});
 			}
 
-			const host = new Host({ name, billing, signatureUrl, logoUrl });
+			const host = new Host({ ...hostInput });
 			await host.save();
 
 			return {
@@ -51,10 +48,15 @@ module.exports = {
 			_,
 			{ hostId, hostInput: { name, billing, signatureUrl, logoUrl } }
 		) {
-			// const { errors, valid } = validateHost(hostInput);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateHost({
+				name,
+				billing,
+				signatureUrl,
+				logoUrl,
+			});
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
 			const host = await Host.findOne({ _id: hostId });
 			if (!host) {

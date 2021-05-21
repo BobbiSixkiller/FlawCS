@@ -50,9 +50,9 @@ module.exports = gql`
 	}
 
 	extend type Query {
-		getInvoice(invoiceId: ID!, userId: ID): Invoice!
-		getInvoices(conferenceId: ID!): [Invoice]!
-		downloadInvoice(invoiceId: ID!, userId: ID): String!
+		getInvoice(invoiceId: ID!): Invoice!
+		#development query, might not be needed in production
+		getConferenceInvoices(conferenceId: ID!): [Invoice]!
 	}
 	extend type Mutation {
 		updateInvoice(

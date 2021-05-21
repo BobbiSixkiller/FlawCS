@@ -30,6 +30,7 @@ const submissionSchema = new Schema(
 
 const sectionSchema = new Schema(
 	{
+		conferenceId: { type: Schema.Types.ObjectId, ref: "Conference" },
 		name: { type: String, trim: true },
 		topic: { type: String, trim: true },
 		start: Date,
@@ -50,7 +51,6 @@ sectionSchema.pre("remove", async function () {
 	await this.model("Submission").deleteMany({ sectionId: this._id });
 });
 
-//check to see if refactor is needed to use isModified
 sectionSchema.pre("save", async function () {
 	await this.model("Conference").findOneAndUpdate(
 		{

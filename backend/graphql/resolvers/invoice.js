@@ -4,7 +4,8 @@ const Invoice = require("../../models/Invoice");
 
 module.exports = {
 	Query: {
-		async getInvoices(_, { conferenceId }) {
+		//development resolver, might not be needed in production
+		async getConferenceInvoices(_, { conferenceId }) {
 			const invoices = await Invoice.find({ conferenceId });
 
 			return invoices;

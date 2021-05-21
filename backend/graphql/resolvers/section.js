@@ -5,15 +5,17 @@ const Section = require("../../models/Section");
 const Submission = require("../../models/Submission");
 const {
 	validateSection,
-	validateGarant,
+	validateStaff,
 	validateSubmission,
 } = require("../../util/validation");
 
 module.exports = {
 	Query: {
 		//development resolver, might not be needed in production
-		async getSections() {
-			const sections = await Section.find().sort({ createdAt: -1 });
+		async getConferenceSections(parent, { conferenceId }) {
+			const sections = await Section.find({ conferenceId }).sort({
+				createdAt: -1,
+			});
 			return sections;
 		},
 		async getSection(parent, { sectionId }) {
@@ -27,10 +29,10 @@ module.exports = {
 	},
 	Mutation: {
 		async createSection(parent, { conferenceId, sectionInput }) {
-			// const { errors, valid } = validateSection({ ...sectionInput });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateSection(sectionInput);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 
 			const conference = await Conference.findOne({ _id: conferenceId });
 			if (!conference) {
@@ -45,7 +47,10 @@ module.exports = {
 				});
 			}
 
-			const section = new Section({ ...sectionInput });
+			const section = new Section({
+				...sectionInput,
+				conferenceId,
+			});
 			conference.sections.push({ name: section.name, sectionId: section._id });
 
 			await Promise.all([section.save(), conference.save()]);
@@ -57,13 +62,25 @@ module.exports = {
 			};
 		},
 		async updateSection(parent, { sectionId, sectionInput }) {
-			// const { errors, valid } = validateSection({ ...sectionInput });
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateSection(sectionInput);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
+			}
+			const conference = await Conference.findOne({
+				_id: section.conferenceId,
+			});
+			const sectionExists = conference.sections.find(
+				(section) =>
+					section.name == sectionInput.name && section.sectionId != sectionId
+			);
+			if (sectionExists) {
+				throw new UserInputError("Section exists!", {
+					errors: { name: "Section with submitted name already exists." },
+				});
 			}
 
 			section.name = sectionInput.name;
@@ -72,7 +89,7 @@ module.exports = {
 			section.end = sectionInput.end;
 			section.languages = sectionInput.languages;
 
-			const res = await section.save();
+			await section.save();
 
 			return {
 				message: `Section ${section.name} has been updated.`,
@@ -93,10 +110,10 @@ module.exports = {
 			};
 		},
 		async addGarant(parent, { sectionId, userId, name }) {
-			// const { errors, valid } = validateGarant(name, userId);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateStaff(name, userId);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
@@ -112,29 +129,29 @@ module.exports = {
 			await section.save();
 
 			return {
-				message: `New garant has been added to ${secton.name} section.`,
+				message: `New garant has been added to ${section.name} section.`,
 				section,
 			};
 		},
-		async removeGarant(parent, { sectionId, userId }) {
-			const section = await Section.findOneAndUpdate(
-				{ _id: sectionId },
-				{ $pull: { garants: { userId } } },
-				{ new: true }
-			);
+		async removeGarant(parent, { sectionId, garantId }) {
+			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
 			}
+
+			section.garants.pull({ _id: garantId });
+			await section.save();
+
 			return {
-				message: `Garant has been removed from ${secton.name} section.`,
+				message: `Garant has been removed from ${section.name} section.`,
 				section,
 			};
 		},
 		async addCoordinator(parent, { sectionId, userId, name }) {
-			// const { errors, valid } = validateGarant(name, userId);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+			const { errors, valid } = validateStaff(name, userId);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
@@ -152,35 +169,31 @@ module.exports = {
 			await section.save();
 
 			return {
-				message: `New coordinator has been added to ${secton.name} section.`,
+				message: `New coordinator has been added to ${section.name} section.`,
 				section,
 			};
 		},
-		async removeCoordinator(parent, { sectionId, userId }) {
-			const section = await Section.findOneAndUpdate(
-				{ _id: sectionId },
-				{ $pull: { coordinators: { userId } } },
-				{ new: true }
-			);
+		async removeCoordinator(parent, { sectionId, coordinatorId }) {
+			const section = await Section.findOne({ _id: sectionId });
 			if (!section) {
 				throw new UserInputError("Section not found.");
 			}
+
+			section.garants.pull({ _id: coordinatorId });
+			await section.save();
+
 			return {
 				message: `Coordinator has been removed from ${section.name} section.`,
 				section,
 			};
 		},
-		async addSubmission(
-			parent,
-			{ conferenceId, sectionId, authors, submissionInput }
-		) {
-			// const { errors, valid } = validateSubmission(submissionInput);
-			// if (!valid) {
-			// 	throw new UserInputError("Errors", { errors });
-			// }
+		async addSubmission(parent, { conferenceId, sectionId, submissionInput }) {
+			const { errors, valid } = validateSubmission(submissionInput);
+			if (!valid) {
+				throw new UserInputError("Errors", { errors });
+			}
 			const submission = new Submission({
 				...submissionInput,
-				authors,
 				conferenceId,
 				sectionId,
 			});
@@ -208,7 +221,7 @@ module.exports = {
 			await Promise.all([submission.save(), section.save()]);
 
 			return {
-				message: `Submission has been added to ${secton.name} section.`,
+				message: `Submission has been added to ${section.name} section.`,
 				submission,
 				section,
 			};

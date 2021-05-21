@@ -53,6 +53,7 @@ module.exports = {
 			const { valid, errors } = validateRegister({
 				...userInput,
 				...billingInput,
+				role,
 			});
 			if (!valid) {
 				throw new UserInputError("Errors", { errors });

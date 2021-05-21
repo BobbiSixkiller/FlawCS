@@ -8,9 +8,8 @@ module.exports = {
 		//development resolver, might not be needed in production
 		async getSubmissions() {
 			try {
-				const submissions = await Submission.find()
-					.populate("authors")
-					.sort({ updatedAt: -1 });
+				const submissions = await Submission.find().sort({ updatedAt: -1 });
+
 				return submissions;
 			} catch (err) {
 				throw new Error(err);
@@ -20,17 +19,17 @@ module.exports = {
 			const submission = await Submission.findOne({
 				_id: submissionId,
 			}).populate("authors");
-			if (submission) {
-				return submission;
-			} else {
+			if (!submission) {
 				throw new UserInputError("Submission not found.");
 			}
+
+			return submission;
 		},
 	},
 	Mutation: {
 		async updateSubmission(
 			parent,
-			{ submissionId, submissionInput, authors, accepted }
+			{ submissionId, submissionInput, accepted }
 		) {
 			const { errors, valid } = validateSubmission(submissionInput);
 			if (!valid) {
@@ -43,9 +42,9 @@ module.exports = {
 			submission.name = submissionInput.name;
 			submission.abstract = submissionInput.abstract;
 			submission.keywords = submissionInput.keywords;
+			submission.authors = submissionInput.authors;
 			submission.url = submissionInput.url;
 			submission.accepted = accepted;
-			submission.authors = authors;
 
 			await submission.save();
 
@@ -58,7 +57,7 @@ module.exports = {
 			}
 			await submission.remove();
 
-			return { message: "Submission has been deleted!", submission };
+			return { message: "Submission has been deleted!" };
 		},
 	},
 };

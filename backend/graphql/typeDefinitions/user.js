@@ -20,7 +20,7 @@ module.exports = gql`
 		role: Role!
 		createdAt: Date!
 		updatedAt: Date!
-		submissions: [Submission]!
+		#submissions: [Submission]!
 	}
 	type UserMutationRes implements MutationResponse {
 		message: String!

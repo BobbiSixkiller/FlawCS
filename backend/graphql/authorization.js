@@ -1,5 +1,5 @@
 const { and, or, rule, shield } = require("graphql-shield");
-const Conference = require("../models/Conference");
+const Submission = require("../models/Submission");
 
 function checkRole(user, role) {
 	if (user) {
@@ -26,33 +26,55 @@ const isSupervisor = rule({ cache: "contextual" })((parent, args, { user }) => {
 	return checkRole(user, "SUPERVISOR");
 });
 
-const isGarant = rule({ cache: "strict" })(
-	async (parent, { sectionId }, { user }) => {
-		const conference = await Conference.findOne({
-			"sections.garants.garant": user.id,
-		});
-		const garant = conference.sections
-			.id(sectionId)
-			.garants.find((g) => g.garant == user.id);
-		return garant !== null;
+const isOwnSubmission = rule({ cache: "strict" })(
+	async (parent, { submissionId }, { user }) => {
+		const submission = await Submission.findOne({ _id: submissionId });
+
+		return submission.authors.some((author) => author == user.id);
 	}
 );
 
 module.exports = shield(
 	{
 		Query: {
-			//getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			//getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+			getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+			getConferenceInvoices: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			getInvoice: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			getSection: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			getSubmission: and(
+				isAuthenticated,
+				or(isOwnSubmission, isAdmin, isSupervisor)
+			),
 		},
 		Mutation: {
-			// deleteUser: and(isAuthenticated, isAdmin),
-			// updateUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
-			// createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			// updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
-			// deleteHost: and(isAuthenticated, isAdmin),
+			deleteUser: and(isAuthenticated, isAdmin),
+			updateUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
+			createHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			updateHost: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			deleteHost: and(isAuthenticated, isAdmin),
+			createConference: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			updateConference: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			deleteConference: and(isAuthenticated, isAdmin),
+			addAttendee: isAuthenticated,
+			removeAttendee: and(isAuthenticated, isAdmin),
+			updateInvoice: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			createSection: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			updateSection: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			deleteSection: and(isAuthenticated, isAdmin),
+			addGarant: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			removeGarant: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			addCoordinator: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			removeCoordinator: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			addSubmission: isAuthenticated,
+			updateSubmission: and(
+				isAuthenticated,
+				or(isOwnSubmission, isAdmin, isSupervisor)
+			),
+			deleteSubmission: and(isAuthenticated, isAdmin),
 		},
 		Conference: {
-			//attendees: and(isAuthenticated, or(isAdmin, isSupervisor)),
+			attendees: and(isAuthenticated, or(isAdmin, isSupervisor)),
 		},
 	},
 	{ allowExternalErrors: true }

@@ -26,7 +26,7 @@ const userSchema = new Schema(
 
 userSchema.virtual("fullName").get(function () {
 	if (this.titleBefore && this.titleAfter) {
-		return;
+		return `${this.titleBefore} ${this.firstName} ${this.lastName}, ${this.titleAfter}`;
 	}
 	if (this.titleBefore) {
 		return `${this.titleBefore} ${this.firstName} ${this.lastName}`;

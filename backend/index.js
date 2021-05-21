@@ -1,8 +1,4 @@
-const {
-	ApolloServer,
-	makeExecutableSchema,
-	UserInputError,
-} = require("apollo-server-express");
+const { ApolloServer, makeExecutableSchema } = require("apollo-server-express");
 const { graphqlUploadExpress } = require("graphql-upload"); // The Express upload middleware.
 const express = require("express");
 
@@ -18,6 +14,7 @@ const authorization = require("./graphql/authorization");
 const download = require("./rest/download");
 
 const app = new express();
+app.use(express.json());
 app.use(graphqlUploadExpress());
 app.use(express.static("public"));
 app.use(cors());

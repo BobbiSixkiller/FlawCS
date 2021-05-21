@@ -1,8 +1,7 @@
 var checkEmail =
 	/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var checkAlphaNum = /^([a-zA-Z0-9 ]+)$/;
 //minimum eight characters, at least one letter and one number
-var passwordStrength = "^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$";
+var passwordStrength = /^((?=.*\d)(?=.*[a-zA-Z]).{8,})$/;
 
 module.exports.validateRegister = (fields) => {
 	const errors = {};
@@ -14,17 +13,17 @@ module.exports.validateRegister = (fields) => {
 	}
 	if (fields.firstName.trim() === "") {
 		errors.firstName = "Please submit your first name.";
-	} else if (fields.firstName.trim() > 50) {
+	} else if (fields.firstName.trim().length > 50) {
 		errors.firstName = "Maximum length for first name is 50 characters.";
 	}
 	if (fields.lastName.trim() === "") {
 		errors.lastName = "Please submit your last name.";
-	} else if (fields.lastName.trim() > 50) {
+	} else if (fields.lastName.trim().length > 50) {
 		errors.lastName = "Maximum length for last name is 50 characters.";
 	}
 	if (fields.organisation.trim() === "") {
 		errors.organisation = "Please submit name of your organisation.";
-	} else if (fields.organisation.trim() > 100) {
+	} else if (fields.organisation.trim().length > 100) {
 		errors.organisation = "Maximum length for first name is 100 characters.";
 	}
 	if (fields.telephone.trim() === "") {
@@ -48,30 +47,31 @@ module.exports.validateRegister = (fields) => {
 	if (fields.confirmPassword.trim() !== fields.password.trim()) {
 		errors.confirmPassword = "Submitted passwords do not match.";
 	}
+	//billingInput validation
 	if (fields.name.trim() === "") {
 		errors.name = "Please submit your billing name.";
-	} else if (fields.name.trim() > 70) {
+	} else if (fields.name.trim().length > 70) {
 		errors.name = "Maximum length for billing name is 70 characters";
 	}
 	if (fields.address.street.trim() === "") {
-		errors.address.street = "Please submit your address.";
-	} else if (fields.address.street.trim() > 70) {
-		errors.address.street = "Maximum length for street name is 70 characters";
+		errors.street = "Please submit your address.";
+	} else if (fields.address.street.trim().length > 70) {
+		errors.street = "Maximum length for street name is 70 characters";
 	}
 	if (fields.address.city.trim() === "") {
 		errors.city = "Please submit your city.";
-	} else if (fields.address.city.trim() > 70) {
-		errors.address.city = "Maximum length for city name is 70 characters";
+	} else if (fields.address.city.trim().length > 70) {
+		errors.city = "Maximum length for city name is 70 characters";
 	}
 	if (fields.address.postal.trim() === "") {
-		errors.address.postal = "Please submit your postal code.";
-	} else if (fields.address.postal.trim() > 10) {
-		errors.address.postal = "Maximum length for postal code is 10 characters";
+		errors.postal = "Please submit your postal code.";
+	} else if (fields.address.postal.trim().length > 10) {
+		errors.postal = "Maximum length for postal code is 10 characters";
 	}
 	if (fields.address.country.trim() === "") {
-		errors.address.country = "Please submit your country.";
-	} else if (fields.address.street.trim() > 70) {
-		errors.address.country = "Maximum length for country name is 70 characters";
+		errors.country = "Please submit your country.";
+	} else if (fields.address.street.trim().length > 70) {
+		errors.country = "Maximum length for country name is 70 characters";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
@@ -81,8 +81,6 @@ module.exports.validateLogin = (email, password) => {
 	const errors = {};
 	if (email.trim() === "") {
 		errors.email = "Please submit your email.";
-	} else if (!fields.email.trim().match(checkEmail)) {
-		errors.email = "Please submit a valid email address.";
 	}
 	if (password.trim() === "") {
 		errors.password = "Please submit your password.";
@@ -93,22 +91,25 @@ module.exports.validateLogin = (email, password) => {
 
 module.exports.validateHost = (fields) => {
 	const errors = {};
-	if (fields.name === "") {
+	if (fields.name.trim() === "") {
 		errors.name = "Please submit name of the hosting organisation.";
 	}
-	if (fields.ICO === "") {
+	if (fields.billing.name.trim() === "") {
+		errors.billingName = "Please billing name.";
+	}
+	if (fields.billing.ICO.trim() === "") {
 		errors.ICO = "Please submit ICO.";
 	}
-	if (fields.ICDPH === "") {
+	if (fields.billing.ICDPH.trim() === "") {
 		errors.ICDPH = "Please submit ICDPH.";
 	}
-	if (fields.DIC === "") {
+	if (fields.billing.DIC.trim() === "") {
 		errors.DIC = "Please submit DIC.";
 	}
-	if (fields.SWIFT === "") {
+	if (fields.billing.SWIFT.trim() === "") {
 		errors.SWIFT = "Please submit SWIFT.";
 	}
-	if (fields.IBAN === "") {
+	if (fields.billing.IBAN.trim() === "") {
 		errors.IBAN = "Please submit IBAN.";
 	}
 	if (fields.signatureUrl === "") {
@@ -118,16 +119,16 @@ module.exports.validateHost = (fields) => {
 	if (fields.logoUrl === "") {
 		errors.logoUrl = "Please upload scan of your organisation's logo.";
 	}
-	if (fields.street === "") {
+	if (fields.billing.address.street.trim() === "") {
 		errors.street = "Please submit name and number of street.";
 	}
-	if (fields.city === "") {
+	if (fields.billing.address.city.trim() === "") {
 		errors.city = "Please submit name of the city.";
 	}
-	if (fields.postal === "") {
+	if (fields.billing.address.postal.trim() === "") {
 		errors.postal = "Please submit postal code.";
 	}
-	if (fields.country === "") {
+	if (fields.billing.address.country.trim() === "") {
 		errors.country = "Please submit country.";
 	}
 
@@ -142,20 +143,20 @@ module.exports.validateConference = (fields) => {
 	if (fields.conference.name.trim() === "") {
 		errors.conference.name = "Please submit name of the conference.";
 	}
-	if (fields.conference.hostId.trim() === "") {
-		errors.conference.hostId = "Please submit name of the host organisation.";
+	if (fields.conference.host.trim() === "") {
+		errors.conference.host = "Please choose a host organisation.";
 	}
-	if (fields.conference.start === undefined) {
-		errors.conference.name = "Please submit start date of the conference.";
+	if (isNaN(Date.parse(fields.conference.start))) {
+		errors.conference.start = "Please submit start date of the conference.";
 	}
-	if (fields.conference.end === undefined) {
-		errors.conference.name = "Please submit end date of the conference.";
+	if (isNaN(Date.parse(fields.conference.end))) {
+		errors.conference.end = "Please submit end date of the conference.";
 	}
-	if (fields.conference.regStart === undefined) {
+	if (isNaN(Date.parse(fields.conference.regStart))) {
 		errors.conference.regStart =
 			"Please submit date when the registration starts.";
 	}
-	if (fields.conference.regEnd === undefined) {
+	if (isNaN(Date.parse(fields.conference.regEnd))) {
 		errors.conference.regEnd = "Please submit date when the registration ends.";
 	}
 	if (fields.conference.ticketPrice === 0) {
@@ -197,12 +198,18 @@ module.exports.validateSection = (fields) => {
 	}
 	if (fields.languages.length === 0 || fields.languages[0] === "") {
 		errors.languages = "You must provide at least 1 language.";
+	} else if (fields.languages.some((language) => language === "")) {
+		errors.languages = "Empty keyword submitted.";
+	} else if (
+		fields.languages.some((language) => !language.match("^[A-Z]{2}$"))
+	) {
+		errors.languages = "Language has to consist of 2 upper case letters.";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
 };
 
-module.exports.validateGarant = (name, id) => {
+module.exports.validateStaff = (name, id) => {
 	const errors = {};
 
 	if (name.trim() === "" || id.trim() === "") {
@@ -217,12 +224,23 @@ module.exports.validateSubmission = (fields) => {
 
 	if (fields.name.trim() === "") {
 		errors.name = "Please submit name of your submission.";
+	} else if (fields.name.trim().length > 150) {
+		errors.name = "Maximum length for submission name is 150 characters.";
 	}
 	if (fields.abstract.trim() === "") {
 		errors.abstract = "Please submit abstract of your submission.";
+	} else if (fields.abstract.trim().length > 1500) {
+		errors.abstract = "Maximum length for abstract is 1500 characters.";
 	}
 	if (fields.keywords.length === 0 || fields.keywords[0] === "") {
 		errors.keywords = "You must provide at least 1 keyword.";
+	} else if (fields.keywords.some((keyword) => keyword === "")) {
+		errors.keywords = "Empty keyword submitted.";
+	}
+	if (fields.authors.length === 0) {
+		errors.authors = "You must provide at least one author.";
+	} else if (fields.authors.some((author) => author === "")) {
+		errors.authors = "One of provided authors is an empty string.";
 	}
 
 	return { errors, valid: Object.keys(errors).length === 0 };
