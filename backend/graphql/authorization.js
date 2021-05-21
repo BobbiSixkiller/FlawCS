@@ -37,6 +37,8 @@ const isOwnSubmission = rule({ cache: "strict" })(
 module.exports = shield(
 	{
 		Query: {
+			//deny all other development queries when deploying to production
+			//"*": deny,
 			getUsers: and(isAuthenticated, or(isAdmin, isSupervisor)),
 			getUser: and(isAuthenticated, or(isOwnUser, isAdmin, isSupervisor)),
 			getConferenceInvoices: and(isAuthenticated, or(isAdmin, isSupervisor)),
