@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "GraphQL API endpoint for Conference System.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Matúš Muránsky",
   "license": "ISC",
   "dependencies": {
     "apollo-server-express": "^2.21.0",
